@@ -2,9 +2,17 @@ from rest_framework import serializers
 from .models import Apoderado
 
 class ApoderadoSerializer(serializers.ModelSerializer):
-    estudiante_nombre = serializers.ReadOnlyField(source='estudiante.nombres')
-    estudiante_apellido = serializers.ReadOnlyField(source='estudiante.apellidos')
+    estudiantes_detalle = serializers.SerializerMethodField()
 
     class Meta:
         model = Apoderado
-        fields = ['id', 'estudiante', 'estudiante_nombre', 'estudiante_apellido', 'nombres', 'telefono', 'correo', 'parentesco']
+        fields = ['id', 'estudiantes', 'estudiantes_detalle', 'nombres', 'telefono', 'correo', 'parentesco']
+
+    def get_estudiantes_detalle(self, obj):
+        return [{
+            'id': e.id, 
+            'nombres': e.nombres, 
+            'apellidos': e.apellidos, 
+            'dni': e.dni, 
+            'estado': e.estado
+        } for e in obj.estudiantes.all()]

@@ -21,9 +21,11 @@ class AsistenciaViewSet(viewsets.ModelViewSet):
         elif rol in ['Director', 'Docente']:
             queryset = Asistencia.objects.filter(estudiante__institucion=user.institucion)
         elif rol == 'Apoderado':
-            from apoderados.models import Apoderado
-            student_ids = Apoderado.objects.filter(correo=user.email).values_list('estudiante_id', flat=True)
-            queryset = Asistencia.objects.filter(estudiante_id__in=student_ids)
+            if hasattr(user, 'apoderado_profile'):
+                student_ids = user.apoderado_profile.estudiantes.values_list('id', flat=True)
+                queryset = Asistencia.objects.filter(estudiante_id__in=student_ids)
+            else:
+                queryset = Asistencia.objects.none()
         else:
             queryset = Asistencia.objects.none()
 
@@ -91,9 +93,11 @@ class JustificacionViewSet(viewsets.ModelViewSet):
         elif rol in ['Director', 'Docente']:
             queryset = Justificacion.objects.filter(asistencia__estudiante__institucion=user.institucion)
         elif rol == 'Apoderado':
-            from apoderados.models import Apoderado
-            student_ids = Apoderado.objects.filter(correo=user.email).values_list('estudiante_id', flat=True)
-            queryset = Justificacion.objects.filter(asistencia__estudiante_id__in=student_ids)
+            if hasattr(user, 'apoderado_profile'):
+                student_ids = user.apoderado_profile.estudiantes.values_list('id', flat=True)
+                queryset = Justificacion.objects.filter(asistencia__estudiante_id__in=student_ids)
+            else:
+                queryset = Justificacion.objects.none()
         else:
             queryset = Justificacion.objects.none()
 

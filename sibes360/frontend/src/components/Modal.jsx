@@ -21,19 +21,23 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div className="fixed inset-0 z-50 overflow-y-auto" style={{ zIndex: 9999 }}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         {/* Background Overlay */}
         <div 
-          className="fixed inset-0 transition-opacity bg-slate-900 bg-opacity-40 backdrop-blur-[2px]" 
+          className="fixed inset-0 transition-opacity" 
+          style={{ backgroundColor: 'rgba(15, 23, 42, 0.5)' }}
           onClick={onClose}
         />
 
         {/* Center the modal */}
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-        <div className="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden border border-slate-200 transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-          <div className="flex justify-between items-center px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+        <div 
+          className="inline-block align-bottom rounded-xl text-left overflow-hidden border border-slate-200 transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full shadow-2xl" 
+          style={{ backgroundColor: '#ffffff', opacity: 1, position: 'relative' }}
+        >
+          <div className="flex justify-between items-center px-6 py-4 border-b border-slate-100" style={{ backgroundColor: '#f8fafc', opacity: 1 }}>
             <h3 className="text-base font-bold text-[#1a1f36]">
               {title}
             </h3>
@@ -44,7 +48,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
               <X size={18} />
             </button>
           </div>
-          <div className="px-6 py-5 bg-white">
+          <div className="px-6 py-5" style={{ backgroundColor: '#ffffff', opacity: 1 }}>
             {children}
           </div>
         </div>

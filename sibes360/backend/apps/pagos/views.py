@@ -21,8 +21,10 @@ class PagoViewSet(viewsets.ModelViewSet):
         elif rol == 'Director':
             return Pago.objects.filter(estudiante__institucion=user.institucion)
         elif rol == 'Apoderado':
-            student_ids = Apoderado.objects.filter(correo=user.email).values_list('estudiante_id', flat=True)
-            return Pago.objects.filter(estudiante_id__in=student_ids)
+            if hasattr(user, 'apoderado_profile'):
+                student_ids = user.apoderado_profile.estudiantes.values_list('id', flat=True)
+                return Pago.objects.filter(estudiante_id__in=student_ids)
+            return Pago.objects.none()
         else:
             return Pago.objects.none()
 
@@ -40,8 +42,11 @@ class PagoViewSet(viewsets.ModelViewSet):
         elif rol == 'Director':
             deudas = deudas.filter(estudiante__institucion=user.institucion)
         elif rol == 'Apoderado':
-            student_ids = Apoderado.objects.filter(correo=user.email).values_list('estudiante_id', flat=True)
-            deudas = deudas.filter(estudiante_id__in=student_ids)
+            if hasattr(user, 'apoderado_profile'):
+                student_ids = user.apoderado_profile.estudiantes.values_list('id', flat=True)
+                deudas = deudas.filter(estudiante_id__in=student_ids)
+            else:
+                return Response([])
         else:
             return Response([])
 
@@ -64,7 +69,9 @@ class PensionViewSet(viewsets.ModelViewSet):
         elif rol == 'Director':
             return Pension.objects.filter(estudiante__institucion=user.institucion)
         elif rol == 'Apoderado':
-            student_ids = Apoderado.objects.filter(correo=user.email).values_list('estudiante_id', flat=True)
-            return Pension.objects.filter(estudiante_id__in=student_ids)
+            if hasattr(user, 'apoderado_profile'):
+                student_ids = user.apoderado_profile.estudiantes.values_list('id', flat=True)
+                return Pension.objects.filter(estudiante_id__in=student_ids)
+            return Pension.objects.none()
         else:
             return Pension.objects.none()

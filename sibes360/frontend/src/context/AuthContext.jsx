@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
       
       axios.defaults.headers.common['Authorization'] = `Bearer ${access}`;
       setUser(userData);
-      return { success: true };
+      return { success: true, user: userData };
     } catch (error) {
       console.error("Login failed:", error);
       const message = error.response?.data?.detail || "Usuario o contraseña incorrectos";

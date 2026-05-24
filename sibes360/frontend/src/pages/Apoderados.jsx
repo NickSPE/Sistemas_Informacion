@@ -4,7 +4,7 @@ import DataTable from '../components/DataTable';
 import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
-import { ShieldAlert, BookOpen } from 'lucide-react';
+import { ShieldAlert, BookOpen, Edit, Trash2, CheckCircle, XCircle } from 'lucide-react';
 
 const Apoderados = () => {
   const [apoderados, setApoderados] = useState([]);
@@ -17,7 +17,15 @@ const Apoderados = () => {
   const [telefono, setTelefono] = useState('');
   const [correo, setCorreo] = useState('');
   const [parentesco, setParentesco] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState('');
+  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => setNotification({ show: false, message: '', type: 'success' }), 3000);
+  };
 
   const fetchData = async () => {
     try {
@@ -38,26 +46,66 @@ const Apoderados = () => {
     fetchData();
   }, []);
 
-  const handleAdd = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (selectedStudents.length === 0) return; // Validación básica
+    const payload = {
+      nombres,
+      telefono,
+      correo,
+      parentesco,
+      estudiantes: selectedStudents.map(id => parseInt(id))
+    };
+
     try {
-      await axios.post('http://localhost:8000/api/apoderados/', {
-        nombres,
-        telefono,
-        correo,
-        parentesco,
-        estudiante: parseInt(selectedStudent)
-      });
-      setIsModalOpen(false);
-      setNombres('');
-      setTelefono('');
-      setCorreo('');
-      setParentesco('');
-      setSelectedStudent('');
+      if (editMode) {
+        await axios.put(`http://localhost:8000/api/apoderados/${editId}/`, payload);
+        showNotification("Apoderado actualizado exitosamente");
+      } else {
+        await axios.post('http://localhost:8000/api/apoderados/', payload);
+        showNotification("Apoderado registrado exitosamente");
+      }
+      closeModal();
       fetchData();
     } catch (err) {
-      console.error("Failed to add apoderado:", err);
+      console.error("Failed to save apoderado:", err);
+      showNotification("Error al guardar los datos", "error");
     }
+  };
+
+  const openEditModal = (row) => {
+    setNombres(row.nombres);
+    setTelefono(row.telefono || '');
+    setCorreo(row.correo || '');
+    setParentesco(row.parentesco);
+    setSelectedStudents(row.estudiantes.map(id => id.toString()));
+    setEditId(row.id);
+    setEditMode(true);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este apoderado?")) {
+      try {
+        await axios.delete(`http://localhost:8000/api/apoderados/${id}/`);
+        showNotification("Apoderado eliminado correctamente");
+        fetchData();
+      } catch (err) {
+        console.error("Failed to delete apoderado:", err);
+        showNotification("Error al eliminar", "error");
+      }
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditMode(false);
+    setEditId(null);
+    setNombres('');
+    setTelefono('');
+    setCorreo('');
+    setParentesco('');
+    setSelectedStudents([]);
   };
 
   const columns = [
@@ -65,7 +113,16 @@ const Apoderados = () => {
     { header: 'Parentesco', accessor: 'parentesco', width: '110px' },
     { header: 'Teléfono', accessor: 'telefono', width: '120px' },
     { header: 'Correo Electrónico', accessor: 'correo' },
-    { header: 'Alumno Asociado', render: (row) => `${row.estudiante_apellido || ''}, ${row.estudiante_nombre || ''}` }
+    { header: 'Alumno(s) Asociado(s)', render: (row) => row.estudiantes_detalle && row.estudiantes_detalle.length > 0 ? row.estudiantes_detalle.map(e => `${e.apellidos}, ${e.nombres}`).join(' | ') : 'Sin asociar' },
+    { 
+      header: 'Acciones', 
+      render: (row) => (
+        <div className="flex gap-2">
+          <button onClick={() => openEditModal(row)} className="p-1 text-slate-400 hover:text-[#6c63ff] transition-colors"><Edit size={16} /></button>
+          <button onClick={() => handleDelete(row.id)} className="p-1 text-slate-400 hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+        </div>
+      ) 
+    }
   ];
 
   if (loading) {
@@ -92,7 +149,10 @@ const Apoderados = () => {
             columns={columns}
             data={apoderados}
             searchField="nombres"
-            onAdd={() => setIsModalOpen(true)}
+            onAdd={() => { 
+              closeModal(); 
+              setTimeout(() => setIsModalOpen(true), 0);
+            }}
             addLabel="Asociar Apoderado"
           />
         </div>
@@ -117,14 +177,22 @@ const Apoderados = () => {
         </div>
       </div>
 
+      {/* Toast Notification */}
+      {notification.show && (
+        <div className={`fixed bottom-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg text-white text-sm font-bold transition-all duration-300 ${notification.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'}`}>
+          {notification.type === 'success' ? <CheckCircle size={18} /> : <XCircle size={18} />}
+          {notification.message}
+        </div>
+      )}
+
       {/* Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Asociar Nuevo Apoderado">
-        <form onSubmit={handleAdd} className="space-y-4 text-left">
+      <Modal isOpen={isModalOpen} onClose={closeModal} title={editMode ? "Editar Apoderado" : "Asociar Nuevo Apoderado"}>
+        <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
             <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Nombre Completo del Apoderado</label>
             <input 
               type="text" required value={nombres} onChange={e => setNombres(e.target.value)} placeholder="Ej. Carlos Quispe"
-              className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-slate-50/10 text-[#1a1f36]"
+              className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-white text-[#1a1f36]" style={{ backgroundColor: '#ffffff' }}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -132,14 +200,14 @@ const Apoderados = () => {
               <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Teléfono de Contacto</label>
               <input 
                 type="text" required value={telefono} onChange={e => setTelefono(e.target.value)} placeholder="987654321"
-                className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-slate-50/10 text-[#1a1f36]"
+                className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-white text-[#1a1f36]" style={{ backgroundColor: '#ffffff' }}
               />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Parentesco / Relación</label>
               <input 
                 type="text" required value={parentesco} onChange={e => setParentesco(e.target.value)} placeholder="Ej. Padre, Madre"
-                className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-slate-50/10 text-[#1a1f36]"
+                className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-white text-[#1a1f36]" style={{ backgroundColor: '#ffffff' }}
               />
             </div>
           </div>
@@ -147,23 +215,36 @@ const Apoderados = () => {
             <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Correo Electrónico</label>
             <input 
               type="email" required value={correo} onChange={e => setCorreo(e.target.value)} placeholder="apoderado@ejemplo.pe"
-              className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-slate-50/10 text-[#1a1f36]"
+              className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-white text-[#1a1f36]" style={{ backgroundColor: '#ffffff' }}
             />
           </div>
           <div>
-            <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Estudiante Representado</label>
-            <select 
-              required value={selectedStudent} onChange={e => setSelectedStudent(e.target.value)}
-              className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-slate-50/10 text-[#1a1f36]"
-            >
-              <option value="">Seleccione estudiante...</option>
+            <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Estudiante(s) Representado(s)</label>
+            <div className="border border-slate-200 rounded-lg max-h-32 overflow-y-auto p-2 space-y-1 bg-white" style={{ backgroundColor: '#ffffff' }}>
+              {estudiantes.length === 0 && <span className="text-xs text-slate-400">No hay estudiantes disponibles</span>}
               {estudiantes.map(e => (
-                <option key={e.id} value={e.id}>{e.apellidos}, {e.nombres}</option>
+                <label key={e.id} className="flex items-center gap-2 text-xs text-[#1a1f36] p-1 hover:bg-slate-100 rounded cursor-pointer transition-colors">
+                  <input 
+                    type="checkbox" 
+                    value={e.id}
+                    checked={(selectedStudents || []).includes(e?.id?.toString())}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedStudents([...(selectedStudents || []), e.target.value]);
+                      } else {
+                        setSelectedStudents((selectedStudents || []).filter(id => id !== e.target.value));
+                      }
+                    }}
+                    className="rounded border-slate-300 text-[#6c63ff] focus:ring-[#6c63ff]"
+                  />
+                  {e.apellidos}, {e.nombres}
+                </label>
               ))}
-            </select>
+            </div>
+            {selectedStudents.length === 0 && <span className="text-[10px] text-red-500 mt-1 block">Debe seleccionar al menos un estudiante</span>}
           </div>
           <button type="submit" className="w-full py-2 bg-[#6c63ff] text-white rounded-lg text-xs font-bold hover:bg-[#5b52e0] transition-colors mt-2">
-            Asociar Apoderado
+            {editMode ? "Guardar Cambios" : "Asociar Apoderado"}
           </button>
         </form>
       </Modal>
