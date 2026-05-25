@@ -1,0 +1,67 @@
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+
+const AuthContext = createContext(null);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Initialize Auth headers from localStorage on boot
+  useEffect(() => {
+    const storedUser = localStorage.getItem('sibes360_user');
+    const storedToken = localStorage.getItem('sibes360_token');
+    
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+    }
+    setLoading(false);
+  }, []);
+
+  const login = async (username, password) => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/auth/login/', {
+        username,
+        password
+      });
+
+      const { access, refresh, user: userData } = response.data;
+
+      // Save credentials
+      localStorage.setItem('sibes360_user', JSON.stringify(userData));
+      localStorage.setItem('sibes360_token', access);
+      localStorage.setItem('sibes360_refresh_token', refresh);
+      
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+      setUser(userData);
+      return { success: true };
+    } catch (error) {
+      console.error("Login failed:", error);
+      const message = error.response?.data?.detail || "Usuario o contraseña incorrectos";
+      return { success: false, error: message };
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('sibes360_user');
+    localStorage.removeItem('sibes360_token');
+    localStorage.removeItem('sibes360_refresh_token');
+    delete axios.defaults.headers.common['Authorization'];
+    setUser(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
