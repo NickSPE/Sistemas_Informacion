@@ -32,8 +32,10 @@ class ConductaViewSet(viewsets.ModelViewSet):
                 return Conducta.objects.filter(estudiante_id__in=student_ids)
             return Conducta.objects.none()
         elif rol == 'Apoderado':
-            student_ids = Apoderado.objects.filter(correo=user.email).values_list('estudiante_id', flat=True)
-            return Conducta.objects.filter(estudiante_id__in=student_ids)
+            if hasattr(user, 'apoderado_profile'):
+                student_ids = user.apoderado_profile.estudiantes.values_list('id', flat=True)
+                return Conducta.objects.filter(estudiante_id__in=student_ids)
+            return Conducta.objects.none()
         else:
             return Conducta.objects.none()
 

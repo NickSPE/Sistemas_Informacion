@@ -2,10 +2,16 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
+import ParentLayout from './layouts/ParentLayout';
 
 // Import Pages
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import DashboardPadre from './pages/portal/DashboardPadre';
+import AsistenciaPadre from './pages/portal/AsistenciaPadre';
+import NotasPadre from './pages/portal/NotasPadre';
+import ConductaPadre from './pages/portal/ConductaPadre';
+import PagosPadre from './pages/portal/PagosPadre';
 import Instituciones from './pages/Instituciones';
 import Usuarios from './pages/Usuarios';
 import Estudiantes from './pages/Estudiantes';
@@ -23,7 +29,7 @@ import Comunicacion from './pages/Comunicacion';
 import Alertas from './pages/Alertas';
 import Reportes from './pages/Reportes';
 
-// Protected Route Wrapper
+// Protected Route Wrapper para Administradores y Profesores
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
   
@@ -39,7 +45,34 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
+  if (user?.rol === 'Apoderado') {
+    return <Navigate to="/portal-familia" replace />;
+  }
+
   return <Layout>{children}</Layout>;
+};
+
+// Protected Route Wrapper para Apoderados
+const ParentRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#f4f6fb] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6c63ff]"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.rol !== 'Apoderado') {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <ParentLayout>{children}</ParentLayout>;
 };
 
 function App() {
@@ -68,6 +101,13 @@ function App() {
           <Route path="/comunicacion" element={<ProtectedRoute><Comunicacion /></ProtectedRoute>} />
           <Route path="/alertas" element={<ProtectedRoute><Alertas /></ProtectedRoute>} />
           <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
+
+          {/* Protected Parent Portal pages */}
+          <Route path="/portal-familia" element={<ParentRoute><DashboardPadre /></ParentRoute>} />
+          <Route path="/portal-familia/asistencia" element={<ParentRoute><AsistenciaPadre /></ParentRoute>} />
+          <Route path="/portal-familia/notas" element={<ParentRoute><NotasPadre /></ParentRoute>} />
+          <Route path="/portal-familia/conducta" element={<ParentRoute><ConductaPadre /></ParentRoute>} />
+          <Route path="/portal-familia/pagos" element={<ParentRoute><PagosPadre /></ParentRoute>} />
 
           {/* Root redirect */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />

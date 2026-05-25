@@ -20,7 +20,11 @@ const Login = () => {
     setLoading(false);
 
     if (result.success) {
-      navigate('/dashboard');
+      if (result.user?.rol === 'Apoderado') {
+        navigate('/portal-familia');
+      } else {
+        navigate('/dashboard');
+      }
     } else {
       setError(result.error);
     }

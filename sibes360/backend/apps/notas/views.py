@@ -85,8 +85,11 @@ class NotaViewSet(viewsets.ModelViewSet):
             else:
                 queryset = Nota.objects.none()
         elif rol == 'Apoderado':
-            student_ids = Apoderado.objects.filter(correo=user.email).values_list('estudiante_id', flat=True)
-            queryset = Nota.objects.filter(estudiante_id__in=student_ids)
+            if hasattr(user, 'apoderado_profile'):
+                student_ids = user.apoderado_profile.estudiantes.values_list('id', flat=True)
+                queryset = Nota.objects.filter(estudiante_id__in=student_ids)
+            else:
+                queryset = Nota.objects.none()
         else:
             queryset = Nota.objects.none()
 
@@ -152,8 +155,11 @@ class NotaViewSet(viewsets.ModelViewSet):
                 else:
                     promedios = promedios.none()
             elif rol == 'Apoderado':
-                student_ids = Apoderado.objects.filter(correo=user.email).values_list('estudiante_id', flat=True)
-                promedios = promedios.filter(estudiante_id__in=student_ids)
+                if hasattr(user, 'apoderado_profile'):
+                    student_ids = user.apoderado_profile.estudiantes.values_list('id', flat=True)
+                    promedios = promedios.filter(estudiante_id__in=student_ids)
+                else:
+                    promedios = promedios.none()
 
         serializer = PromedioSerializer(promedios, many=True)
         return Response(serializer.data)
@@ -183,7 +189,9 @@ class PromedioViewSet(viewsets.ModelViewSet):
                 return Promedio.objects.filter(estudiante__institucion=user.institucion, curso_id__in=cursos_ids)
             return Promedio.objects.none()
         elif rol == 'Apoderado':
-            student_ids = Apoderado.objects.filter(correo=user.email).values_list('estudiante_id', flat=True)
-            return Promedio.objects.filter(estudiante_id__in=student_ids)
+            if hasattr(user, 'apoderado_profile'):
+                student_ids = user.apoderado_profile.estudiantes.values_list('id', flat=True)
+                return Promedio.objects.filter(estudiante_id__in=student_ids)
+            return Promedio.objects.none()
         else:
             return Promedio.objects.none()
