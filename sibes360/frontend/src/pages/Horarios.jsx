@@ -27,8 +27,8 @@ const Horarios = () => {
       const [horRes, docRes, curRes, secRes] = await Promise.all([
         axios.get('http://localhost:8000/api/horarios/'),
         axios.get('http://localhost:8000/api/docentes/'),
-        axios.get('http://localhost:8000/api/curso/'),
-        axios.get('http://localhost:8000/api/seccion/')
+        axios.get('http://localhost:8000/api/cursos/'),
+        axios.get('http://localhost:8000/api/secciones/')
       ]);
       setHorarios(horRes.data);
       setDocentes(docRes.data);

@@ -20,11 +20,16 @@ class NivelEducativoViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return NivelEducativo.objects.all()
+            queryset = NivelEducativo.objects.all()
         elif rol in ['Director', 'Docente', 'Apoderado']:
-            return NivelEducativo.objects.filter(institucion=user.institucion)
+            queryset = NivelEducativo.objects.filter(institucion=user.institucion)
         else:
-            return NivelEducativo.objects.none()
+            queryset = NivelEducativo.objects.none()
+
+        institucion_id = self.request.query_params.get('institucion', None)
+        if institucion_id:
+            queryset = queryset.filter(institucion_id=institucion_id)
+        return queryset
 
 class GradoViewSet(viewsets.ModelViewSet):
     queryset = Grado.objects.all()
@@ -38,11 +43,16 @@ class GradoViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return Grado.objects.all()
+            queryset = Grado.objects.all()
         elif rol in ['Director', 'Docente', 'Apoderado']:
-            return Grado.objects.filter(nivel__institucion=user.institucion)
+            queryset = Grado.objects.filter(nivel__institucion=user.institucion)
         else:
-            return Grado.objects.none()
+            queryset = Grado.objects.none()
+
+        institucion_id = self.request.query_params.get('institucion', None)
+        if institucion_id:
+            queryset = queryset.filter(nivel__institucion_id=institucion_id)
+        return queryset
 
 class SeccionViewSet(viewsets.ModelViewSet):
     queryset = Seccion.objects.all()
@@ -56,11 +66,16 @@ class SeccionViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return Seccion.objects.all()
+            queryset = Seccion.objects.all()
         elif rol in ['Director', 'Docente', 'Apoderado']:
-            return Seccion.objects.filter(grado__nivel__institucion=user.institucion)
+            queryset = Seccion.objects.filter(grado__nivel__institucion=user.institucion)
         else:
-            return Seccion.objects.none()
+            queryset = Seccion.objects.none()
+
+        institucion_id = self.request.query_params.get('institucion', None)
+        if institucion_id:
+            queryset = queryset.filter(grado__nivel__institucion_id=institucion_id)
+        return queryset
 
 class CursoViewSet(viewsets.ModelViewSet):
     queryset = Curso.objects.all()
@@ -74,9 +89,9 @@ class CursoViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return Curso.objects.all()
+            queryset = Curso.objects.all()
         elif rol == 'Director' or rol == 'Apoderado':
-            return Curso.objects.filter(institucion=user.institucion)
+            queryset = Curso.objects.filter(institucion=user.institucion)
         elif rol == 'Docente':
             from docentes.models import Docente
             from horarios.models import Horario
@@ -84,10 +99,16 @@ class CursoViewSet(viewsets.ModelViewSet):
             docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
             if docente_profile:
                 cursos_ids = Horario.objects.filter(docente=docente_profile).values_list('curso_id', flat=True)
-                return Curso.objects.filter(id__in=cursos_ids)
-            return Curso.objects.none()
+                queryset = Curso.objects.filter(id__in=cursos_ids)
+            else:
+                queryset = Curso.objects.none()
         else:
-            return Curso.objects.none()
+            queryset = Curso.objects.none()
+
+        institucion_id = self.request.query_params.get('institucion', None)
+        if institucion_id:
+            queryset = queryset.filter(institucion_id=institucion_id)
+        return queryset
 
 class PeriodoAcademicoViewSet(viewsets.ModelViewSet):
     queryset = PeriodoAcademico.objects.all()
@@ -101,8 +122,13 @@ class PeriodoAcademicoViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return PeriodoAcademico.objects.all()
+            queryset = PeriodoAcademico.objects.all()
         elif rol in ['Director', 'Docente', 'Apoderado']:
-            return PeriodoAcademico.objects.filter(institucion=user.institucion)
+            queryset = PeriodoAcademico.objects.filter(institucion=user.institucion)
         else:
-            return PeriodoAcademico.objects.none()
+            queryset = PeriodoAcademico.objects.none()
+
+        institucion_id = self.request.query_params.get('institucion', None)
+        if institucion_id:
+            queryset = queryset.filter(institucion_id=institucion_id)
+        return queryset

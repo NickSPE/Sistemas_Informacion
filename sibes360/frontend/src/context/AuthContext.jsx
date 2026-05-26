@@ -14,6 +14,18 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedInstitucion, setSelectedInstState] = useState(() => {
+    return localStorage.getItem('sibes360_selected_institucion') || '';
+  });
+
+  const setSelectedInstitucion = (id) => {
+    setSelectedInstState(id);
+    if (id) {
+      localStorage.setItem('sibes360_selected_institucion', id);
+    } else {
+      localStorage.removeItem('sibes360_selected_institucion');
+    }
+  };
 
   // Initialize Auth headers from localStorage on boot
   useEffect(() => {
@@ -26,6 +38,7 @@ export const AuthProvider = ({ children }) => {
     }
     setLoading(false);
   }, []);
+
 
   const login = async (username, password) => {
     try {
@@ -60,8 +73,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, selectedInstitucion, setSelectedInstitucion }}>
       {children}
     </AuthContext.Provider>
   );
+
 };

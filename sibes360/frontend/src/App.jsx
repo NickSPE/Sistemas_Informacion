@@ -13,6 +13,7 @@ import NotasPadre from './pages/portal/NotasPadre';
 import ConductaPadre from './pages/portal/ConductaPadre';
 import PagosPadre from './pages/portal/PagosPadre';
 import Instituciones from './pages/Instituciones';
+import GestionarInstitucion from './pages/GestionarInstitucion';
 import Usuarios from './pages/Usuarios';
 import Estudiantes from './pages/Estudiantes';
 import Apoderados from './pages/Apoderados';
@@ -28,6 +29,7 @@ import Pagos from './pages/Pagos';
 import Comunicacion from './pages/Comunicacion';
 import Alertas from './pages/Alertas';
 import Reportes from './pages/Reportes';
+import Configuracion from './pages/Configuracion';
 
 // Protected Route Wrapper para Administradores y Profesores
 const ProtectedRoute = ({ children }) => {
@@ -86,6 +88,7 @@ function App() {
           {/* Protected Main pages */}
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/instituciones" element={<ProtectedRoute><Instituciones /></ProtectedRoute>} />
+          <Route path="/instituciones/:id/gestionar" element={<ProtectedRoute><GestionarInstitucion /></ProtectedRoute>} />
           <Route path="/usuarios" element={<ProtectedRoute><Usuarios /></ProtectedRoute>} />
           <Route path="/estudiantes" element={<ProtectedRoute><Estudiantes /></ProtectedRoute>} />
           <Route path="/apoderados" element={<ProtectedRoute><Apoderados /></ProtectedRoute>} />
@@ -101,6 +104,7 @@ function App() {
           <Route path="/comunicacion" element={<ProtectedRoute><Comunicacion /></ProtectedRoute>} />
           <Route path="/alertas" element={<ProtectedRoute><Alertas /></ProtectedRoute>} />
           <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
+          <Route path="/configuracion" element={<ProtectedRoute><Configuracion /></ProtectedRoute>} />
 
           {/* Protected Parent Portal pages */}
           <Route path="/portal-familia" element={<ParentRoute><DashboardPadre /></ParentRoute>} />

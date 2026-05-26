@@ -13,7 +13,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'institucion', 'institucion_nombre', 'rol', 'rol_nombre', 'estado', 'password']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'institucion', 'institucion_nombre', 'rol', 'rol_nombre', 'estado', 'password', 'dni']
         extra_kwargs = {
             'password': {'write_only': True, 'required': False}
         }
@@ -48,6 +48,15 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
         data = super().validate(attrs)
+        
+        # Check custom user active status
+        if not self.user.estado:
+            raise serializers.ValidationError({"detail": "Esta cuenta está desactivada por el administrador."})
+            
+        # Check parent institution active status
+        if self.user.institucion and not self.user.institucion.estado:
+            raise serializers.ValidationError({"detail": "La institución educativa de esta cuenta se encuentra suspendida."})
+
         data['user'] = {
             'id': self.user.id,
             'username': self.user.username,
@@ -60,3 +69,4 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'estado': self.user.estado
         }
         return data
+

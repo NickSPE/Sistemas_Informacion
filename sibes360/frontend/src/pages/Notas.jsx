@@ -4,7 +4,7 @@ import DataTable from '../components/DataTable';
 import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
-import { FileSpreadsheet, Award } from 'lucide-react';
+import { FileSpreadsheet, Award, Edit, Trash2 } from 'lucide-react';
 
 const Notas = () => {
   const [notas, setNotas] = useState([]);
@@ -12,6 +12,7 @@ const Notas = () => {
   const [evaluaciones, setEvaluaciones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingNota, setEditingNota] = useState(null);
 
   // Form states
   const [selectedStudent, setSelectedStudent] = useState('');
@@ -39,7 +40,35 @@ const Notas = () => {
     fetchData();
   }, []);
 
-  const handleAdd = async (e) => {
+  const handleOpenAdd = () => {
+    setEditingNota(null);
+    setSelectedStudent('');
+    setSelectedEval('');
+    setCalificacion('');
+    setIsModalOpen(true);
+  };
+
+  const handleStartEdit = (row) => {
+    setEditingNota(row);
+    setSelectedStudent(row.estudiante ? row.estudiante.toString() : '');
+    setSelectedEval(row.evaluacion ? row.evaluacion.toString() : '');
+    setCalificacion(row.calificacion.toString());
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("¿Está seguro de que desea eliminar esta calificación?")) {
+      try {
+        await axios.delete(`http://localhost:8000/api/notas/${id}/`);
+        fetchData();
+      } catch (err) {
+        console.error("Grade deletion failed:", err);
+        alert("Error al eliminar la calificación.");
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const val = parseFloat(calificacion);
     if (isNaN(val) || val < 0 || val > 20) {
@@ -47,18 +76,26 @@ const Notas = () => {
       return;
     }
     try {
-      await axios.post('http://localhost:8000/api/notas/', {
+      const payload = {
         estudiante: parseInt(selectedStudent),
         evaluacion: parseInt(selectedEval),
         calificacion: val
-      });
+      };
+
+      if (editingNota) {
+        await axios.put(`http://localhost:8000/api/notas/${editingNota.id}/`, payload);
+      } else {
+        await axios.post('http://localhost:8000/api/notas/', payload);
+      }
       setIsModalOpen(false);
+      setEditingNota(null);
       setSelectedStudent('');
       setSelectedEval('');
       setCalificacion('');
       fetchData();
     } catch (err) {
-      console.error("Grade recording failed:", err);
+      console.error("Grade saving failed:", err);
+      alert("Error al guardar la calificación.");
     }
   };
 
@@ -78,6 +115,30 @@ const Notas = () => {
       accessor: 'calificacion', 
       width: '110px',
       render: (row) => <span className={getGradeStyle(parseFloat(row.calificacion))}>{row.calificacion}</span>
+    },
+    {
+      header: 'Acciones',
+      width: '140px',
+      render: (row) => (
+        <div className="flex gap-2.5 items-center">
+          <button 
+            onClick={() => handleStartEdit(row)}
+            className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5 hover:underline"
+            title="Editar Calificación"
+          >
+            <Edit size={12} />
+            <span>Editar</span>
+          </button>
+          <button 
+            onClick={() => handleDelete(row.id)}
+            className="text-[10px] font-bold text-rose-600 hover:text-rose-800 flex items-center gap-0.5 hover:underline"
+            title="Eliminar Calificación"
+          >
+            <Trash2 size={12} />
+            <span>Eliminar</span>
+          </button>
+        </div>
+      )
     }
   ];
 
@@ -93,7 +154,7 @@ const Notas = () => {
     <div className="space-y-6">
       {/* Strict single H1 Constraint */}
       <div>
-        <h1 className="text-xl font-bold text-[#1a1f36] tracking-tight">Registro de Calificaciones</h1>
+        <h1 className="text-xl font-bold text-[#1a1f36] tracking-tight">Registro de Calificaciones Generales</h1>
         <p className="text-xs text-[#8898aa]">Gestión de notas de evaluaciones parciales y exámenes (escala oficial de 0 a 20).</p>
       </div>
 
@@ -105,7 +166,7 @@ const Notas = () => {
             columns={columns}
             data={notas}
             searchField="estudiante_apellidos"
-            onAdd={() => setIsModalOpen(true)}
+            onAdd={handleOpenAdd}
             addLabel="Registrar Calificación"
           />
         </div>
@@ -131,8 +192,8 @@ const Notas = () => {
       </div>
 
       {/* Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Registrar Nota Académica">
-        <form onSubmit={handleAdd} className="space-y-4 text-left">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingNota ? "Modificar Calificación Académica" : "Registrar Nota Académica"}>
+        <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
             <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Estudiante</label>
             <select 
@@ -165,7 +226,7 @@ const Notas = () => {
             />
           </div>
           <button type="submit" className="w-full py-2 bg-[#6c63ff] text-white rounded-lg text-xs font-bold hover:bg-[#5b52e0] transition-colors mt-2">
-            Registrar Calificación
+            {editingNota ? "Guardar Cambios" : "Registrar Calificación"}
           </button>
         </form>
       </Modal>

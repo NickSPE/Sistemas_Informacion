@@ -4,13 +4,14 @@ import DataTable from '../components/DataTable';
 import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
-import { Calendar, UserCheck } from 'lucide-react';
+import { Calendar, UserCheck, Edit, Trash2 } from 'lucide-react';
 
 const Asistencia = () => {
   const [asistencias, setAsistencias] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingAsistencia, setEditingAsistencia] = useState(null);
 
   // Form states
   const [selectedStudent, setSelectedStudent] = useState('');
@@ -37,21 +38,59 @@ const Asistencia = () => {
     fetchData();
   }, []);
 
-  const handleAdd = async (e) => {
+  const handleOpenAdd = () => {
+    setEditingAsistencia(null);
+    setSelectedStudent('');
+    setFecha(new Date().toISOString().split('T')[0]);
+    setEstado('P');
+    setObservacion('');
+    setIsModalOpen(true);
+  };
+
+  const handleStartEdit = (row) => {
+    setEditingAsistencia(row);
+    setSelectedStudent(row.estudiante ? row.estudiante.toString() : '');
+    setFecha(row.fecha);
+    setEstado(row.estado);
+    setObservacion(row.observacion || '');
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("¿Está seguro de que desea eliminar este registro de asistencia?")) {
+      try {
+        await axios.delete(`http://localhost:8000/api/asistencia/${id}/`);
+        fetchData();
+      } catch (err) {
+        console.error("Attendance deletion failed:", err);
+        alert("Error al eliminar el registro de asistencia.");
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8000/api/asistencia/', {
+      const payload = {
         estudiante: parseInt(selectedStudent),
         fecha,
         estado,
         observacion
-      });
+      };
+
+      if (editingAsistencia) {
+        await axios.put(`http://localhost:8000/api/asistencia/${editingAsistencia.id}/`, payload);
+      } else {
+        await axios.post('http://localhost:8000/api/asistencia/', payload);
+      }
       setIsModalOpen(false);
+      setEditingAsistencia(null);
       setSelectedStudent('');
       setObservacion('');
       fetchData();
     } catch (err) {
-      console.error("Attendance submission failed:", err);
+      console.error("Attendance saving failed:", err);
+      alert("Error al guardar la asistencia.");
     }
   };
 
@@ -74,7 +113,31 @@ const Asistencia = () => {
       width: '120px',
       render: (row) => <Badge type={row.estado} text={getStatusText(row.estado)} />
     },
-    { header: 'Observación', accessor: 'observacion' }
+    { header: 'Observación', accessor: 'observacion' },
+    {
+      header: 'Acciones',
+      width: '140px',
+      render: (row) => (
+        <div className="flex gap-2.5 items-center">
+          <button 
+            onClick={() => handleStartEdit(row)}
+            className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5 hover:underline"
+            title="Editar Registro"
+          >
+            <Edit size={12} />
+            <span>Editar</span>
+          </button>
+          <button 
+            onClick={() => handleDelete(row.id)}
+            className="text-[10px] font-bold text-rose-600 hover:text-rose-800 flex items-center gap-0.5 hover:underline"
+            title="Eliminar Registro"
+          >
+            <Trash2 size={12} />
+            <span>Eliminar</span>
+          </button>
+        </div>
+      )
+    }
   ];
 
   if (loading) {
@@ -89,19 +152,19 @@ const Asistencia = () => {
     <div className="space-y-6">
       {/* Strict single H1 Constraint */}
       <div>
-        <h1 className="text-xl font-bold text-[#1a1f36] tracking-tight">Control de Asistencia Escolar</h1>
-        <p className="text-xs text-[#8898aa]">Toma de asistencia escolar diaria, retardos y gestión de justificaciones.</p>
+        <h1 className="text-xl font-bold text-[#1a1f36] tracking-tight">Control de Asistencia General</h1>
+        <p className="text-xs text-[#8898aa]">Toma de asistencia escolar diaria, retardos y gestión de justificaciones oficiales.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Center Column */}
         <div className="lg:col-span-2">
           <DataTable
-            title="Bitácora de Asistencia"
+            title="Bitácora de Asistencia Escolar"
             columns={columns}
             data={asistencias}
             searchField="estudiante_apellidos"
-            onAdd={() => setIsModalOpen(true)}
+            onAdd={handleOpenAdd}
             addLabel="Registrar Asistencia"
           />
         </div>
@@ -109,9 +172,9 @@ const Asistencia = () => {
         {/* Right Column */}
         <div className="space-y-6">
           <KPICard 
-            title="Registros Hoy" 
+            title="Registros Consolidados" 
             value={asistencias.length} 
-            subtitle="Asistencias procesadas" 
+            subtitle="Toma de firmas y retardos" 
             icon={Calendar} 
             color="success"
           />
@@ -128,8 +191,8 @@ const Asistencia = () => {
       </div>
 
       {/* Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Registrar Asistencia Estudiantil">
-        <form onSubmit={handleAdd} className="space-y-4 text-left">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingAsistencia ? "Modificar Registro de Asistencia" : "Registrar Asistencia Estudiantil"}>
+        <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
             <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Estudiante</label>
             <select 
@@ -171,7 +234,7 @@ const Asistencia = () => {
             />
           </div>
           <button type="submit" className="w-full py-2 bg-[#6c63ff] text-white rounded-lg text-xs font-bold hover:bg-[#5b52e0] transition-colors mt-2">
-            Registrar Asistencia
+            {editingAsistencia ? "Guardar Cambios" : "Registrar Asistencia"}
           </button>
         </form>
       </Modal>

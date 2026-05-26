@@ -20,6 +20,10 @@ class HorarioViewSet(viewsets.ModelViewSet):
         else:
             queryset = Horario.objects.none()
 
+        institucion_id = self.request.query_params.get('institucion', None)
+        if institucion_id:
+            queryset = queryset.filter(curso__institucion_id=institucion_id)
+
         curso_id = self.request.query_params.get('curso', None)
         if curso_id:
             queryset = queryset.filter(curso_id=curso_id)

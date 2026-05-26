@@ -1,0 +1,2175 @@
+% ============================================================
+%  SICOLEGIO 360 --- Documento Academico Completo
+%  Curso: Sistemas de Informacion  |  Ciclo 7
+%  Elaborado con LaTeX (clase report)
+% ============================================================
+\documentclass[12pt,a4paper,oneside]{report}
+
+% -- Paquetes esenciales -------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[provide=*,spanish]{babel}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\addto\captionsspanish{\renewcommand{\listtablename}{\'Indice de Tablas}}
+\addto\captionsspanish{\renewcommand{\listfigurename}{\'Indice de Figuras}}
+\addto\captionsspanish{\renewcommand{\appendixname}{Anexo}}
+\addto\captionsspanish{\renewcommand{\contentsname}{\'Indice General}}
+\usepackage{lmodern}
+
+% -- Geometria -----------------------------------------------
+\usepackage[
+  top=2.54cm, bottom=2.54cm,
+  left=2.54cm, right=2.54cm,
+  headheight=28pt
+]{geometry}
+
+% -- Colores (mantener definiciones para compatibilidad si hay referencias, pero sin uso decorativo) --
+\usepackage[table]{xcolor}
+\definecolor{azulOscuro}{RGB}{10,47,97}
+\definecolor{azulMedio}{RGB}{28,100,180}
+\definecolor{verdInst}{RGB}{34,120,80}
+\definecolor{grisClaro}{RGB}{245,246,248}
+\definecolor{grisTabla}{RGB}{220,225,232}
+\definecolor{dorado}{RGB}{180,140,20}
+
+% -- Tipografia (Times New Roman para APA 7) -----------------
+\usepackage{times}
+
+% -- Encabezados y pies (Formato APA 7 sin colores ni lineas) -
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\MakeUppercase{SICOLEGIO 360: Plataforma Multiinstitucional}}
+\fancyhead[R]{\thepage}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+
+% -- Secciones en formato APA 7 (sin color, sin lineas) -----
+\usepackage{titlesec}
+\titleformat{\chapter}
+  {\normalfont\bfseries\Large\centering}
+  {\thechapter\quad}
+  {0pt}
+  {}
+\titlespacing*{\chapter}{0pt}{-25pt}{15pt}
+\titleformat{\section}
+  {\normalfont\bfseries\large}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\bfseries\itshape\normalsize}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\bfseries\normalsize}{\thesubsubsection}{1em}{}
+
+% -- Listas --------------------------------------------------
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=1.5em,itemsep=2pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=1.5em,itemsep=2pt,topsep=4pt}
+
+% -- Tablas --------------------------------------------------
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+\renewcommand{\arraystretch}{1.35}
+
+% -- Figuras y Captions al estilo APA 7 ----------------------
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup[table]{labelfont=bf,textfont=it,labelsep=newline,singlelinecheck=off,justification=raggedright}
+\captionsetup[figure]{labelfont=bf,textfont=it,labelsep=newline,singlelinecheck=off,justification=raggedright}
+
+% -- Hiperenlaces (APA: negro para formato impreso/sobrio) ----
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  pdftitle={SICOLEGIO 360 — Sistema de Información Multiinstitucional},
+  pdfauthor={Curso Sistemas de Información},
+  pdfsubject={Proyecto académico},
+}
+
+% -- Bibliografía (APA: Autor-Año con natbib) ---------------
+\usepackage[authoryear]{natbib}
+\setcitestyle{authoryear,round,aysep={,}}
+
+% -- Utilidades ----------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tocloft}
+\setcounter{tocdepth}{1} % Solo mostrar Capitulos y Secciones en el Indice General
+% -- Personalizacion de Tocloft para APA 7 (Centrado y Puntos) --
+\renewcommand{\cfttoctitlefont}{\hfill\normalfont\bfseries\Large}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\renewcommand{\cftlottitlefont}{\hfill\normalfont\bfseries\Large}
+\renewcommand{\cftafterlottitle}{\hfill}
+\renewcommand{\cftloftitlefont}{\hfill\normalfont\bfseries\Large}
+\renewcommand{\cftafterloftitle}{\hfill}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % Habilitar lineas de puntos para capitulos
+\setlength{\cftbeforetoctitleskip}{-25pt}
+\setlength{\cftaftertoctitleskip}{15pt}
+\setlength{\cftbeforelottitleskip}{-25pt}
+\setlength{\cftafterlottitleskip}{15pt}
+\setlength{\cftbeforeloftitleskip}{-25pt}
+\setlength{\cftafterloftitleskip}{15pt}
+\usepackage{rotating}
+\usepackage{framed}
+\usepackage{setspace}
+
+% -- Espaciado y Sangrias APA 7 -----------------------------
+\usepackage{indentfirst} % Forzar sangria en el primer parrafo de cada seccion
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1.27cm}
+
+% -- Caja destacada (sin tcolorbox, sobria en negro) ---------
+\newenvironment{cajaConcepto}[1][]{%
+  \begin{framed}\noindent{\bfseries #1}\par\smallskip
+}{\end{framed}}
+
+% ═══════════════════
+\begin{document}
+\sloppy
+\doublespacing
+
+% ─────────────────────────────────────────────────────────────
+%  PORTADA (Estilo APA 7 - Sin color, fondo blanco y tipografía sobria)
+% ─────────────────────────────────────────────────────────────
+\begin{titlepage}
+    \begin{center}
+        \setstretch{1.1}
+        {\fontsize{14}{16}\selectfont\textbf{UNIVERSIDAD NACIONAL AGRARIA DE LA SELVA}} \\[0.3cm]
+        {\fontsize{13}{15}\selectfont\textbf{FACULTAD DE INGENIERÍA EN INFORMÁTICA Y SISTEMAS}} \\[0.2cm]
+        {\fontsize{12}{14}\selectfont\textbf{ESCUELA PROFESIONAL DE INGENIERÍA DE SISTEMAS}} \\[0.4cm]
+        
+        % Bloques para logos institucionales
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[height=8cm,keepaspectratio]{logounas.png}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[height=5cm,keepaspectratio]{LOGO-FIIS-1000x1000-TR.png}
+        \end{minipage}\\[0 cm]
+        
+        % Línea divisoria elegante
+        \rule{\linewidth}{1.5pt} \\[0.6cm]
+        
+        % Título del proyecto
+        {\fontsize{13}{16}\selectfont\textbf{DE LAS TRANSACCIONES OPERATIVAS A LA ESTRATEGIA GERENCIAL: ANÁLISIS DE DATOS PARA LA TOMA DE DECISIONES EN SICOLEGIO 360}} \\[0.6cm]
+        
+        \rule{\linewidth}{1.5pt} \\[1.5cm]
+        
+        % Información del curso y autores
+        \setstretch{1.5}
+        \begin{minipage}{0.85\textwidth}
+            \begin{flushleft}
+                \begin{tabular}{@{}p{3.5cm}p{9.5cm}@{}}
+                    \textbf{Curso:} & Sistemas de Información \\[0.2cm]
+                    \textbf{Autores:} & Evaristo Jara, Jose Junior \\
+                                      & Tapullima Serna, Meselemias \\[0.2cm]
+                    \textbf{Docente:} & Docente del Curso \\[0.2cm]
+                    \textbf{Ciclo:} & Séptimo \\[0.2cm]
+                \end{tabular}
+            \end{flushleft}
+        \end{minipage}
+        
+        \vfill
+        
+        % Ubicación y Fecha
+        {\fontsize{12}{14}\selectfont\textbf{Tingo María -- Perú}} \\[0.2cm]
+        {\fontsize{12}{14}\selectfont\textbf{2026}}
+    \end{center}
+\end{titlepage}
+
+% ─────────────────────────────────────────────────────────────
+%  RESUMEN
+% ─────────────────────────────────────────────────────────────
+\chapter*{Resumen}
+\addcontentsline{toc}{chapter}{Resumen}
+\markboth{RESUMEN}{RESUMEN}
+
+El presente trabajo académico propone el diseño de \textbf{SICOLEGIO 360}, una plataforma multiinstitucional de sistema de información con enfoque socio-tecnológico, orientada a mejorar la gestión académica, administrativa, financiera y comunicacional de instituciones educativas privadas de nivel básico regular en el Perú y América Latina.
+
+La problemática identificada parte del diagnóstico de que gran parte de los colegios privados pequeños y medianos continúan gestionando sus procesos mediante registros manuales, hojas de cálculo desconectadas, archivos físicos y canales informales de comunicación como WhatsApp. Esto genera pérdida de información, duplicidad de registros, demoras en los reportes, errores en el cálculo de notas y promedios, descontrol en los pagos de pensiones y una comunicación deficiente con los padres de familia.
+
+Frente a esta realidad, SICOLEGIO 360 se propone como una solución integral que integra tecnología, organización, personas y procesos bajo el marco del enfoque socio-tecnológico. El sistema trabaja en cuatro niveles organizacionales: operativo, de conocimiento, administrativo y estratégico, aplicando los conceptos de TPS, KWS, MIS, DSS y ESS según las necesidades de cada tipo de usuario.
+
+El diseño del sistema contempla diecisiete módulos funcionales que cubren matrícula, estudiantes, apoderados, docentes, gestión académica, horarios, asistencia, notas, libretas, conducta, pagos, comunicados, reportes y alertas. La arquitectura propuesta es de tres capas, con una base de datos multiinstitucional que separa los datos de cada colegio usuario.
+
+El documento incluye el marco teórico sobre sistemas de información gerencial, los tipos de sistemas según el usuario y la función organizacional, los procesos manuales actuales y su comparación con los procesos automatizados propuestos, el diseño de la base de datos con sus principales tablas y relaciones, los prototipos de las pantallas principales del sistema, las pruebas funcionales planificadas, el análisis de beneficios, los retos de implementación y la viabilidad técnica, económica, operativa y organizacional del proyecto.
+
+\textbf{Palabras clave:} sistema de información, plataforma multiinstitucional, gestión académica, enfoque socio-tecnológico, TPS, MIS, DSS, ESS, base de datos educativa.
+
+% ─────────────────────────────────────────────────────────────
+%  ABSTRACT
+% ─────────────────────────────────────────────────────────────
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+\markboth{ABSTRACT}{ABSTRACT}
+
+This academic paper proposes the design of \textbf{SICOLEGIO 360}, a multi-institutional information system platform with a socio-technological approach, aimed at improving the academic, administrative, financial, and communication management of private educational institutions at the basic regular level in Peru and Latin America.
+
+The identified problem stems from the diagnosis that most small and medium private schools continue to manage their processes through manual records, disconnected spreadsheets, physical files, and informal communication channels such as WhatsApp. This generates information loss, duplicate records, delays in reporting, errors in grade and average calculation, poor control over tuition payments, and deficient communication with parents.
+
+In response to this reality, SICOLEGIO 360 is proposed as a comprehensive solution that integrates technology, organization, people, and processes under the socio-technological approach framework. The system operates at four organizational levels: operational, knowledge, administrative, and strategic, applying the concepts of TPS, KWS, MIS, DSS, and ESS according to each type of user's needs.
+
+The system design includes seventeen functional modules covering enrollment, students, guardians, teachers, academic management, schedules, attendance, grades, report cards, conduct, payments, communications, reports, and alerts. The proposed architecture follows a three-tier model with a multi-institutional database that separates the data of each school user.
+
+\textbf{Keywords:} information system, multi-institutional platform, academic management, socio-technological approach, TPS, MIS, DSS, ESS, educational database, private schools.
+
+% ─────────────────────────────────────────────────────────────
+%  ÍNDICES
+% ─────────────────────────────────────────────────────────────
+\newpage 
+\tableofcontents
+\newpage
+\listoftables
+\newpage
+\listoffigures
+
+% ─────────────────────────────────────────────────────────────
+%  INTRODUCCIÓN
+% ─────────────────────────────────────────────────────────────
+\chapter*{Introducción}
+\addcontentsline{toc}{chapter}{Introducción}
+\markboth{INTRODUCCIÓN}{INTRODUCCIÓN}
+
+La educación es uno de los servicios más importantes que una sociedad puede ofrecer a sus ciudadanos. Sin embargo, en un contexto donde la tecnología ha transformado casi todas las industrias, muchas instituciones educativas privadas pequeñas y medianas aún operan con métodos administrativos y académicos propios del siglo pasado: cuadernos de asistencia, libretas físicas, recibos de pago manuales y comunicaciones dispersas a través de mensajes informales.
+
+Esta brecha tecnológica no es un problema menor. Cuando la información de un colegio está fragmentada en distintos archivos, cuadernos y personas, el riesgo de error es alto, la toma de decisiones se vuelve lenta e imprecisa, y la experiencia de padres, estudiantes y docentes se deteriora progresivamente.
+
+El presente trabajo académico propone el diseño de \textbf{SICOLEGIO 360}, una plataforma multiinstitucional de sistema de información con enfoque socio-tecnológico, que permita a varios colegios gestionar de manera integrada y eficiente sus procesos académicos, administrativos, financieros y comunicacionales desde una única plataforma. El sistema no está dirigido a una sola institución educativa, sino que plantea un modelo de plataforma escalable, donde cada colegio gestiona su propia información de forma independiente y segura.
+
+El trabajo está organizado en diecinueve capítulos. Los primeros abordan el contexto y la problemática del sector educativo, los procesos manuales actuales y los objetivos del proyecto. Los capítulos centrales desarrollan el marco teórico sobre sistemas de información, los tipos de sistemas (TPS, MIS, DSS, ESS, KWS), el enfoque socio-tecnológico, los sistemas empresariales y la cadena de abastecimiento. Los capítulos finales presentan el diseño del sistema, la base de datos, la arquitectura tecnológica, los módulos funcionales, los prototipos, las pruebas, los beneficios, los retos, la viabilidad y las conclusiones del proyecto.
+
+Este documento ha sido elaborado como trabajo académico del curso de Sistemas de Información y busca aplicar de manera práctica los conceptos estudiados durante el semestre, proyectándolos hacia una solución real, útil y escalable para el sector educativo.
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO I
+% ═══════════════════════════════════════════════════════════════
+\chapter{Contexto del Proyecto y Organizaciones Usuarias}
+
+\section{Descripción general del sector educativo}
+
+\subsection{Instituciones educativas como organizaciones de servicios}
+
+Las instituciones educativas son organizaciones cuyo propósito central es la prestación de un servicio: la educación. A diferencia de las empresas que producen bienes tangibles, los colegios generan valor a través de la formación académica, el desarrollo de competencias, la socialización de los estudiantes y el acompañamiento familiar. Desde la perspectiva de los sistemas de información, las instituciones educativas son organizaciones de servicios complejas que requieren gestionar grandes volúmenes de datos: estudiantes, docentes, notas, asistencias, pagos, comunicados y reportes institucionales.
+
+En este contexto, la gestión de la información no es un aspecto secundario, sino un componente esencial del funcionamiento organizacional. Un colegio que no maneja bien su información difícilmente puede tomar buenas decisiones pedagógicas, administrativas o financieras.
+
+\subsection{Necesidad de digitalización en colegios}
+
+En los últimos años, la presión por digitalizar los procesos educativos se ha incrementado de manera significativa. La pandemia del COVID-19 evidenció que las instituciones que no contaban con herramientas tecnológicas integradas tuvieron serias dificultades para adaptarse al entorno virtual. Sin embargo, incluso en el retorno a la presencialidad, muchos colegios privados pequeños y medianos continúan operando con métodos manuales o con herramientas parciales que no están conectadas entre sí.
+
+La digitalización en los colegios no implica solo comprar computadoras o crear una cuenta de correo electrónico. Significa diseñar e implementar sistemas de información que permitan gestionar de manera integrada todos los procesos institucionales: académicos, administrativos, financieros y comunicacionales.
+
+\subsection{Problemática de la gestión manual en instituciones educativas}
+
+La gestión manual de los procesos educativos genera una serie de problemas que afectan directamente la calidad del servicio educativo. Entre los principales problemas identificados se encuentran:
+
+\begin{itemize}
+  \item Pérdida de información en archivos físicos o archivos digitales no respaldados.
+  \item Duplicidad de registros por el uso de múltiples herramientas desconectadas.
+  \item Errores en el cálculo de notas y promedios realizados manualmente.
+  \item Demoras en la elaboración de reportes académicos, financieros e institucionales.
+  \item Dificultad para identificar estudiantes en riesgo académico o administrativo.
+  \item Comunicación deficiente e informal con los padres de familia.
+  \item Descontrol en el registro de pagos de pensiones y matrículas.
+  \item Incapacidad para tomar decisiones basadas en datos confiables y oportunos.
+\end{itemize}
+
+\section{Tipo de organizaciones a las que se dirige el sistema}
+
+SICOLEGIO 360 está diseñado para ser utilizado por distintos tipos de instituciones educativas privadas del nivel básico regular. El sistema puede adaptarse a las necesidades específicas de cada tipo de organización.
+
+\paragraph{Colegios privados pequeños.} Son instituciones educativas con una población estudiantil menor a doscientos estudiantes, generalmente con estructura administrativa reducida. En este tipo de colegios, una misma persona suele cumplir varias funciones simultáneamente: secretaría, tesorería y administración. La implementación de SICOLEGIO 360 en este contexto permite ordenar los procesos y distribuir mejor las funciones sin necesidad de contratar personal adicional.
+
+\paragraph{Colegios privados medianos.} Son colegios con una población de entre doscientos y ochocientos estudiantes, con una estructura organizacional más definida, áreas diferenciadas y mayor volumen de transacciones diarias. Para este tipo de instituciones, el sistema ofrece la posibilidad de integrar las distintas áreas en una sola plataforma, eliminando la duplicidad de registros y mejorando la comunicación interna.
+
+\paragraph{Academias escolares.} Son centros de enseñanza complementaria que ofrecen refuerzo académico a estudiantes de distintos colegios. Aunque su estructura es diferente a la de un colegio tradicional, también requieren gestionar matrícula, asistencia, pagos y comunicación con los padres.
+
+\paragraph{Centros educativos con inicial, primaria y secundaria.} Son los colegios más complejos, ya que atienden tres niveles educativos con características distintas. La plataforma SICOLEGIO 360 permite configurar los niveles educativos, grados y secciones de manera independiente, adaptándose a la estructura particular de cada institución.
+
+\section{Usuarios principales de la plataforma}
+
+\paragraph{Superadministrador de la plataforma.} Es el usuario con el nivel más alto de acceso. Tiene la capacidad de registrar nuevas instituciones educativas en la plataforma, configurar parámetros globales, monitorear el uso del sistema por parte de cada colegio y generar reportes de carácter global. Este perfil corresponde al administrador del negocio de la plataforma, no a un funcionario de un colegio específico.
+
+\paragraph{Administrador de cada colegio.} Es el usuario responsable de la gestión general del sistema dentro de su institución educativa. Configura el colegio en la plataforma, registra usuarios, define los niveles, grados, secciones y periodos académicos, y tiene acceso completo a todos los módulos del sistema dentro de los límites de su institución.
+
+\paragraph{Director.} Tiene acceso a los reportes institucionales, estadísticas de rendimiento académico, reportes financieros y alertas estratégicas. Utiliza el sistema principalmente para la toma de decisiones y el seguimiento del desempeño institucional.
+
+\paragraph{Padres de familia.} Acceden a la plataforma para consultar las notas, asistencias, conducta y pagos de sus hijos. También reciben comunicados escolares y citaciones a través del sistema.
+
+\paragraph{Estudiantes.} Pueden consultar sus propias notas, horarios, asistencias y comunicados. Su acceso es de solo lectura y está restringido a su propia información.
+
+\section{Procesos comunes en los colegios}
+
+\paragraph{Matrícula escolar.} La matrícula es el proceso mediante el cual un estudiante se inscribe formalmente en una institución educativa para el año lectivo o período académico correspondiente. Implica la recopilación de datos del estudiante, la asignación de grado y sección, la firma de compromisos de pago y la entrega de documentos.
+
+\paragraph{Registro de estudiantes.} Comprende el ingreso y actualización de los datos personales, académicos y familiares de cada estudiante en el sistema institucional.
+
+\paragraph{Registro de docentes.} Implica el ingreso de los datos personales, académicos y laborales de cada docente, así como la asignación de cursos, grados, secciones y horarios.
+
+\paragraph{Asignación de cursos, grados y secciones.} Proceso mediante el cual se define qué docente dicta qué curso, en qué grado y en qué sección, durante cada período académico.
+
+\paragraph{Control de asistencia.} Registro diario de la presencia, tardanza, falta o justificación de cada estudiante en cada clase o jornada escolar.
+
+\paragraph{Registro de notas.} Proceso de ingreso de las calificaciones obtenidas por cada estudiante en cada evaluación realizada durante el período académico.
+
+\paragraph{Cálculo de promedios.} Proceso de obtención del promedio de notas por curso, bimestre o período académico, aplicando los criterios de evaluación definidos por la institución.
+
+\paragraph{Emisión de libretas.} Generación del documento oficial que resume el rendimiento académico del estudiante en cada período, incluyendo notas por curso, promedios, asistencias y conducta.
+
+\paragraph{Control de conducta e incidencias.} Registro de las situaciones disciplinarias que se presentan en la institución educativa, incluyendo el tipo de incidencia, el estudiante involucrado, la fecha y las acciones tomadas.
+
+\paragraph{Citaciones a padres.} Proceso de convocatoria formal a los padres o apoderados de un estudiante para tratar temas académicos, conductuales o administrativos.
+
+\paragraph{Pagos de matrícula y pensiones.} Registro y control del cumplimiento de las obligaciones financieras de los padres de familia con la institución educativa.
+
+\paragraph{Comunicados escolares.} Mensajes institucionales dirigidos a los padres de familia, estudiantes o docentes, relacionados con actividades, eventos, informes o disposiciones de la institución.
+
+\paragraph{Reportes institucionales.} Documentos que resumen la situación académica, financiera o administrativa de la institución en un período determinado, utilizados por directivos para la toma de decisiones.
+
+\section{Problema general}
+
+\paragraph{Descripción del problema.} Muchas instituciones educativas privadas pequeñas y medianas en el Perú gestionan sus procesos académicos, administrativos y financieros de manera manual o con herramientas tecnológicas desconectadas entre sí. Esta situación genera una serie de problemas que afectan la calidad del servicio educativo, la eficiencia operativa y la capacidad de toma de decisiones de los directivos. 
+
+La fragmentación de la información es el problema central: cuando los datos de los estudiantes están en una hoja de cálculo, las notas en los cuadernos del docente, los pagos en recibos físicos y los comunicados en grupos de WhatsApp, resulta prácticamente imposible tener una visión integral de la situación institucional.
+
+\paragraph{Causas del problema.} 
+\begin{itemize}
+  \item Ausencia de sistemas de información integrados en las instituciones educativas.
+  \item Limitación de recursos económicos para adquirir o desarrollar software especializado.
+  \item Desconocimiento de las ventajas de los sistemas de información entre los directivos.
+  \item Resistencia al cambio por parte del personal administrativo y docente.
+  \item Falta de capacitación en el uso de herramientas tecnológicas para la gestión educativa.
+  \item Cada área trabaja de forma aislada, sin compartir información con las demás.
+\end{itemize}
+
+\paragraph{Consecuencias del problema.}
+\begin{itemize}
+  \item Pérdida o deterioro de información académica y administrativa.
+  \item Errores frecuentes en el cálculo de notas, promedios y libretas.
+  \item Demoras en la atención a padres de familia y en la emisión de documentos.
+  \item Dificultad para identificar estudiantes con bajo rendimiento o con deudas.
+  \item Descontrol financiero por falta de registro centralizado de pagos.
+  \item Mala imagen institucional por la deficiencia en el servicio.
+  \item Incapacidad de los directivos para tomar decisiones basadas en datos.
+\end{itemize}
+
+\paragraph{Formulación del problema.} ¿De qué manera el diseño de una plataforma multiinstitucional de sistema de información con enfoque socio-tecnológico puede mejorar la gestión académica, administrativa, financiera y comunicacional de las instituciones educativas privadas?
+
+\section{Justificación del proyecto}
+
+\paragraph{Justificación académica.} El proyecto aplica los conocimientos del curso de Sistemas de Información a un caso real y relevante para la sociedad. Permite desarrollar competencias en el análisis de organizaciones, el diseño de sistemas de información, la identificación de requerimientos funcionales y el modelado de datos, entre otras.
+
+\paragraph{Justificación tecnológica.} La tecnología actual permite diseñar plataformas multiinstitucionales escalables, seguras y accesibles desde cualquier dispositivo. El uso de arquitecturas de tres capas, bases de datos relacionales y sistemas de roles y permisos hace técnicamente viable la implementación de SICOLEGIO 360.
+
+\paragraph{Justificación organizacional.} La implementación de un sistema de información integrado permite a los colegios mejorar su eficiencia operativa, reducir el tiempo dedicado a tareas administrativas repetitivas y concentrar esfuerzos en la mejora de la calidad educativa.
+
+\paragraph{Justificación económica.} La automatización de procesos reduce los costos operativos a mediano y largo plazo. Además, el modelo multiinstitucional permite que varios colegios compartan el costo de la infraestructura tecnológica, haciendo la solución más asequible para instituciones de menor tamaño.
+
+\paragraph{Justificación social.} Un sistema de información bien diseñado mejora la comunicación entre la institución educativa, los padres de familia y los estudiantes. La transparencia en la información académica y financiera genera confianza y fortalece la relación entre el colegio y las familias.
+
+\section{Objetivos del proyecto}
+
+\paragraph{Objetivo general.} Diseñar una plataforma multiinstitucional de sistema de información con enfoque socio-tecnológico para mejorar la gestión académica, administrativa, financiera y de bienestar en colegios privados.
+
+\paragraph{Objetivos específicos.}
+
+\begin{enumerate}
+  \item Analizar los procesos manuales comunes que realizan los colegios en la gestión académica, administrativa y financiera.
+  \item Identificar los principales problemas generados por la falta de integración de la información institucional.
+  \item Diseñar una plataforma multiinstitucional que permita gestionar varios colegios desde un mismo sistema.
+  \item Automatizar procesos como matrícula, asistencia, notas, pagos, conducta, comunicados y reportes.
+  \item Aplicar los conceptos de TPS, MIS, DSS, ESS y KWS dentro del sistema propuesto.
+  \item Explicar el enfoque socio-tecnológico del sistema, integrando tecnología, personas, procesos y organización.
+  \item Proponer una base de datos multiinstitucional que separe la información de cada colegio.
+  \item Diseñar módulos funcionales para la gestión académica, administrativa, financiera, comunicacional y de reportes.
+  \item Plantear indicadores y análisis de datos para apoyar la toma de decisiones institucionales.
+  \item Evaluar los beneficios, retos y viabilidad de implementación del sistema propuesto.
+\end{enumerate}
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO II — MARCO TEÓRICO
+% ═══════════════════════════════════════════════════════════════
+\chapter{Marco Teórico}
+
+\section{Sistemas de información}
+
+
+
+Un sistema de información es un conjunto de componentes interrelacionados que recopilan, procesan, almacenan y distribuyen información para apoyar la toma de decisiones, la coordinación y el control en una organización \citep{laudon2016}. Los sistemas de información no son únicamente tecnología: incluyen también a las personas que los usan, los procesos que apoyan y las organizaciones en las que operan.
+
+\subsection{Componentes de un sistema de información}
+
+Un sistema de información está compuesto por tres actividades principales que producen la información que las organizaciones necesitan:
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{componentes de un sistemas de informacion .png}
+  \caption{Componentes de un sistema de información}
+  \label{fig:sistema-informacion}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{Entrada (Input):} Recopila o captura datos no procesados del interior de la organización o de su entorno.
+  \item \textbf{Procesamiento (Processing):} Convierte los datos de entrada en una forma más significativa.
+  \item \textbf{Salida (Output):} Transfiere la información procesada a las personas o actividades donde se utilizará.
+\end{itemize}
+
+Adicionalmente, los sistemas de información incluyen la \textbf{retroalimentación}, que consiste en la salida que se devuelve a los miembros apropiados de la organización para ayudarles a evaluar o corregir la etapa de entrada.
+
+\subsection{Importancia de los sistemas de información en las organizaciones}
+
+Los sistemas de información juegan un papel fundamental en las organizaciones modernas. Permiten automatizar tareas repetitivas, centralizar la información institucional, facilitar la comunicación entre áreas, generar reportes para la toma de decisiones y mejorar la eficiencia operativa en general \citep{obrien2009}. En el contexto educativo, un buen sistema de información puede transformar la manera en que un colegio gestiona sus procesos y se relaciona con sus usuarios.
+
+\section{Sistemas de información gerencial}
+
+
+
+Los sistemas de información gerencial (MIS, por sus siglas en inglés: Management Information Systems) son sistemas de información que sirven a las funciones de planificación, control y toma de decisiones de la gerencia, proporcionando resúmenes de las operaciones rutinarias y reportes de excepción \citep{laudon2016}. Estos sistemas consolidan datos del nivel operativo y los presentan de manera resumida para que los gerentes puedan tomar decisiones informadas.
+
+\subsection{Sistemas de información en la empresa digital}
+
+La empresa digital es aquella en la que prácticamente todas las relaciones comerciales significativas con clientes, proveedores y empleados se realizan digitalmente y se gestionan mediante sistemas de información. En una empresa digital, los activos fundamentales —capital intelectual, competencias esenciales y activos financieros— se gestionan mediante herramientas digitales \citep{laudon2016}. La aplicación de este concepto al sector educativo implica que un colegio digital gestiona sus matrículas, notas, pagos y comunicaciones de manera integrada a través de plataformas tecnológicas.
+
+\subsection{Uso de sistemas de información para la toma de decisiones}
+
+Los sistemas de información apoyan la toma de decisiones en todos los niveles organizacionales. En el nivel operativo, permiten registrar y procesar transacciones diarias. En el nivel administrativo, generan reportes de control y análisis. En el nivel estratégico, proporcionan información agregada para la planificación de largo plazo \citep{stair2016}.
+
+\section{Sistemas empresariales}
+
+
+
+Los sistemas empresariales, también llamados sistemas de planificación de recursos empresariales (ERP), son sistemas de información integrados que unifican los principales procesos de negocio de una organización —finanzas, manufactura, recursos humanos, compras, entre otros— en un único sistema de software \citep{laudon2016}. Su principal característica es la integración: la información ingresada en un módulo del sistema está disponible de inmediato para todos los demás módulos.
+
+\subsection{Características de los sistemas empresariales}
+
+\begin{itemize}
+  \item Integración de todos los procesos de negocio en una sola plataforma.
+  \item Base de datos centralizada compartida por todos los módulos.
+  \item Acceso a información en tiempo real para todos los usuarios autorizados.
+  \item Automatización de procesos transaccionales y generación de reportes.
+  \item Soporte a múltiples funciones organizacionales desde un único sistema.
+\end{itemize}
+
+\subsection{Beneficios del uso de sistemas empresariales}
+
+Los sistemas empresariales ofrecen beneficios significativos, entre los que destacan la eliminación de la duplicidad de datos, la mejora en la coherencia de la información, la reducción de tiempos de procesamiento, el acceso oportuno a reportes gerenciales y la mejora en la coordinación entre departamentos \citep{obrien2009}.
+
+\subsection{Retos del uso de sistemas empresariales}
+
+La implementación de sistemas empresariales no está exenta de dificultades. Entre los principales retos se encuentran la resistencia al cambio por parte del personal, la necesidad de capacitación intensiva, el costo de implementación y mantenimiento, la complejidad de la migración de datos históricos y la necesidad de personalizar el sistema para adaptarlo a los procesos específicos de cada organización.
+
+\subsection{Sistemas empresariales frente a sistemas aislados}
+
+Los sistemas aislados o independientes gestionan solo una función o área de la organización sin comunicarse con los demás sistemas. Esto genera islas de información que dificultan la coordinación y la toma de decisiones. Los sistemas empresariales resuelven este problema integrando todas las funciones en una sola plataforma.
+
+\subsection{Aplicación de sistemas empresariales en plataformas educativas}
+
+En el contexto educativo, un sistema empresarial integrado permite que la secretaría, los docentes, la tesorería, la dirección y los padres de familia compartan la misma información actualizada en tiempo real. SICOLEGIO 360 aplica este concepto al sector educativo, funcionando como un sistema empresarial diseñado específicamente para colegios.
+
+\section{Tipos de sistemas de información desde la perspectiva funcional}
+
+Tradicionalmente, las organizaciones estructuran sus sistemas de información para dar servicio a las áreas de negocio principales:
+
+\paragraph{Sistemas de ventas y marketing.} Apoyan las actividades de ventas, análisis de mercado, fijación de precios, seguimiento de clientes y análisis del comportamiento del consumidor. En el contexto educativo, el equivalente sería la gestión de matrículas, la captación de nuevos estudiantes y la comunicación con las familias.
+
+\paragraph{Sistemas de manufactura y producción.} Gestionan la planificación y el control de los procesos de producción de bienes. En las organizaciones educativas, la "producción" equivale a la prestación del servicio educativo: la programación de clases, el desarrollo del currículo y la realización de evaluaciones.
+
+\paragraph{Sistemas financieros y contables.} Gestionan los activos financieros de la organización, incluyendo cuentas por cobrar, contabilidad, control presupuestario y elaboración de informes financieros. En un colegio, esto se traduce en el control de pagos de pensiones, matrículas, deudas y moras.
+
+\paragraph{Sistemas de recursos humanos.} Apoyan la gestión del personal de la organización, incluyendo contratación, nómina, evaluación del desempeño y capacitación. En un colegio, esta función abarca el registro y gestión de docentes, su asignación de cursos y la administración de su carga académica.
+
+\subsection{Adaptación de las funciones empresariales al sector educativo}
+
+La siguiente tabla muestra cómo las funciones empresariales tradicionales se adaptan al contexto de un colegio gestionado con SICOLEGIO 360:
+
+\begin{table}[H]
+\centering
+\caption{Correspondencia entre funciones empresariales y gestión educativa}
+\label{tab:funciones}
+
+\begin{tabularx}{\textwidth}{>{\bfseries}lX}
+\toprule
+Función empresarial & Aplicación en SICOLEGIO 360 \\
+\midrule
+Ventas y marketing & Matrícula, captación de estudiantes, comunicación con padres. \\
+Manufactura/Producción & Clases, evaluaciones, asistencia, seguimiento académico. \\
+Finanzas y contabilidad & Pagos de pensiones, deudas, moras, reportes financieros. \\
+Recursos humanos & Docentes, asignación de cursos, carga académica, horarios. \\
+Atención al cliente & Comunicación con padres, consultas de notas, reclamos. \\
+Control gerencial & Reportes de rendimiento, alertas, toma de decisiones. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Tipos de sistemas de información desde la perspectiva del usuario}
+
+\subsection{Sistemas de procesamiento de transacciones --- TPS}
+
+Los sistemas de procesamiento de transacciones (TPS) son sistemas de información computarizados que registran las transacciones de rutina diarias necesarias para conducir el negocio \citep{laudon2016}. Son el punto de partida de todos los sistemas de información, ya que generan los datos que alimentan a los sistemas de niveles superiores.
+
+\subsection{Sistemas de información gerencial --- MIS}
+
+Los MIS consolidan y resumen los datos generados por los TPS para presentarlos en forma de reportes estructurados a los gerentes de nivel medio. Estos reportes permiten monitorear el desempeño de la organización y tomar decisiones operativas y tácticas.
+
+\subsection{Sistemas de apoyo a la toma de decisiones --- DSS}
+
+Los sistemas de apoyo a la toma de decisiones (DSS) son sistemas de información que combinan datos, modelos analíticos sofisticados y herramientas de análisis de datos para apoyar la toma de decisiones semiestructuradas y no estructuradas \citep{laudon2016}. A diferencia de los MIS, los DSS permiten al usuario interactuar con el sistema y explorar diferentes escenarios.
+
+\subsection{Sistemas de apoyo a ejecutivos --- ESS/EIS}
+
+Los sistemas de apoyo a ejecutivos (ESS, también denominados EIS) son sistemas que apoyan la toma de decisiones no estructuradas a nivel estratégico \citep{laudon2016}. Proporcionan información agregada de múltiples fuentes y permiten a los altos directivos monitorar el desempeño global de la organización y analizar tendencias.
+
+\subsection{Sistemas de trabajo de conocimiento --- KWS}
+
+Los sistemas de trabajo de conocimiento (KWS) apoyan a los trabajadores del conocimiento —investigadores, diseñadores, analistas— en la creación y distribución de nuevo conocimiento e información. Incluyen herramientas para el análisis, la modelación y la presentación de información compleja.
+
+\subsection{Sistemas de oficina --- Office Systems}
+
+Son las aplicaciones informáticas que apoyan las tareas documentarias y de comunicación del personal de oficina, como procesadores de texto, hojas de cálculo, correo electrónico y sistemas de gestión documental.
+
+\section{Principales tipos de sistemas en las organizaciones}
+
+\subsection{Sistemas a nivel operativo}
+
+Los sistemas del nivel operativo apoyan a los gerentes operativos en el seguimiento de las actividades elementales y las transacciones de la organización. Los TPS son el tipo principal de sistema a este nivel.
+
+\subsection{Sistemas a nivel de conocimiento}
+
+Los sistemas del nivel de conocimiento apoyan a los trabajadores del conocimiento y a los trabajadores de datos. Los KWS y los sistemas de oficina pertenecen a este nivel.
+
+\subsection{Sistemas a nivel administrativo}
+
+Los sistemas del nivel administrativo apoyan el seguimiento, control, toma de decisiones y actividades administrativas de los gerentes de nivel medio. Los MIS y los DSS son los tipos principales.
+
+\subsection{Sistemas a nivel estratégico}
+
+Los sistemas del nivel estratégico apoyan a la alta dirección en el abordaje de cuestiones estratégicas y tendencias de largo plazo. Los ESS/EIS son los sistemas de este nivel.
+
+\subsection{Relación entre niveles organizacionales y usuarios}
+
+\begin{table}[H]
+\centering
+\caption{Niveles organizacionales, sistemas y usuarios en SICOLEGIO 360}
+\label{tab:niveles}
+
+\begin{tabularx}{\textwidth}{lllX}
+\toprule
+
+Nivel &
+Sistema &
+Usuarios &
+Aplicación en el sistema \\
+\midrule
+Operativo & TPS & Secretaría, docentes, tesorería & Matrícula, asistencia, notas, pagos \\
+Conocimiento & KWS/Office & Docentes, coordinadores & Reportes de aula, análisis académico \\
+Administrativo & MIS, DSS & Directores, coordinadores & Reportes de control, análisis de riesgo \\
+Estratégico & ESS/EIS & Directivos, promotores & Visión global, tendencias, decisiones \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Sistemas de procesamiento de transacciones --- TPS}
+
+
+
+Un sistema de procesamiento de transacciones (TPS) es un sistema de información computarizado que registra las transacciones de rutina diarias necesarias para conducir el negocio. El propósito principal de los TPS es responder preguntas rutinarias y hacer el seguimiento del flujo de transacciones a través de la organización \citep{laudon2016}.
+
+\subsection{Características principales de los TPS}
+
+\begin{itemize}
+  \item Procesan grandes volúmenes de datos de manera rápida y eficiente.
+  \item Automatizan las operaciones rutinarias y repetitivas.
+  \item Requieren alta disponibilidad y confiabilidad, ya que son esenciales para el funcionamiento diario.
+  \item Generan datos estructurados que alimentan a los sistemas de niveles superiores.
+  \item Aplican reglas de negocio predefinidas para validar y procesar las transacciones.
+\end{itemize}
+
+
+
+\subsection{Tipos de TPS según función organizacional}
+
+Los TPS pueden clasificarse según la función organizacional a la que apoyan: ventas y marketing, manufactura, finanzas, contabilidad, recursos humanos, entre otros. En cada función, los TPS registran las transacciones específicas de esa área y generan los datos necesarios para el control y la toma de decisiones.
+
+\subsection{Aplicación de TPS en instituciones educativas}
+
+En un colegio, los TPS registran las transacciones diarias: matrículas, asistencias, notas, pagos de pensiones, comunicados e incidencias de conducta. Cada uno de estos procesos genera datos que luego son consolidados por los MIS para generar reportes de control y por los DSS para apoyar la toma de decisiones.
+
+\section{Sistemas de información gerencial --- MIS}
+
+
+
+Los sistemas de información gerencial (MIS) sirven al nivel de control gerencial de la organización. Proporcionan a los gerentes de nivel medio reportes sobre el desempeño actual de la organización, permitiéndoles monitorear y controlar las actividades operativas \citep{laudon2016}.
+
+\subsection{Características de los MIS}
+
+\begin{itemize}
+  \item Consolidan y resumen los datos generados por los TPS.
+  \item Generan reportes periódicos, de excepción y a demanda.
+  \item Utilizan datos internos de la organización, principalmente del nivel operativo.
+  \item Tienen poca capacidad de análisis; su función principal es resumir y presentar datos.
+  \item Son adecuados para decisiones estructuradas y semiestructuradas.
+\end{itemize}
+
+\subsection{Reportes de control}
+
+Los MIS generan tres tipos principales de reportes: reportes periódicos programados (como el reporte mensual de pagos), reportes de excepción (que informan sobre situaciones anómalas, como estudiantes con nota desaprobatoria) y reportes a demanda (que el usuario puede solicitar cuando los necesita).
+
+\subsection{Uso de datos presentes y pasados}
+
+Los MIS utilizan principalmente datos del presente y del pasado reciente de la organización. Esto les permite mostrar el estado actual de los procesos y compararlos con períodos anteriores.
+
+\subsection{Aplicación de MIS en la gestión educativa}
+
+En SICOLEGIO 360, los MIS generan reportes de rendimiento académico, asistencia, conducta, pagos y matrículas. Estos reportes son utilizados por directores, coordinadores y administradores para monitorear el desempeño institucional y tomar decisiones de control.
+
+\section{Sistemas de apoyo a la toma de decisiones --- DSS}
+
+Los sistemas de apoyo a la toma de decisiones (DSS) son sistemas de información que combinan datos de los TPS y MIS con modelos analíticos y herramientas de análisis interactivo para apoyar la toma de decisiones semiestructuradas y no estructuradas \citep{laudon2016}.
+
+\subsection{Características de los DSS}
+
+\begin{itemize}
+  \item Permiten al usuario interactuar con el sistema para explorar escenarios y alternativas.
+  \item Combinan datos internos con modelos analíticos para generar información útil.
+  \item Son flexibles y adaptables a las necesidades específicas del tomador de decisiones.
+  \item Apoyan decisiones que no pueden resolverse completamente con reglas predefinidas.
+  \item Pueden incorporar datos externos para enriquecer el análisis.
+\end{itemize}
+
+\subsection{Decisiones estructuradas y semiestructuradas}
+
+Las decisiones estructuradas son aquellas que siguen un procedimiento definido y pueden automatizarse. Las decisiones semiestructuradas combinan elementos automáticos con juicio humano. Los DSS son especialmente útiles para este último tipo de decisión.
+
+\subsection{Procesamiento interactivo de datos}
+
+Una característica fundamental de los DSS es su capacidad para procesar datos de manera interactiva, permitiendo al usuario formular preguntas, filtrar información, cruzar variables y explorar tendencias en tiempo real.
+
+\subsection{Aplicación de DSS en el análisis académico, financiero y conductual}
+
+En SICOLEGIO 360, el DSS permite identificar estudiantes en riesgo académico, secciones con alta tasa de desaprobación, familias con alto nivel de morosidad y patrones de conducta problemática. Esta información apoya decisiones como intervenciones pedagógicas, acuerdos de pago o medidas disciplinarias.
+
+\section{Sistemas de apoyo a ejecutivos --- ESS/EIS}
+
+
+Los sistemas de apoyo a ejecutivos (ESS o EIS) son sistemas que apoyan a la alta dirección de la organización en la toma de decisiones de nivel estratégico. Proporcionan información agregada de múltiples fuentes, presentada de manera gráfica e intuitiva \citep{laudon2016}.
+
+\subsection{Características de los ESS}
+
+\begin{itemize}
+  \item Diseñados para la alta dirección, con interfaces simples e intuitivas.
+  \item Incorporan datos de fuentes internas y externas.
+  \item Presentan información de manera visual: gráficos, tableros de control, indicadores.
+  \item Apoyan decisiones no estructuradas y de largo plazo.
+  \item Permiten explorar tendencias y escenarios futuros.
+\end{itemize}
+
+\subsection{Uso de datos internos y externos}
+
+Los ESS no se limitan a los datos internos de la organización. También incorporan información del entorno externo: tendencias del sector educativo, datos demográficos, comportamiento del mercado, entre otros.
+
+\subsection{Proyecciones y planificación estratégica}
+
+Los ESS apoyan la planificación estratégica al proporcionar información sobre el desempeño histórico de la organización y proyecciones de futuro basadas en modelos estadísticos.
+
+\subsection{Aplicación de ESS en plataformas multiinstitucionales}
+
+En SICOLEGIO 360, el ESS está orientado al superadministrador de la plataforma y a los promotores de los colegios. Proporciona información sobre el crecimiento de la plataforma, el número de colegios usuarios, la cantidad de estudiantes gestionados, los ingresos generados y las tendencias de uso del sistema.
+
+\section{Sistemas de trabajo de conocimiento y sistemas de oficina}
+
+\subsection{Sistemas de trabajo de conocimiento --- KWS}
+
+Los sistemas de trabajo de conocimiento apoyan a los trabajadores del conocimiento en la creación e integración de nuevo conocimiento en la organización. En el contexto educativo, los docentes son trabajadores del conocimiento que crean, adaptan y distribuyen conocimiento pedagógico \citep{laudon2016}.
+
+\subsection{Sistemas de oficina}
+
+Los sistemas de oficina apoyan las tareas documentarias y comunicacionales del personal de oficina. Incluyen procesadores de texto, hojas de cálculo, correo electrónico, sistemas de gestión documental y herramientas de comunicación.
+
+\subsection{Apoyo a docentes, coordinadores y personal administrativo}
+
+En SICOLEGIO 360, los sistemas de oficina apoyan a los docentes en la elaboración de programaciones curriculares, la generación de reportes de aula y la comunicación con padres. Los coordinadores usan estas herramientas para el análisis del rendimiento académico por grado y sección.
+
+\subsection{Aplicación en la generación de documentos, reportes y análisis académico}
+
+El sistema permite generar documentos como libretas, constancias de estudios, reportes de asistencia, reportes financieros y comunicados oficiales de manera automática y estandarizada.
+
+\section{Relación e interacción entre los sistemas de información}
+
+\subsection{Relación entre TPS, KWS, MIS, DSS y ESS}
+
+Los distintos tipos de sistemas de información no son independientes entre sí. Los TPS generan los datos que alimentan a los KWS y los sistemas de oficina. Los MIS consolidan los datos de los TPS para generar reportes gerenciales. Los DSS utilizan los datos de los MIS y los TPS para apoyar el análisis y la toma de decisiones. Los ESS reciben información de todos los niveles para proporcionar una visión estratégica de la organización.
+
+\subsection{Flujo de información desde el nivel operativo hasta el nivel estratégico}
+
+La información fluye de abajo hacia arriba: las transacciones del nivel operativo generan datos que, después de ser procesados y consolidados por los sistemas de los niveles intermedios, llegan al nivel estratégico en forma de indicadores, tendencias y proyecciones.
+
+\subsection{Integración de sistemas en una plataforma multiinstitucional}
+
+En una plataforma multiinstitucional como SICOLEGIO 360, la integración de los distintos tipos de sistemas es especialmente importante. Los datos registrados por los TPS de cada colegio deben estar disponibles para los MIS y DSS del colegio correspondiente, y también para el ESS del superadministrador de la plataforma.
+
+\section{Enfoque socio-tecnológico de los sistemas de información}
+
+\subsection{Concepto de enfoque socio-tecnológico}
+
+El enfoque socio-tecnológico reconoce que los sistemas de información son sistemas socio-técnicos: no son solo tecnología, sino una combinación de tecnología, personas, procesos y organización \citep{laudon2016}. Para que un sistema de información sea efectivo, debe diseñarse considerando las necesidades y las capacidades de las personas que lo usarán, los procesos que apoyará y la estructura de la organización en la que operará.
+
+\subsection{Relación entre tecnología y organización}
+
+La tecnología y la organización se influyen mutuamente. La introducción de un nuevo sistema de información cambia la forma en que las personas trabajan y se relacionan entre sí. A su vez, la organización puede moldear el diseño del sistema de información para adaptarlo a su cultura y sus procesos.
+
+\subsection{Diseño final de la tecnología y diseño final de la organización}
+
+El diseño final de un sistema de información debe alcanzar el ajuste óptimo entre los requerimientos técnicos del sistema y las necesidades sociales y organizacionales de los usuarios. Esto implica reconocer que el mejor sistema técnico no siempre es el mejor sistema socio-técnico.
+
+\subsection{Aplicación del enfoque socio-tecnológico en SICOLEGIO 360}
+
+SICOLEGIO 360 presenta un enfoque socio-tecnológico porque integra herramientas tecnológicas con los procesos organizacionales de distintas instituciones educativas. El sistema no impone una forma única de trabajo, sino que se adapta a la estructura y los procesos de cada colegio, permitiendo que las personas —directivos, docentes, secretaría, tesorería y padres— trabajen de manera más eficiente con la información que necesitan. La siguiente tabla resume las dimensiones del enfoque socio-tecnológico en SICOLEGIO 360:
+
+\begin{table}[H]
+\centering
+\caption{Dimensiones del enfoque socio-tecnológico en SICOLEGIO 360}
+\label{tab:sociotec}
+
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+
+Dimensión & Aplicación en SICOLEGIO 360 \\
+\midrule
+Tecnología & Software, base de datos, módulos, reportes, roles, alertas y seguridad. \\
+Organización & Colegios, dirección, docentes, secretaría, tesorería, padres y estudiantes. \\
+Personas & Usuarios que registran, consultan y toman decisiones con la información. \\
+Procesos & Matrícula, asistencia, notas, pagos, conducta, comunicados y reportes. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Organización plana y sistemas de información}
+
+\subsection{Organización jerárquica tradicional}
+
+En una organización jerárquica tradicional, la información fluye de manera vertical: de abajo hacia arriba para informar a la gerencia y de arriba hacia abajo para dar instrucciones al personal operativo. Esta estructura puede ser lenta e ineficiente cuando la información debe recorrer varios niveles antes de llegar al tomador de decisiones.
+
+\subsection{Organización plana apoyada por sistemas de información}
+
+Los sistemas de información permiten a las organizaciones adoptar estructuras más planas, con menos niveles jerárquicos. Cuando la información está disponible en tiempo real para todos los usuarios autorizados, no es necesario que fluya a través de múltiples intermediarios, lo que acelera la toma de decisiones y mejora la eficiencia.
+
+\subsection{Reducción de niveles administrativos mediante la digitalización}
+
+La digitalización de los procesos permite reducir el número de personas necesarias para gestionar la información, eliminar pasos intermediarios y hacer que la información esté disponible para quienes la necesitan, en el momento en que la necesitan.
+
+\subsection{Aplicación en colegios que usan plataformas integradas}
+
+Cuando un colegio implementa SICOLEGIO 360, los directores pueden acceder directamente a los reportes de rendimiento sin necesitar que el coordinador elabore el informe manualmente. Los padres pueden consultar las notas de sus hijos sin tener que llamar a secretaría. Los docentes pueden ver el historial académico de un estudiante sin necesitar que la coordinación les entregue un expediente físico.
+
+\section{Rediseño de procesos mediante sistemas de información}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{2.png}
+  \caption{Rediseño de procesos mediante sistemas de información}
+  \label{fig:sistema-informacion}
+\end{figure}
+
+
+\section{Vista tradicional de los sistemas de información}
+
+\subsection{Sistemas funcionales por áreas de la organización}
+
+En la vista tradicional, cada área de la organización tiene su propio sistema de información independiente. El área de finanzas tiene su sistema contable, el área de recursos humanos tiene su sistema de nómina, el área de ventas tiene su sistema de pedidos. Estos sistemas no están conectados entre sí.
+
+\subsection{Problemas de los sistemas aislados}
+
+Los sistemas aislados generan islas de información, duplicidad de datos, inconsistencias entre los registros de distintas áreas y dificultad para obtener una visión integrada de la organización.
+
+\subsection{Límites organizacionales, proveedores y clientes}
+
+Los sistemas de información tradicionales operan dentro de los límites de la organización, sin integrar fácilmente la información de proveedores o clientes externos. Los sistemas modernos superan esta limitación mediante la integración con socios externos a través de plataformas y APIs.
+
+\subsection{Necesidad de integración de procesos}
+
+La solución a los problemas de los sistemas aislados es la integración de procesos: diseñar o adoptar un sistema que unifique los datos y procesos de todas las áreas en una sola plataforma.
+
+\section{Aplicaciones empresariales de los sistemas de información}
+
+\subsection{Sistemas empresariales integrados}
+
+Son plataformas que integran todos los procesos de una organización en un único sistema, con una base de datos centralizada y módulos interconectados.
+
+\subsection{Administración de la cadena de abastecimiento}
+
+Los sistemas de administración de la cadena de abastecimiento (SCM) coordinan el flujo de materiales, información y pagos entre proveedores, la organización y los clientes.
+
+\subsection{Comercio electrónico}
+
+El comercio electrónico permite realizar transacciones comerciales —compras, pagos, reservas— a través de plataformas digitales, eliminando intermediarios y reduciendo costos.
+
+\subsection{Administración de relaciones con el cliente --- CRM}
+
+Los sistemas CRM gestionan la relación entre la organización y sus clientes, registrando interacciones, preferencias y comportamientos para mejorar el servicio y la fidelización.
+
+\subsection{Administración del conocimiento}
+
+Los sistemas de administración del conocimiento capturan, organizan y distribuyen el conocimiento institucional, permitiendo que la organización aprenda de su experiencia y mejore sus procesos continuamente.
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{image1.png}
+    \caption{Vista tradicional de los sistemas de información}
+    \label{fig:placeholder}
+\end{figure}
+
+\section{Comercio electrónico}
+
+
+El comercio electrónico comprende el uso de tecnologías digitales para realizar transacciones comerciales, incluyendo compras, pagos, reservas y consultas a través de plataformas en línea.
+
+\subsection{Beneficios del comercio electrónico}
+
+Los principales beneficios son la eliminación de intermediarios, la reducción de costos de transacción, la disponibilidad del servicio las veinticuatro horas del día y la posibilidad de llegar a un mercado más amplio.
+
+\subsection{Aplicación del comercio electrónico en plataformas educativas}
+
+SICOLEGIO 360 incorpora elementos de comercio electrónico al permitir el pago digital de matrículas y pensiones, la firma digital de compromisos de pago y la consulta en línea de estados de cuenta.
+
+\subsection{Pagos en línea, matrículas digitales y servicios educativos}
+
+La plataforma permite a los padres realizar pagos de pensiones desde cualquier dispositivo, consultar su estado de cuenta en tiempo real y recibir comprobantes digitales de sus pagos.
+
+\section{Administración de relaciones con el cliente --- CRM}
+
+
+
+Los sistemas CRM ayudan a las organizaciones a gestionar sus relaciones con los clientes, coordinando todos los procesos de negocio relacionados con las ventas, el marketing y los servicios de atención \citep{laudon2016}.
+
+\subsection{Beneficios empresariales del CRM}
+
+Los CRM mejoran la satisfacción del cliente, reducen los costos de atención, aumentan las ventas cruzadas y permiten identificar y retener a los clientes más valiosos.
+
+\subsection{Padres, estudiantes y colegios como clientes del sistema}
+
+En SICOLEGIO 360, los clientes son los padres de familia y los estudiantes (en relación con el colegio) y los propios colegios (en relación con la plataforma). El sistema gestiona las relaciones con ambos tipos de clientes: los padres reciben información personalizada sobre sus hijos y los colegios reciben soporte técnico y actualizaciones de la plataforma.
+
+\subsection{Aplicación del CRM en SICOLEGIO 360}
+
+El módulo de comunicación de SICOLEGIO 360 funciona como un CRM educativo: registra las interacciones con los padres, envía comunicados personalizados, registra citaciones y acuerdos, y permite hacer seguimiento a las familias con situaciones especiales.
+
+\section{Administración del conocimiento}
+
+
+
+La administración del conocimiento es el conjunto de procesos que permiten a una organización capturar, organizar, distribuir y utilizar el conocimiento generado por sus miembros para mejorar su desempeño \citep{laudon2016}.
+
+\subsection{Importancia de gestionar conocimiento institucional}
+
+El conocimiento institucional es uno de los activos más valiosos de una organización. Sin sistemas que lo capturen y organicen, el conocimiento permanece en las mentes de las personas y se pierde cuando estas abandonan la organización.
+
+\subsection{Conocimiento académico, reportes y experiencia docente}
+
+En un colegio, el conocimiento institucional incluye las estrategias pedagógicas exitosas, los materiales didácticos desarrollados, los reportes de rendimiento histórico de cada estudiante y los procedimientos administrativos establecidos.
+
+\subsection{Aplicación en instituciones educativas}
+
+SICOLEGIO 360 gestiona el conocimiento institucional al mantener un historial completo de cada estudiante, registrar los acuerdos con los padres, conservar los reportes de períodos anteriores y permitir el análisis de tendencias a lo largo del tiempo.
+
+\section{Procesos de negocio e integración organizacional}
+
+
+Un proceso de negocio es un conjunto de tareas y comportamientos relacionados lógicamente que las organizaciones desarrollan a lo largo del tiempo para producir resultados de valor específicos \citep{laudon2016}. Los procesos de negocio representan la manera única en que una organización coordina el trabajo, la información y el conocimiento.
+
+\subsection{Importancia de que los gerentes conozcan los procesos}
+
+Para diseñar un sistema de información efectivo, es fundamental que los gerentes y analistas comprendan los procesos de negocio que el sistema debe apoyar. Un sistema que no se ajusta a los procesos reales de la organización será subutilizado o rechazado por los usuarios.
+
+\subsection{Necesidad de integrar procesos de negocio}
+
+Los procesos de negocio que operan de manera aislada generan ineficiencias, duplicidades y demoras. La integración de procesos permite que la información generada en un proceso esté disponible de manera inmediata para los procesos que dependen de ella.
+
+\subsection{Integración de procesos en SICOLEGIO 360}
+
+SICOLEGIO 360 integra los procesos académicos, administrativos y financieros de los colegios en una sola plataforma. La información de una matrícula registrada por secretaría está disponible de inmediato para tesorería, docentes y dirección, sin necesidad de volver a ingresar los datos o de comunicarlos manualmente entre áreas.
+
+
+\section{Seguridad y privacidad de la información}
+
+\subsection{Protección de datos personales}
+
+Los sistemas de información que gestionan datos de personas —especialmente menores de edad— deben cumplir con las normativas de protección de datos personales. En el contexto de SICOLEGIO 360, esto implica proteger los datos de los estudiantes, sus familias y los docentes de accesos no autorizados.
+
+\subsection{Usuarios y contraseñas}
+
+El sistema debe implementar un mecanismo de autenticación robusto, con contraseñas encriptadas y políticas de cambio periódico de contraseñas.
+
+\subsection{Roles y permisos}
+
+El sistema debe implementar un modelo de roles y permisos que garantice que cada usuario solo tenga acceso a la información y las funcionalidades que necesita para realizar su trabajo.
+
+\subsection{Copias de seguridad}
+
+El sistema debe realizar copias de seguridad periódicas de la base de datos para garantizar la recuperación de la información en caso de fallas técnicas.
+
+\subsection{Separación de datos entre colegios}
+
+La arquitectura multiinstitucional de SICOLEGIO 360 garantiza que los datos de cada colegio estén separados de los de los demás. Ningún usuario de un colegio puede acceder a la información de otro colegio.
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO III — DESCRIPCIÓN DEL SISTEMA
+% ═══════════════════════════════════════════════════════════════
+\chapter{Descripción del Sistema Propuesto}
+
+\section{Nombre del sistema}
+
+El sistema propuesto se denomina \textbf{SICOLEGIO 360}. El nombre combina las iniciales de ``Sistema de Información para Colegios'' (SICOLEG) con el sufijo ``360'', que evoca una visión integral y completa de la gestión institucional. Este nombre refleja la aspiración del sistema de cubrir todos los ángulos de la gestión educativa: académico, administrativo, financiero y comunicacional.
+
+\section{Descripción general de SICOLEGIO 360}
+
+SICOLEGIO 360 es una plataforma multiinstitucional de sistema de información con enfoque socio-tecnológico, diseñada para mejorar la gestión de los procesos académicos, administrativos, financieros y comunicacionales de instituciones educativas privadas. El sistema permite que varios colegios gestionen su información de manera independiente, segura y organizada desde una única plataforma.
+
+El sistema está compuesto por diecisiete módulos funcionales que cubren todos los aspectos de la gestión institucional: matrícula, estudiantes, apoderados, docentes, cursos, horarios, asistencia, notas, libretas, conducta, pagos, comunicados, reportes y alertas. Cada módulo está diseñado para automatizar los procesos manuales que actualmente realizan los colegios, reduciendo errores, ahorrando tiempo y mejorando la calidad de la información disponible para la toma de decisiones.
+
+\section{Alcance del sistema}
+
+\subsection{Alcance académico}
+
+El sistema gestiona todos los procesos relacionados con la actividad académica del colegio: configuración de niveles, grados, secciones y períodos académicos; registro y asignación de cursos; gestión de horarios; control de asistencia; registro de evaluaciones y notas; cálculo automático de promedios; emisión de libretas; y seguimiento del rendimiento académico de cada estudiante.
+
+\subsection{Alcance administrativo}
+
+El sistema gestiona los procesos administrativos: registro de estudiantes y apoderados; matrícula; registro y asignación de docentes; gestión de documentos escolares; registro de incidencias de conducta; citaciones a padres; y gestión de acuerdos institucionales.
+
+\subsection{Alcance financiero}
+
+El sistema gestiona los procesos financieros: registro de pagos de matrícula y pensiones; control de deudas pendientes; cálculo de moras; generación de reportes financieros por período y por colegio.
+
+\subsection{Alcance comunicacional}
+
+El sistema gestiona la comunicación institucional: envío de comunicados escolares; registro de citaciones y acuerdos con padres; generación de alertas académicas, administrativas y financieras.
+
+\subsection{Alcance multiinstitucional}
+
+El sistema puede ser utilizado simultáneamente por varios colegios, cada uno gestionando su propia información de manera independiente. El superadministrador de la plataforma tiene acceso a información global sobre todos los colegios registrados.
+
+\section{Características principales}
+
+\subsection{Plataforma para varios colegios}
+
+SICOLEGIO 360 está diseñado desde su arquitectura base para soportar múltiples instituciones educativas. No es un sistema monoinstitucional adaptado, sino una plataforma multiinstitucional construida desde el principio con esa capacidad.
+
+\subsection{Gestión independiente por institución educativa}
+
+Cada colegio registrado en la plataforma gestiona su propia información de manera completamente independiente. Los datos de un colegio no son visibles para otros colegios usuarios de la plataforma.
+
+\subsection{Acceso por roles}
+
+El sistema implementa un modelo de acceso basado en roles. Cada usuario tiene un perfil que determina qué módulos puede acceder y qué acciones puede realizar dentro de cada módulo.
+
+\subsection{Módulos configurables}
+
+Los módulos del sistema pueden configurarse para adaptarse a las necesidades específicas de cada colegio: número de períodos académicos, criterios de evaluación, estructura de pagos, niveles educativos activos, entre otros.
+
+\subsection{Reportes automáticos}
+
+El sistema genera automáticamente reportes académicos, administrativos y financieros con los datos registrados en la plataforma, sin necesidad de procesamiento manual adicional.
+
+\subsection{Alertas académicas, administrativas y financieras}
+
+El sistema genera alertas automáticas cuando detecta situaciones que requieren atención: estudiantes con bajo rendimiento, inasistencias frecuentes, pagos vencidos, deudas acumuladas o incidencias conductuales repetidas.
+
+\section{Tipo de sistema}
+
+\subsection{Sistema de información integral}
+
+SICOLEGIO 360 es un sistema de información integral porque cubre todos los aspectos de la gestión institucional de un colegio, integrando los procesos académicos, administrativos, financieros y comunicacionales en una sola plataforma.
+
+\subsection{Sistema multiinstitucional}
+
+Es un sistema multiinstitucional porque puede ser utilizado simultáneamente por múltiples instituciones educativas, cada una con su propia información y configuración independiente.
+
+\subsection{Sistema socio-tecnológico}
+
+Es un sistema socio-tecnológico porque integra tecnología con los procesos organizacionales y las necesidades de las personas que lo utilizan, reconociendo que la tecnología por sí sola no es suficiente para mejorar la gestión institucional.
+
+\subsection{Sistema operativo, administrativo, decisional y estratégico}
+
+El sistema opera en todos los niveles organizacionales: registra transacciones operativas (TPS), genera reportes administrativos (MIS), apoya el análisis para la toma de decisiones (DSS) y proporciona información estratégica para la alta dirección (ESS).
+
+\section{Función empresarial que cumple el sistema}
+
+\subsection{Gestión académica}
+
+El sistema controla matrícula, cursos, docentes, notas, promedios, libretas y rendimiento académico de los estudiantes.
+
+\subsection{Gestión administrativa}
+
+El sistema organiza estudiantes, apoderados, secciones, horarios y documentos escolares.
+
+\subsection{Gestión financiera}
+
+El sistema registra pagos de matrícula, pensiones, deudas, moras y genera comprobantes de pago.
+
+\subsection{Gestión de recursos humanos docentes}
+
+El sistema administra docentes, cursos asignados, horarios y carga académica.
+
+\subsection{Gestión de atención al cliente educativo}
+
+El sistema mejora la comunicación con padres, estudiantes y colegios usuarios a través del módulo de comunicación y el portal de consultas.
+
+\subsection{Gestión de control y toma de decisiones}
+
+El sistema genera reportes sobre notas, asistencia, conducta, pagos y estudiantes en riesgo para apoyar la toma de decisiones de directivos y coordinadores.
+
+\section{SICOLEGIO 360 como sistema empresarial integrado}
+
+\subsection{Integración de procesos académicos}
+
+La información generada en el proceso de matrícula está disponible de inmediato para el registro de asistencia, el ingreso de notas y la emisión de libretas. No hay necesidad de volver a ingresar datos en cada proceso.
+
+\subsection{Integración de procesos administrativos}
+
+Los datos de los estudiantes registrados en el módulo de estudiantes están disponibles para secretaría, docentes, tesorería y dirección, sin necesidad de duplicar registros.
+
+\subsection{Integración de procesos financieros}
+
+Los pagos registrados por tesorería están disponibles de inmediato para la generación de alertas de morosidad y reportes financieros de dirección.
+
+\subsection{Integración de comunicación con padres y estudiantes}
+
+Los comunicados, citaciones y alertas generadas por cualquier área del sistema son recibidas por los padres y estudiantes a través de un único canal integrado.
+
+\subsection{Diferencia entre sistema aislado y plataforma integrada}
+
+En un sistema aislado, cada área maneja su propia información y debe comunicarla manualmente a las demás. En SICOLEGIO 360, la información es compartida automáticamente entre todos los módulos, eliminando la necesidad de comunicación manual entre áreas.
+
+\section{SICOLEGIO 360 frente a la vista tradicional de los sistemas de información}
+
+\subsection{Sistemas aislados en colegios tradicionales}
+
+En un colegio tradicional, la secretaría tiene su lista de estudiantes en Excel, los docentes tienen sus cuadernos de notas, tesorería tiene sus recibos físicos y dirección pide reportes manualmente a cada área. Esta fragmentación genera ineficiencia, errores y demoras.
+
+\subsection{Problemas de la información separada por áreas}
+
+Los principales problemas son la duplicidad de datos, la inconsistencia entre registros de distintas áreas, la imposibilidad de cruzar información de manera rápida y la dificultad para obtener una visión integral de la institución.
+
+\subsection{Integración de procesos en una sola plataforma}
+
+SICOLEGIO 360 resuelve estos problemas al integrar todos los procesos en una sola plataforma con una base de datos centralizada. Toda la información ingresada en cualquier módulo está disponible de inmediato para todos los usuarios autorizados.
+
+\subsection{Beneficios de superar la gestión por áreas separadas}
+
+Los beneficios incluyen la eliminación de la duplicidad de datos, la consistencia de la información, la reducción de tiempos de procesamiento, la disponibilidad de información en tiempo real y la capacidad de generar reportes integrados sin necesidad de consolidar datos manualmente.
+
+\section{Cadena de abastecimiento educativa en SICOLEGIO 360}
+
+\subsection{Proveedores del servicio educativo}
+
+Los proveedores del servicio educativo son las entidades que proporcionan insumos para el proceso educativo: editoriales, proveedores de materiales didácticos, plataformas de contenido digital, docentes y personal administrativo.
+
+\subsection{Instituciones educativas usuarias}
+
+Las instituciones educativas son el núcleo de la cadena: reciben los insumos de los proveedores, los transforman mediante el proceso educativo y entregan el servicio a los estudiantes y sus familias.
+
+\subsection{Padres y estudiantes como clientes finales}
+
+Los padres de familia y los estudiantes son los clientes finales de la cadena educativa. Reciben el servicio educativo y proporcionan retroalimentación sobre su calidad y pertinencia.
+
+\subsection{Flujo de información, pagos, servicios y reportes}
+
+SICOLEGIO 360 gestiona los flujos de información a lo largo de la cadena educativa: la información de matrículas, pagos, asistencias, notas y comunicados fluye entre todos los actores de la cadena de manera integrada.
+
+\subsection{Beneficios de la integración de la cadena educativa}
+
+La integración de la cadena educativa mediante SICOLEGIO 360 mejora la transparencia, reduce los tiempos de respuesta, mejora la calidad del servicio y fortalece la relación entre la institución educativa y las familias.
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO IV — PROCESOS MANUALES
+% ═══════════════════════════════════════════════════════════════
+\chapter{Procesos Manuales Actuales}
+
+\section{Gestión y Registro Administrativo Manual}
+
+En los colegios que no disponen de una plataforma integrada, los flujos administrativos iniciales se caracterizan por una alta dependencia del papel y herramientas de escritorio locales aisladas.
+
+\paragraph{Proceso manual de matrícula.} El proceso de matrícula en un colegio sin sistema de información integrado implica la atención presencial del padre de familia en secretaría, el llenado manual de una ficha de matrícula en papel o en un archivo de Excel no compartido, la verificación manual de los datos del estudiante, la asignación manual del grado y la sección, la firma del compromiso de pago en un documento físico y el archivado del expediente en una carpeta física. Este proceso es lento, propenso a errores de transcripción y difícil de consultar posteriormente.
+
+\paragraph{Proceso manual de registro de estudiantes.} El registro de estudiantes se realiza en una hoja de cálculo o en un cuaderno. Cada secretaria tiene su propio formato, lo que genera inconsistencias. Cuando se necesita actualizar un dato del estudiante, debe buscarse el registro en el archivo correspondiente y modificarlo manualmente, con el riesgo de que existan versiones distintas del mismo registro en distintos archivos.
+
+\paragraph{Proceso manual de registro de docentes.} El registro de docentes se realiza de manera similar al de estudiantes: en archivos de Excel o en documentos físicos. La información sobre los cursos asignados a cada docente se maneja por separado, generalmente en un cuadro elaborado manualmente al inicio de cada año escolar.
+
+\paragraph{Proceso manual de asignación de cursos y secciones.} La asignación de cursos y secciones se realiza manualmente, generalmente en una hoja de cálculo o en un cuadro impreso. Este proceso es laborioso y propenso a errores, especialmente cuando hay cambios en la planta docente o en la organización de las secciones.
+
+\section{Gestión Académica y Evaluación Manual}
+
+Los procesos clave para el seguimiento académico sufren de importantes retardos temporales y riesgo de inconsistencias debido a la duplicidad de registros manuscritos o en archivos locales de los docentes.
+
+\paragraph{Proceso manual de asistencia.} El control de asistencia se realiza mediante listas impresas que el docente llena a mano al inicio de cada clase. Al final del día, la secretaría debe consolidar las listas de todos los docentes para tener un registro de la asistencia diaria de la institución. Este proceso es lento, propenso a errores y difícil de consultar para períodos anteriores.
+
+\paragraph{Proceso manual de registro de notas.} Las notas son registradas por los docentes en sus cuadernos personales o en archivos de Excel individuales. Al final del período académico, cada docente entrega sus notas a la secretaría, que las transcribe en un registro centralizado. Este proceso de transcripción es una fuente frecuente de errores.
+
+\paragraph{Proceso manual de cálculo de promedios.} El cálculo de promedios se realiza manualmente por cada docente o por la secretaría académica, aplicando las fórmulas establecidas por la institución. Cuando hay errores en los datos de entrada, los promedios calculados también son incorrectos. Además, la revisión de los cálculos es tediosa y requiere tiempo adicional.
+
+\paragraph{Proceso manual de emisión de libretas.} La elaboración de las libretas de notas es uno de los procesos más laboriosos. La secretaría debe recopilar las notas de todos los cursos de cada estudiante, calcular los promedios, verificar las asistencias y elaborar el documento final. Este proceso puede tomar varios días y es común que se detecten errores después de entregar las libretas a los padres.
+
+\section{Gestión Disciplinaria y de Bienestar Manual}
+
+El comportamiento y la comunicación formal de incidentes se manejan mediante metodologías desconectadas que dificultan el seguimiento longitudinal del estudiante.
+
+\paragraph{Proceso manual de conducta e incidencias.} Los registros de conducta e incidencias se anotan en cuadernos de incidencias o en informes físicos. Cada docente o tutor maneja su propio registro, lo que hace difícil tener una visión integral del comportamiento de un estudiante a lo largo del tiempo o identificar patrones conductuales en una sección.
+
+\paragraph{Proceso manual de citaciones a padres.} Las citaciones a los padres de familia se realizan por escrito (comunicados físicos enviados con el estudiante), por llamadas telefónicas o por mensajes de WhatsApp. No existe un registro formal de las citaciones realizadas, las respuestas de los padres ni los acuerdos alcanzados en las reuniones.
+
+\section{Gestión Financiera, de Comunicados y Alertas Manual}
+
+Las interacciones económicas y la difusión de directivas institucionales se gestionan con altos riesgos de descontrol administrativo y pérdida de documentos.
+
+\paragraph{Proceso manual de pagos de pensiones.} Los pagos de pensiones se registran en recibos físicos numerados y en un cuaderno de control de tesorería. La verificación del estado de pago de un estudiante requiere revisar físicamente los recibos o el cuaderno, lo que es lento e impreciso cuando hay un gran número de estudiantes.
+
+\paragraph{Proceso manual de comunicados escolares.} Los comunicados escolares se envían principalmente de dos maneras: mediante documentos físicos entregados a los estudiantes (que no siempre llegan a los padres) o a través de grupos de WhatsApp (que no garantizan que todos los padres reciban y lean el comunicado). No hay un registro formal de los comunicados enviados ni confirmación de recepción.
+
+\section{Problemas detectados en los procesos manuales}
+
+\begin{table}[H]
+\centering
+\caption{Principales problemas detectados en los procesos manuales}
+\label{tab:problemas}
+
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+
+Proceso &
+Problema principal &
+Impacto \\
+\midrule
+Matrícula & Datos incompletos, archivos desactualizados & Alto \\
+Registro de notas & Errores de transcripción & Alto \\
+Cálculo de promedios & Errores en fórmulas manuales & Alto \\
+Emisión de libretas & Demoras y errores & Alto \\
+Control de pagos & Pérdida de recibos, datos inconsistentes & Alto \\
+Asistencia & Consolidación lenta, datos incompletos & Medio \\
+Conducta & Sin registro histórico integrado & Medio \\
+Comunicados & Sin confirmación de recepción & Medio \\
+Citaciones & Sin registro formal de acuerdos & Medio \\
+Reportes & Elaboración manual lenta y laboriosa & Alto \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO V — PROCESOS AUTOMATIZADOS
+% ═══════════════════════════════════════════════════════════════
+\chapter{Procesos Automatizados del Sistema}
+
+\section{Automatización de Gestión y Configuración Institucional}
+
+SICOLEGIO 360 proporciona capacidades avanzadas de aprovisionamiento de entornos de trabajo específicos para cada colegio y herramientas ágiles para su estructuración organizativa.
+
+\paragraph{Automatización del registro de instituciones educativas.} Con SICOLEGIO 360, el superadministrador puede registrar un nuevo colegio en la plataforma ingresando los datos básicos de la institución: nombre, RUC, dirección, teléfono, logo, niveles educativos que ofrece y configuración inicial. El sistema genera automáticamente el espacio de trabajo del colegio en la plataforma, con su base de datos independiente y los roles predefinidos para sus usuarios.
+
+\paragraph{Niveles educativos.} El administrador del colegio puede configurar los niveles educativos que ofrece su institución: inicial, primaria y secundaria. El sistema adapta automáticamente las estructuras de grados, secciones y cursos a los niveles configurados.
+
+\paragraph{Grados.} Dentro de cada nivel, el sistema permite configurar los grados correspondientes y asociarles los cursos que corresponden según la malla curricular del colegio.
+
+\paragraph{Secciones.} El sistema permite crear secciones dentro de cada grado y asignarles un tutor responsable. Las secciones están configuradas para el período académico activo.
+
+\paragraph{Periodos académicos.} El sistema permite configurar los períodos académicos (bimestres, trimestres o semestres) con sus fechas de inicio y fin, que determinarán el ciclo de registro de notas, asistencias y reportes.
+
+\section{Automatización de Gestión Académica y Evaluación}
+
+La integración de procesos desde el ingreso del alumno hasta la consolidación de sus notas elimina la duplicidad y minimiza drásticamente los errores de cómputo.
+
+\paragraph{Automatización de matrícula.} El proceso de matrícula se realiza en línea, con el registro de los datos del estudiante en el sistema, la selección del grado y la sección, la asignación automática de un código de matrícula único, el registro del compromiso de pago y la generación automática del recibo de matrícula. El proceso que antes tomaba entre treinta minutos y una hora puede realizarse en cinco minutos con el sistema.
+
+\paragraph{Automatización del registro de estudiantes y apoderados.} El sistema centraliza todos los datos de los estudiantes and sus apoderados en una sola base de datos. La información registrada en el módulo de estudiantes está disponible de inmediato para todos los demás módulos del sistema, eliminando la necesidad de volver a ingresar datos.
+
+\paragraph{Automatización del registro de docentes.} El sistema permite registrar los datos personales, académicos y laborales de cada docente, y asignarle automáticamente los cursos, grados y secciones que le corresponden según el horario configurado.
+
+\paragraph{Automatización de cursos, grados y secciones.} La asignación de cursos a grados y secciones se realiza en el sistema con unos pocos clics. El sistema verifica automáticamente que no haya conflictos de horario y genera la distribución de clases de manera organizada.
+
+\paragraph{Automatización de horarios escolares.} El módulo de horarios permite configurar el horario de clases de cada sección, asignando docentes y aulas a cada bloque horario. El sistema genera automáticamente la vista de horario de cada docente y cada sección.
+
+\paragraph{Automatización del control de asistencia.} Los docentes registran la asistencia de sus estudiantes directamente en el sistema, desde cualquier dispositivo con acceso a la plataforma. El sistema registra de manera automática la fecha, la hora y el estado de cada estudiante (presente, tardanza, falta o justificación). La consolidación de asistencias es automática y está disponible en tiempo real para tutores y dirección.
+
+\paragraph{Automatización del registro de notas.} Los docentes ingresan las notas de las evaluaciones directamente en el sistema, que valida automáticamente que estén dentro del rango permitido. El sistema organiza las notas por estudiante, por curso y por período académico.
+
+\paragraph{Automatización del cálculo de promedios.} Una vez ingresadas todas las notas del período, el sistema calcula automáticamente los promedios de cada estudiante por curso, aplicando los criterios de ponderación configurados por el colegio. El proceso de cálculo es instantáneo y no requiere intervención manual.
+
+\paragraph{Automatización de emisión de libretas.} El sistema genera automáticamente la libreta de notas de cada estudiante con los datos de todas las áreas evaluadas, los promedios calculados, el porcentaje de asistencia y las observaciones de conducta. Las libretas pueden descargarse en formato PDF e imprimirse o enviarse electrónicamente a los padres.
+
+\section{Automatización de Gestión Disciplinaria y de Bienestar}
+
+El seguimiento del comportamiento y la comunicación formal de incidentes con las familias se gestiona a través de portales interactivos integrados.
+
+\paragraph{Automatización de conducta e incidencias.} Los docentes y tutores pueden registrar incidencias de conducta directamente en el sistema, asociándolas al estudiante involucrado, la fecha, el tipo de incidencia y las acciones tomadas. El sistema acumula el historial conductual de cada estudiante y genera alertas cuando se detectan patrones preocupantes.
+
+\paragraph{Automatización de citaciones a padres.} El sistema permite generar citaciones formales a los padres de familia, que son notificadas automáticamente a través del portal de padres. El sistema registra la respuesta del padre, la fecha de la reunión y los acuerdos alcanzados.
+
+\section{Automatización Financiera, de Comunicados y Alertas}
+
+La automatización de procesos económicos y la distribución estratégica de notificaciones optimizan el control gerencial del colegio.
+
+\paragraph{Automatización de pagos y pensiones.} El módulo de pagos registra automáticamente cada pago recibido, genera el recibo digital correspondiente, actualiza el estado de cuenta del estudiante y envía una notificación al padre de familia. El sistema identifica automáticamente los pagos vencidos y calcula las moras según la política del colegio.
+
+\paragraph{Automatización de comunicados escolares.} El módulo de comunicación permite enviar comunicados escolares a todos los padres de una sección, un grado, un nivel o toda la institución con un solo clic. El sistema registra la fecha de envío y permite verificar quiénes han leído el comunicado.
+
+\paragraph{Automatización de reportes.} El sistema genera automáticamente reportes académicos, administrativos y financieros con los datos registrados en la plataforma. Los reportes están disponibles en tiempo real y pueden exportarse en formato PDF o Excel.
+
+\paragraph{Automatización de alertas.} El sistema genera alertas automáticas basadas en condiciones configurables: estudiante con promedio menor a once, estudiante con más del treinta por ciento de inasistencias, familia con deuda pendiente de más de dos meses, estudiante con más de tres incidencias conductuales en el período, entre otras.
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO VI — TPS DEL SISTEMA
+% ═══════════════════════════════════════════════════════════════
+\chapter{TPS del Sistema}
+
+\section{Importancia de los TPS en SICOLEGIO 360}
+
+Los TPS de SICOLEGIO 360 permiten registrar las operaciones diarias de los colegios, convirtiendo los datos operativos en información útil para reportes, análisis y toma de decisiones. Sin los TPS, los sistemas de niveles superiores (MIS, DSS, ESS) no tendrían datos con los cuales trabajar.
+
+La siguiente tabla presenta la matriz completa de TPS del sistema:
+
+\begin{longtable}{p{0.5cm}p{3.5cm}p{4.5cm}p{4.5cm}}
+\caption{Matriz de TPS de SICOLEGIO 360}
+\label{tab:tps}\\
+\toprule
+
+N° &
+TPS &
+Entrada &
+Salida \\
+\midrule
+\endfirsthead
+\toprule
+
+N° &
+TPS &
+Entrada &
+Salida \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la página siguiente...}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+1 & Registro de institución & Datos del colegio & Ficha institucional generada \\
+2 & Configuración institucional & Niveles, grados, secciones & Estructura académica configurada \\
+
+3 & Matrícula de estudiantes & Datos del estudiante y grado & Matrícula registrada, recibo generado \\
+4 & Registro de estudiantes & Datos personales & Perfil del estudiante creado \\
+
+5 & Registro de apoderados & Datos del apoderado & Perfil del apoderado vinculado \\
+6 & Registro de docentes & Datos personales y académicos & Perfil del docente creado \\
+
+7 & Asignación de cursos & Docente, curso, grado & Asignación registrada \\
+8 & Asignación de secciones & Grado, sección, estudiantes & Sección configurada \\
+
+9 & Control de asistencia & Lista de estudiantes, estado & Registro de asistencia del día \\
+10 & Justificación de inasistencias & Estudiante, fecha, motivo & Justificación registrada \\
+
+11 & Registro de evaluaciones & Tipo, fecha, ponderación & Evaluación configurada \\
+12 & Registro de notas & Estudiante, nota, evaluación & Nota registrada \\
+
+13 & Cálculo de promedios & Notas del período & Promedio calculado automáticamente \\
+14 & Emisión de libreta & Promedios, asistencia, conducta & Libreta generada en PDF \\
+
+15 & Conducta estudiantil & Estudiante, tipo, fecha & Incidencia registrada \\
+16 & Citación a padres & Estudiante, motivo, fecha & Citación enviada y registrada \\
+
+17 & Acuerdos con padres & Reunión, compromisos & Acuerdos registrados \\
+18 & Pagos de pensiones & Monto, fecha, concepto & Pago registrado, recibo generado \\
+
+19 & Deudas y moras & Pensiones vencidas & Mora calculada, alerta generada \\
+20 & Comunicados escolares & Mensaje, destinatarios & Comunicado enviado y registrado \\
+
+21 & Reportes institucionales & Datos del período & Reporte generado automáticamente \\
+\end{longtable}
+
+\section{TPS de Gestión y Configuración Institucional}
+
+Los Sistemas de Procesamiento de Transacciones (TPS) dedicados a la base estructural del sistema permiten formalizar los cimientos organizacionales de cada entorno escolar.
+
+\paragraph{TPS 1: Registro de institución educativa.}
+\textbf{Descripción:} Registra los datos de una nueva institución educativa en la plataforma. \\
+\textbf{Entradas:} Nombre del colegio, RUC, dirección, teléfono, logo, niveles educativos. \\
+\textbf{Procesamiento:} Validación de datos, creación del espacio de trabajo, generación de credenciales. \\
+\textbf{Salidas:} Ficha institucional creada, credenciales de acceso generadas.
+
+\paragraph{TPS 2: Configuración institucional.}
+\textbf{Descripción:} Configura la estructura académica del colegio: niveles, grados, secciones y períodos. \\
+\textbf{Entradas:} Niveles educativos, grados por nivel, secciones por grado, períodos académicos. \\
+\textbf{Procesamiento:} Creación de la estructura jerárquica de la institución. \\
+\textbf{Salidas:} Estructura académica configurada y disponible para todos los módulos.
+
+\section{TPS de Gestión Académica y Evaluación}
+
+Este bloque transaccional constituye el núcleo operativo diario en la interacción de secretarios, docentes y coordinadores académicos.
+
+\paragraph{TPS 3: Matrícula de estudiantes.}
+\textbf{Descripción:} Registra la matrícula de un estudiante en el colegio para el período académico activo. \\
+\textbf{Entradas:} Datos del estudiante, grado, sección, compromiso de pago. \\
+\textbf{Procesamiento:} Validación de datos, asignación de código de matrícula, registro en la base de datos. \\
+\textbf{Salidas:} Matrícula registrada, recibo de matrícula generado, estudiante asignado a sección.
+
+\paragraph{TPS 4: Registro de estudiantes.} Registra los datos personales, académicos y familiares del estudiante en el sistema, creando su perfil institucional que servirá como referencia para todos los demás módulos.
+
+\paragraph{TPS 5: Registro de apoderados.} Registra los datos del apoderado y los vincula al perfil del estudiante correspondiente. Un apoderado puede estar vinculado a más de un estudiante del mismo colegio.
+
+\paragraph{TPS 6: Registro de docentes.} Registra los datos personales, académicos y laborales de cada docente, creando su perfil en el sistema y habilitando su acceso a los módulos que le corresponden según su rol.
+
+\paragraph{TPS 7: Asignación de cursos.} Registra la asignación de cada curso a un docente específico, para un grado, sección y período académico determinados. El sistema verifica que no haya conflictos de horario.
+
+\paragraph{TPS 8: Asignación de grados y secciones.} Registra la distribución de los estudiantes en los grados y secciones del período académico activo. El sistema puede distribuir automáticamente los estudiantes según criterios configurables.
+
+\paragraph{TPS 9: Control de asistencia.} Registra el estado de asistencia de cada estudiante en cada día escolar: presente, tardanza, falta o justificación. El sistema registra automáticamente la fecha y la hora del registro.
+
+\paragraph{TPS 10: Justificación de inasistencias.} Registra la justificación de las faltas de un estudiante, incluyendo el motivo, el documento de sustento y el estado de aprobación de la justificación.
+
+\paragraph{TPS 11: Registro de evaluaciones.} Registra las evaluaciones programadas para cada curso, incluyendo el tipo (práctica, examen, trabajo, entre otros), la fecha, la ponderación y el valor máximo.
+
+\paragraph{TPS 12: Registro de notas.} Registra las calificaciones obtenidas por cada estudiante en cada evaluación. El sistema valida que las notas estén dentro del rango permitido y las asocia automáticamente al estudiante, el curso y el período correspondiente.
+
+\paragraph{TPS 13: Cálculo de promedios.} Calcula automáticamente el promedio de cada estudiante por curso y período, aplicando los criterios de ponderación configurados por el colegio. El proceso es instantáneo y no requiere intervención manual.
+
+\paragraph{TPS 14: Emisión de libreta de notas.} Genera automáticamente la libreta de notas de cada estudiante con todos los datos del período: notas por curso, promedios, porcentaje de asistencia y observaciones. La libreta se genera en formato PDF listo para imprimir o enviar electrónicamente.
+
+\section{TPS de Gestión Disciplinaria y de Bienestar}
+
+El seguimiento conductual y la vinculación presencial o digital con los apoderados se estructuran en este grupo transaccional.
+
+\paragraph{TPS 15: Conducta estudiantil.} Registra las incidencias de conducta de los estudiantes, incluyendo el tipo de incidencia, la fecha, el docente o tutor que la registra, las acciones tomadas y el estado del caso.
+
+\paragraph{TPS 16: Citación a padres.} Registra las citaciones formales enviadas a los padres de familia, incluyendo el motivo, la fecha propuesta, el estado de respuesta del padre y los acuerdos alcanzados en la reunión.
+
+\paragraph{TPS 17: Acuerdos con padres.} Registra los compromisos y acuerdos establecidos en las reuniones con los padres de familia, incluyendo las acciones comprometidas por cada parte y las fechas de seguimiento.
+
+\section{TPS Financieros, de Comunicación y Reportes}
+
+Agrupa los flujos comerciales de cobranza y la difusión masiva y analítica de datos a nivel ejecutivo.
+
+\paragraph{TPS 18: Pagos de pensiones.} Registra cada pago de pensión recibido, incluyendo el monto, la fecha, el concepto (mes de pensión, matrícula, otros), el medio de pago y el código del comprobante generado.
+
+\paragraph{TPS 19: Registro de deudas y moras.} Registra las deudas pendientes de los estudiantes y calcula automáticamente las moras según la política del colegio. El sistema genera alertas cuando una deuda supera el umbral configurado.
+
+\paragraph{TPS 20: Comunicados escolares.} Registra los comunicados enviados por la institución, incluyendo el contenido, los destinatarios, la fecha de envío y el estado de lectura de cada destinatario.
+
+\paragraph{TPS 21: Reportes institucionales.} Genera reportes automáticos de rendimiento académico, asistencia, conducta, pagos y estadísticas institucionales, basándose en los datos registrados en todos los demás módulos del sistema.
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO VII — TIPOS DE SISTEMAS EN SICOLEGIO 360
+% ═══════════════════════════════════════════════════════════════
+\chapter{Aplicación de los Tipos de Sistemas de Información en SICOLEGIO 360}
+
+
+
+Los TPS de SICOLEGIO 360 registran todas las transacciones operativas diarias de los colegios: matrículas, asistencias, notas, pagos, comunicados e incidencias. Son el cimiento del sistema y la fuente de todos los datos que alimentan los reportes y análisis de niveles superiores. Los usuarios principales de los TPS son la secretaría académica, los docentes y el personal de tesorería.
+
+\section{Aplicación de sistemas de oficina en SICOLEGIO 360}
+
+Los sistemas de oficina en SICOLEGIO 360 apoyan las tareas documentarias del personal administrativo y docente. Incluyen la generación automática de documentos como constancias de estudios, constancias de matrícula, libretas de notas, reportes de asistencia y comunicados institucionales. Estos documentos se generan en formatos estándar (PDF) y pueden personalizarse con el logo y los colores de cada institución.
+
+\section{Aplicación de KWS en SICOLEGIO 360}
+
+Los sistemas de trabajo de conocimiento en SICOLEGIO 360 apoyan a los docentes, coordinadores y tutores en su trabajo de análisis y planificación académica. Incluyen herramientas para el análisis del rendimiento por sección, la identificación de estudiantes que necesitan apoyo adicional, el diseño de estrategias de intervención y el seguimiento de los resultados de las acciones tomadas.
+
+\section{Aplicación de MIS en SICOLEGIO 360}
+
+El nivel MIS de SICOLEGIO 360 genera reportes periódicos para los coordinadores y directores de los colegios. Los reportes incluyen: promedio académico por grado y sección, porcentaje de asistencia por sección, tasa de morosidad por mes, número de incidencias conductuales por período, estado de matrículas y evolución del rendimiento académico. Estos reportes permiten a los gerentes educativos monitorear el desempeño institucional y tomar decisiones de control.
+
+\section{Aplicación de DSS en SICOLEGIO 360}
+
+El nivel DSS de SICOLEGIO 360 apoya la toma de decisiones semiestructuradas de los directivos. Permite analizar datos desde múltiples perspectivas: comparar el rendimiento de diferentes secciones, identificar correlaciones entre asistencia y rendimiento académico, analizar la evolución de la morosidad a lo largo del año y proyectar el comportamiento de matrícula para el siguiente período. El director puede formular preguntas interactivas al sistema y obtener respuestas basadas en los datos disponibles.
+
+\section{Aplicación de ESS/EIS en SICOLEGIO 360}
+
+El nivel ESS de SICOLEGIO 360 está orientado al superadministrador de la plataforma y a los promotores o dueños de los colegios. Proporciona una vista global del desempeño de la plataforma y de cada institución: número de colegios registrados, número de estudiantes gestionados, ingresos generados, crecimiento histórico, tendencias de uso y proyecciones de expansión. La información se presenta en tableros de control con gráficos y medidores de desempeño.
+
+\section{Relación entre los sistemas dentro de SICOLEGIO 360}
+
+Los distintos tipos de sistemas de SICOLEGIO 360 están interconectados y se alimentan mutuamente. Los datos registrados por los TPS son consolidados por el MIS para generar reportes de control. El DSS utiliza esos reportes para apoyar el análisis y la toma de decisiones. El ESS recibe información de todos los niveles para proporcionar una visión estratégica de la plataforma y de cada institución.
+
+\section{Flujo de información desde el nivel operativo hasta el nivel estratégico}
+
+La información en SICOLEGIO 360 fluye de manera ascendente: las transacciones operativas (TPS) generan datos que son procesados y consolidados en reportes gerenciales (MIS), que a su vez alimentan el análisis para la toma de decisiones (DSS) y la visión estratégica de la alta dirección (ESS). Este flujo garantiza que los tomadores de decisiones en todos los niveles tengan acceso a la información que necesitan, en el formato y la oportunidad adecuados.
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO VIII — ANÁLISIS DE DATOS
+% ═══════════════════════════════════════════════════════════════
+\chapter{Análisis de Datos del Sistema}
+
+\section{Datos institucionales}
+
+El sistema analiza datos relacionados con la estructura y el desempeño general de cada institución educativa: número de colegios registrados en la plataforma, número de estudiantes por colegio, número de docentes por institución, niveles educativos activos, crecimiento de matrículas entre períodos y tasa de retención estudiantil.
+
+\section{Datos académicos}
+
+El sistema analiza el rendimiento académico desde múltiples dimensiones: notas promedio por curso, por grado y por sección; porcentaje de estudiantes aprobados y desaprobados por área; evolución del rendimiento a lo largo del período; cursos con mayor tasa de desaprobación; estudiantes con bajo rendimiento en múltiples áreas; y comparación del rendimiento entre secciones del mismo grado.
+
+\section{Datos de asistencia}
+
+El sistema analiza los patrones de asistencia: porcentaje de asistencia por estudiante, por sección y por institución; número de faltas, tardanzas y justificaciones por período; estudiantes con inasistencias frecuentes; días con mayor ausentismo; y correlación entre inasistencia y rendimiento académico.
+
+\section{Datos de conducta}
+
+El sistema analiza los datos de comportamiento estudiantil: número de incidencias por estudiante y por sección; tipos de faltas más frecuentes; estudiantes con incidencias reiteradas; evolución de los problemas conductuales a lo largo del período; y efectividad de las intervenciones realizadas.
+
+\section{Datos financieros}
+
+El sistema analiza el estado financiero del colegio: pagos de matrícula y pensiones recibidos por período; deudas pendientes acumuladas; índice de morosidad; familias con más de dos meses de deuda; ingresos mensuales proyectados vs. recibidos; y comparación de la recaudación entre períodos.
+
+\section{Datos de comunicación con padres}
+
+El sistema analiza la participación de los padres de familia: número de comunicados enviados y leídos; porcentaje de padres que responden a las citaciones; acuerdos registrados y cumplidos; y nivel de participación de los padres en las actividades institucionales.
+
+\section{Indicadores principales del sistema}
+
+\begin{table}[H]
+\centering
+\caption{Indicadores principales de SICOLEGIO 360}
+\label{tab:indicadores}
+
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+
+Indicador &
+Qué mide &
+Nivel \\
+\midrule
+Tasa de matrícula & Crecimiento de estudiantes registrados & Operativo \\
+Promedio académico general & Rendimiento global del estudiante o colegio & Administrativo \\
+Porcentaje de asistencia & Participación y permanencia escolar & Operativo \\
+Tasa de tardanzas & Puntualidad estudiantil & Operativo \\
+Tasa de desaprobación & Cursos o grados con bajo rendimiento & Administrativo \\
+Índice de morosidad & Nivel de deuda pendiente en el colegio & Administrativo \\
+Incidencias conductuales & Problemas de convivencia escolar & Operativo \\
+Participación de padres & Asistencia a citaciones y reuniones & Administrativo \\
+Estudiantes en riesgo académico & Alumnos con bajo rendimiento o alta inasistencia & Decisional \\
+Estudiantes en riesgo administrativo & Alumnos con deuda o matrícula incompleta & Decisional \\
+Crecimiento de la plataforma & Colegios e instituciones registradas & Estratégico \\
+Ingresos por colegio & Recaudación mensual por institución & Estratégico \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO IX — FUNCIONES EN LA PIRÁMIDE
+% ═══════════════════════════════════════════════════════════════
+\chapter{Funciones del Sistema en la Pirámide Organizacional}
+
+\section{Niveles organizacionales y sistemas de información}
+
+Las organizaciones tienen cuatro niveles: operativo, de conocimiento, administrativo y estratégico. Cada nivel tiene necesidades de información diferentes, y los sistemas de información deben diseñarse para satisfacer esas necesidades específicas. SICOLEGIO 360 opera en los cuatro niveles, proporcionando a cada tipo de usuario la información que necesita para realizar su trabajo.
+
+\section{Nivel operativo: TPS}
+
+En el nivel operativo, SICOLEGIO 360 actúa como un sistema de procesamiento de transacciones (TPS) que registra todas las operaciones diarias del colegio. Los usuarios principales de este nivel son la secretaría académica, los docentes y el personal de tesorería. Las transacciones incluyen matrícula, asistencia, notas, pagos y comunicados.
+
+\section{Nivel del conocimiento: KWS y sistemas de oficina}
+
+En el nivel de conocimiento, SICOLEGIO 360 proporciona herramientas para que los docentes, tutores y coordinadores analicen la información disponible, generen documentos y tomen decisiones informadas sobre la gestión de sus aulas. Las herramientas incluyen reportes de rendimiento por sección, generación de libretas, análisis de asistencia y comunicación con padres.
+
+\section{Nivel administrativo: MIS y DSS}
+
+En el nivel administrativo, SICOLEGIO 360 genera reportes gerenciales (MIS) y apoya el análisis para la toma de decisiones (DSS). Los usuarios de este nivel son los directores, coordinadores y administradores de los colegios. Los reportes incluyen estadísticas de rendimiento, asistencia, conducta y finanzas.
+
+\section{Nivel estratégico: ESS/EIS}
+
+En el nivel estratégico, SICOLEGIO 360 proporciona tableros de control e indicadores globales para el superadministrador de la plataforma y los promotores de los colegios. La información incluye tendencias de crecimiento, proyecciones de matrícula y desempeño global de la plataforma.
+
+\section{Usuarios atendidos por cada tipo de sistema}
+
+\begin{table}[H]
+\centering
+\caption{Usuarios por nivel de sistema en SICOLEGIO 360}
+\label{tab:usuarios}
+
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+
+Nivel &
+Sistema &
+Usuarios \\
+\midrule
+Operativo & TPS & Secretaría, docentes, tesorería \\
+Conocimiento & KWS, Office & Docentes, tutores, coordinadores \\
+Administrativo & MIS, DSS & Directores, coordinadores, administradores \\
+Estratégico & ESS/EIS & Superadmin, promotores, directivos generales \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO X — MÓDULOS DEL SISTEMA
+% ═══════════════════════════════════════════════════════════════
+\chapter{Módulos del Sistema}
+
+\section{Módulos de Configuración Institucional y Seguridad}
+
+Constituyen el soporte y base operativa inicial, garantizando la consistencia organizativa y la protección perimetral del sistema.
+
+\paragraph{Módulo de administración general de la plataforma.} Este módulo es accesible únicamente para el superadministrador. Permite registrar nuevas instituciones educativas, configurar los parámetros globales de la plataforma, monitorear el uso del sistema por parte de cada colegio, gestionar los planes de suscripción y generar reportes globales.
+
+\subsection{Módulo de Gestión Jerárquica de Instituciones Educativas}
+
+Este módulo representa el núcleo administrativo y de gobernanza multiinstitucional en la plataforma SIBES 360. A diferencia de las aproximaciones de software tradicionales que plantean un listado plano de funcionalidades aisladas, SIBES 360 implementa un modelo jerárquico multinivel. Una vez que el Superadministrador de la plataforma o el Director de un centro específico selecciona un local educativo, la plataforma activa la vista consolidada ``Gestionar Institución Educativa''. Esta vista actúa como un contenedor jerárquico que encapsula de forma aislada y segura todas las operaciones esenciales del centro escolar, distribuidas en nueve submódulos clave:
+
+\begin{table}[H]
+\centering
+\caption{Matriz del Módulo de Gestión de Institución Educativa}
+\label{tab:matriz_gestion_ie}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\textbf{Submódulo} & \textbf{Componentes Clave de Datos} & \textbf{Propósito Operativo en SIBES 360} \\
+\midrule
+1. Información General & RUC, Nombre, Dirección, Código Modular, Estado, Niveles & Registro de la identidad legal del local y control de suspensión. \\
+2. Director & DNI, Nombres, Apellidos, Email, Teléfono, Cargo & Asociación y administración de accesos del directivo responsable. \\
+3. Docentes & Ficha del Docente, Título, Especialidad, Cursos asignados & Administración del personal docente y su carga de asignaturas. \\
+4. Cursos / Áreas & Áreas Curriculares, Grado, Nivel, Ponderaciones & Configuración y estructuración del plan de estudios anual. \\
+5. Grados y Secciones & Nivel Educativo, Grado, Aulas (1°A, 2°B), Tutor & Definición del mapa estructural y agrupamiento del alumnado. \\
+6. Alumnos & DNI, Ficha Familiar, Historial de Notas, Asistencia & Expediente unificado del estudiante y seguimiento longitudinal. \\
+7. Matrícula & Año Escolar, Vacantes, Requisitos, Estado del Proceso & Formalización anual del ingreso del alumnado y vacantes. \\
+8. Horarios & Bloque de Horas, Cruce Docente-Sección-Aula & Programación semanal de clases para optimizar los recursos. \\
+9. Aulas & Nombre de Aula, Ubicación, Aforo Máximo, Tipo & Inventario y control de aforo de la infraestructura escolar. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+A continuación, se detalla la descripción estructural y el flujo operativo de cada uno de los submódulos de la jerarquía:
+
+\paragraph{1. Submódulo de Información General de la IE.} Administra el perfil legal e institucional del centro escolar. Almacena campos críticos como la Razón Social, RUC de 11 dígitos, Dirección Física, Teléfono, Correo Institucional, Logotipo oficial, los niveles educativos autorizados (Inicial, Primaria, Secundaria) y el Código Modular de 7 dígitos otorgado por el Ministerio de Educación. Asimismo, aloja el conmutador de estado (Activo/Inactivo) mediante el cual el Superadministrador puede suspender temporalmente el acceso total a la plataforma en caso de atraso en suscripciones.
+
+\paragraph{2. Submódulo de Director.} Centraliza los datos del director o director general asignado para liderar la institución educativa. Permite registrar su documento de identidad (DNI), nombres completos, apellidos, datos de contacto (teléfono, correo electrónico) y cargo oficial. Este registro está interconectado con el sistema de autenticación, asegurando la inmediata asignación de permisos administrativos del tenant.
+
+\paragraph{3. Submódulo de Docentes.} Permite gestionar de manera exclusiva la planta docente adscrita al local. Este submódulo abarca la creación de fichas profesionales, control de estado laboral (activo/licencia), edición de datos de contacto y la asignación interactiva a las áreas curriculares que dictará en los distintos grados y secciones.
+
+\paragraph{4. Submódulo de Cursos / Áreas.} Organiza el plan académico que ofrece la institución educativa. Permite el registro formal de áreas (Matemática, Comunicación, Ciencia y Tecnología, etc.) organizadas por grado y nivel, estableciendo las competencias y ponderaciones específicas de calificación que gobernarán el módulo de notas del período.
+
+\paragraph{5. Submódulo de Grados y Secciones.} Estructura el tejido de grupos académicos del colegio. A través de este submódulo, el administrador puede crear secciones bajo los grados definidos en los niveles autorizados (ej. Inicial 3 años A, 1° de Primaria A, 5° de Secundaria B), vinculando a cada sección un docente tutor responsable del monitoreo grupal.
+
+\paragraph{6. Submódulo de Alumnos.} Constituye la bitácora longitudinal del estudiante en el centro escolar. Mantiene centralizada la ficha de inscripción del estudiante, el historial de matrícula por año, el registro histórico de notas de períodos anteriores, estadísticas de conducta y el vínculo directo con la ficha familiar de su apoderado responsable.
+
+\paragraph{7. Submódulo de Matrícula.} Gestiona el proceso operativo anual de incorporación y ratificación de alumnos. Permite al personal administrativo definir el número de vacantes por sección, procesar las fichas socioeconómicas, ratificar la matrícula de alumnos regulares y registrar el estado del pago correspondiente.
+
+\paragraph{8. Submódulo de Horarios.} Permite diseñar la cuadrícula de distribución escolar. Cruza la carga horaria de las secciones con la disponibilidad semanal de los docentes y la asignación física de las aulas, validando de forma activa que no se generen duplicidades o choques de horas.
+
+\paragraph{9. Submódulo de Aulas.} Administra la infraestructura física del colegio. Permite registrar las aulas disponibles (aulas tradicionales, laboratorios de computación, laboratorios de ciencias), su capacidad máxima de alumnos (aforo) y su equipamiento, proporcionando un control detallado sobre la logística del espacio de aprendizaje.
+
+\paragraph{Módulo de usuarios y roles.} Gestiona los usuarios del sistema y sus perfiles de acceso. El administrador del colegio puede crear usuarios para los distintos roles: director, secretaría, docentes, tutores, tesorería, padres y estudiantes. Cada rol tiene permisos específicos sobre los módulos y las acciones disponibles.
+
+\section{Módulos de Gestión Académica e Historial Escolar}
+
+Dan soporte a los procesos de inscripción, seguimiento y desarrollo de los perfiles institucionales de estudiantes y personal escolar.
+
+\paragraph{Módulo de matrícula.} Gestiona el proceso completo de matrícula: registro de la solicitud, verificación de datos, asignación de grado y sección, firma del compromiso de pago y generación del recibo de matrícula. El módulo mantiene el historial de matrículas de cada estudiante.
+
+\paragraph{Módulo de estudiantes.} Centraliza todos los datos de los estudiantes: datos personales, datos académicos, historial de matrículas, registro de apoderados, historial de notas, historial de asistencia, historial de conducta y estado de pagos.
+
+\paragraph{Módulo de apoderados.} Gestiona los datos de los apoderados y su relación con los estudiantes. Un apoderado puede estar vinculado a más de un estudiante. El módulo permite registrar el tipo de relación (padre, madre, apoderado legal) y los datos de contacto.
+
+\paragraph{Módulo de docentes.} Gestiona los datos de los docentes: información personal, formación académica, cursos asignados, horario de clases, historial de notas registradas y reportes de aula.
+
+\paragraph{Módulo académico.} Gestiona la estructura curricular del colegio: niveles educativos, grados, secciones, cursos y su asignación a los grados correspondientes. También gestiona los períodos académicos y las fechas de registro de notas.
+
+\paragraph{Módulo de horarios.} Gestiona el horario escolar: asignación de clases a bloques horarios, asignación de docentes a cada bloque, asignación de aulas y verificación de conflictos de horario. Genera vistas de horario por sección, por docente y por aula.
+
+\section{Módulos de Control de Asistencia y Evaluación}
+
+Orientados al registro, análisis y control presencial y curricular diario de los alumnos.
+
+\paragraph{Módulo de asistencia.} Permite el registro diario de asistencia de los estudiantes, la gestión de justificaciones de inasistencia, la generación de reportes de asistencia y la visualización de estadísticas de asistencia por estudiante, sección y período.
+
+\paragraph{Módulo de notas y evaluaciones.} Gestiona el registro de evaluaciones (tipo, fecha, ponderación), el ingreso de notas por los docentes, el cálculo automático de promedios y la generación de reportes de rendimiento académico.
+
+\paragraph{Módulo de libretas.} Genera automáticamente las libretas de notas de los estudiantes con todos los datos del período. Permite personalizar el formato de la libreta con el logo y los colores del colegio, y exportarla en PDF para su impresión o distribución electrónica.
+
+\paragraph{Módulo de conducta.} Gestiona el registro de incidencias de conducta, el seguimiento del historial conductual de cada estudiante, la generación de alertas por incidencias reiteradas y la elaboración de informes de convivencia escolar.
+
+\section{Módulos de Gestión Financiera, Comunicación y Soporte Analítico}
+
+Enfocados en los procesos económicos, enlaces informativos y generación de conocimiento ejecutivo para directivos y apoderados.
+
+\paragraph{Módulo de pagos y pensiones.} Gestiona el registro de pagos de matrícula y pensiones, el control de deudas pendientes, el cálculo de moras, la generación de recibos digitales y la elaboración de reportes financieros.
+
+\paragraph{Módulo de comunicación.} Gestiona el envío de comunicados escolares, el registro de citaciones a padres, el seguimiento de los acuerdos alcanzados en las reuniones y la comunicación directa entre la institución y las familias.
+
+\paragraph{Módulo de reportes.} Genera reportes automáticos de todas las áreas del sistema: reportes académicos, reportes de asistencia, reportes de conducta, reportes financieros y reportes institucionales. Los reportes pueden exportarse en PDF o Excel.
+
+\paragraph{Módulo de alertas.} Genera alertas automáticas basadas en condiciones configurables: bajo rendimiento académico, inasistencias frecuentes, deudas pendientes, incidencias conductuales reiteradas. Las alertas son enviadas a los usuarios correspondientes (tutor, director, padre) según la naturaleza de la situación.
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO XI — DISEÑO DEL SISTEMA
+% ═══════════════════════════════════════════════════════════════
+\chapter{Diseño del Sistema}
+
+\section{Requerimientos funcionales}
+
+\begin{table}[H]
+\centering
+\caption{Requerimientos funcionales de SICOLEGIO 360}
+\label{tab:req_func}
+
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+
+Código &
+Módulo &
+Descripción \\
+\midrule
+RF-01 & Instituciones & Registrar colegios en la plataforma \\
+RF-02 & Usuarios & Gestionar usuarios y roles \\
+RF-03 & Matrícula & Registrar y gestionar matrículas \\
+RF-04 & Estudiantes & Registrar y actualizar datos de estudiantes \\
+RF-05 & Apoderados & Registrar y vincular apoderados a estudiantes \\
+RF-06 & Docentes & Registrar y asignar docentes \\
+RF-07 & Académico & Configurar niveles, grados, secciones y cursos \\
+RF-08 & Horarios & Gestionar horarios de clases \\
+RF-09 & Asistencia & Registrar asistencia diaria de estudiantes \\
+RF-10 & Notas & Registrar evaluaciones y notas \\
+RF-11 & Promedios & Calcular promedios automáticamente \\
+RF-12 & Libretas & Generar libretas de notas en PDF \\
+RF-13 & Conducta & Registrar incidencias conductuales \\
+RF-14 & Pagos & Registrar pagos de matrícula y pensiones \\
+RF-15 & Comunicados & Enviar comunicados y citaciones \\
+RF-16 & Reportes & Generar reportes automáticos \\
+RF-17 & Alertas & Generar alertas por condiciones configuradas \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Requerimientos no funcionales}
+
+\begin{table}[H]
+\centering
+\caption{Requerimientos no funcionales de SICOLEGIO 360}
+\label{tab:req_nofunc}
+
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+
+Código &
+Categoría &
+Descripción \\
+\midrule
+RNF-01 & Seguridad & Autenticación con usuario y contraseña encriptada \\
+RNF-02 & Seguridad & Separación de datos entre instituciones \\
+RNF-03 & Seguridad & Roles y permisos por módulo \\
+RNF-04 & Disponibilidad & El sistema debe estar disponible el 99.5\% del tiempo \\
+RNF-05 & Rendimiento & Respuesta a consultas en menos de 3 segundos \\
+RNF-06 & Escalabilidad & Soporte para nuevas instituciones sin degradación \\
+RNF-07 & Usabilidad & Interfaz intuitiva para usuarios no técnicos \\
+RNF-08 & Compatibilidad & Accesible desde navegadores web estándar \\
+RNF-09 & Mantenibilidad & Documentación técnica actualizada \\
+RNF-10 & Respaldo & Copias de seguridad automáticas diarias \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Casos de uso}
+
+Los principales casos de uso del sistema incluyen:
+
+\begin{itemize}
+  \item \textbf{CU-01:} Registrar institución educativa (actor: superadministrador).
+  \item \textbf{CU-02:} Gestionar usuarios y roles (actor: administrador del colegio).
+  \item \textbf{CU-03:} Registrar matrícula (actor: secretaría).
+  \item \textbf{CU-04:} Registrar asistencia (actor: docente).
+  \item \textbf{CU-05:} Registrar notas (actor: docente).
+  \item \textbf{CU-06:} Generar libreta (actor: secretaría / sistema automático).
+  \item \textbf{CU-07:} Registrar pago de pensión (actor: tesorería).
+  \item \textbf{CU-08:} Consultar notas (actor: padre de familia / estudiante).
+  \item \textbf{CU-09:} Generar reporte académico (actor: director / coordinador).
+  \item \textbf{CU-10:} Gestionar alertas (actor: sistema automático / director).
+\end{itemize}
+
+\section{Diagramas del sistema}
+
+El sistema está representado mediante los diagramas incluidos en los anexos del presente documento. El Anexo 17 contiene el diagrama de casos de uso general del sistema. El Anexo 18 contiene el modelo entidad-relación de la base de datos. El Anexo 16 presenta el flujograma del proceso automatizado comparado con el proceso manual del Anexo 15.
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO XII — BASE DE DATOS
+% ═══════════════════════════════════════════════════════════════
+\chapter{Diseño de Base de Datos}
+
+\section{Modelo multiinstitucional de datos}
+
+La base de datos de SICOLEGIO 360 está diseñada bajo un modelo multiinstitucional, en el que la tabla \texttt{InstitucionEducativa} actúa como el nodo central de separación de datos. Todas las demás tablas tienen una clave foránea que las vincula a una institución educativa específica, garantizando que los datos de cada colegio estén completamente separados de los demás.
+
+\section{Modelo entidad-relación}
+
+El modelo entidad-relación de SICOLEGIO 360 contempla las siguientes entidades principales y sus relaciones. Ver Anexo 18 para el diagrama completo.
+
+\section{Tablas principales}
+
+\begin{table}[H]
+\centering
+\caption{Tablas principales de la base de datos de SICOLEGIO 360}
+\label{tab:tablas}
+
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+
+N° &
+Tabla &
+Descripción \\
+\midrule
+1 & InstitucionEducativa & Datos de los colegios registrados en la plataforma \\
+2 & Usuario & Usuarios del sistema con sus credenciales \\
+3 & Rol & Roles definidos en el sistema \\
+4 & Estudiante & Datos personales y académicos de los estudiantes \\
+5 & Apoderado & Datos de los apoderados vinculados a estudiantes \\
+6 & Docente & Datos de los docentes registrados en el colegio \\
+7 & NivelEducativo & Niveles educativos del colegio (inicial, primaria, secundaria) \\
+8 & Grado & Grados por nivel educativo \\
+9 & Seccion & Secciones por grado \\
+10 & Curso & Cursos por grado \\
+11 & PeriodoAcademico & Períodos de evaluación (bimestres, trimestres) \\
+12 & Matricula & Registro de matrículas por estudiante y período \\
+13 & Horario & Horario de clases por sección y período \\
+14 & Asistencia & Registro diario de asistencia por estudiante \\
+15 & Justificacion & Justificaciones de inasistencias \\
+16 & Evaluacion & Evaluaciones programadas por curso y período \\
+17 & Nota & Calificaciones de los estudiantes por evaluación \\
+18 & Promedio & Promedios calculados por estudiante y curso \\
+19 & Libreta & Libretas de notas generadas por período \\
+20 & Conducta & Incidencias conductuales de los estudiantes \\
+21 & Citacion & Citaciones enviadas a los apoderados \\
+22 & Pago & Pagos de matrícula y pensiones registrados \\
+23 & Pension & Estructura de pensiones del colegio \\
+24 & Comunicado & Comunicados enviados a la comunidad escolar \\
+25 & Alerta & Alertas generadas automáticamente por el sistema \\
+26 & Reporte & Reportes generados por el sistema \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Diccionario de datos}
+
+A continuación se presenta el diccionario de datos de las tablas más importantes del sistema. El diccionario completo se incluye en el Anexo 19.
+
+\begin{table}[H]
+\centering
+\caption{Diccionario de datos: tabla InstitucionEducativa}
+\label{tab:dic_inst}
+
+\begin{tabularx}{\textwidth}{llllX}
+\toprule
+
+Campo &
+Tipo &
+Longitud &
+Nulo &
+Descripción \\
+\midrule
+id\_institucion & INT & 11 & No & Identificador único \\
+nombre & VARCHAR & 200 & No & Nombre del colegio \\
+ruc & VARCHAR & 11 & Sí & RUC de la institución \\
+direccion & VARCHAR & 300 & Sí & Dirección física \\
+telefono & VARCHAR & 20 & Sí & Teléfono de contacto \\
+email & VARCHAR & 100 & Sí & Correo electrónico \\
+logo & VARCHAR & 500 & Sí & Ruta del logo \\
+estado & TINYINT & 1 & No & 1=Activo, 0=Inactivo \\
+fecha\_registro & DATETIME & --- & No & Fecha de registro \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Diccionario de datos: tabla Estudiante}
+\label{tab:dic_est}
+
+\begin{tabularx}{\textwidth}{llllX}
+\toprule
+
+Campo &
+Tipo &
+Longitud &
+Nulo &
+Descripción \\
+\midrule
+id\_estudiante & INT & 11 & No & Identificador único \\
+id\_institucion & INT & 11 & No & Clave foránea a InstitucionEducativa \\
+nombres & VARCHAR & 100 & No & Nombres del estudiante \\
+apellidos & VARCHAR & 100 & No & Apellidos del estudiante \\
+dni & VARCHAR & 15 & Sí & Documento de identidad \\
+fecha\_nacimiento & DATE & --- & Sí & Fecha de nacimiento \\
+sexo & CHAR & 1 & Sí & M=Masculino, F=Femenino \\
+estado & TINYINT & 1 & No & 1=Activo, 0=Inactivo \\
+fecha\_registro & DATETIME & --- & No & Fecha de registro \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Relaciones principales}
+
+Las relaciones más importantes de la base de datos son:
+
+\begin{itemize}
+  \item Una \textbf{InstitucionEducativa} tiene muchos \textbf{Estudiantes}, \textbf{Docentes}, \textbf{Grados} y \textbf{Secciones}.
+  \item Un \textbf{Estudiante} pertenece a una única \textbf{InstitucionEducativa}.
+  \item Un \textbf{Estudiante} puede tener uno o más \textbf{Apoderados}.
+  \item Un \textbf{Estudiante} tiene muchas \textbf{Notas}, muchas \textbf{Asistencias} y muchos \textbf{Pagos}.
+  \item Un \textbf{Docente} puede dictar varios \textbf{Cursos} en distintas \textbf{Secciones}.
+  \item Un \textbf{Curso} pertenece a un \textbf{Grado} dentro de una \textbf{InstitucionEducativa}.
+  \item Una \textbf{Seccion} tiene muchos \textbf{Estudiantes} y está asignada a un \textbf{Grado}.
+  \item Una \textbf{Nota} está asociada a un \textbf{Estudiante}, una \textbf{Evaluacion} y un \textbf{PeriodoAcademico}.
+  \item Un \textbf{Pago} está asociado a un \textbf{Estudiante} y a una \textbf{Pension} de la institución.
+\end{itemize}
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO XIII — ARQUITECTURA Y TECNOLOGÍA
+% ═══════════════════════════════════════════════════════════════
+\chapter{Arquitectura y Tecnología del Sistema}
+
+\section{Arquitectura en tres capas}
+
+SICOLEGIO 360 está diseñado bajo una arquitectura en tres capas, que separa claramente las responsabilidades de presentación, lógica de negocio y datos:
+
+\begin{itemize}
+  \item \textbf{Capa de presentación:} Es la interfaz de usuario. Permite a los distintos usuarios interactuar con el sistema: ingresar datos, consultar información y generar reportes. Esta capa se accede a través de un navegador web desde cualquier dispositivo con conexión a Internet.
+
+  \item \textbf{Capa de lógica de negocio:} Es el núcleo del sistema. Contiene las reglas de negocio que gobiernan el comportamiento del sistema: cálculo de promedios, generación de alertas, validación de datos de matrícula, verificación de pagos, entre otros. Esta capa se encarga de procesar las solicitudes de los usuarios y de coordinar el acceso a la base de datos.
+
+  \item \textbf{Capa de datos:} Es la base de datos multiinstitucional del sistema. Almacena toda la información de los colegios registrados, los estudiantes, los docentes, las notas, los pagos y todos los demás datos gestionados por el sistema.
+\end{itemize}
+
+\section{Arquitectura multiinstitucional}
+
+La arquitectura multiinstitucional de SICOLEGIO 360 garantiza que:
+
+\begin{itemize}
+  \item Varios colegios pueden usar la misma plataforma simultáneamente.
+  \item Cada colegio solo ve su propia información, nunca la de otros colegios.
+  \item Los datos de cada colegio están separados por la clave foránea \texttt{id\_institucion} en todas las tablas de la base de datos.
+  \item El sistema implementa roles y permisos que garantizan que cada usuario solo acceda a la información y las funcionalidades correspondientes a su perfil.
+  \item El sistema es escalable: puede incorporar nuevos colegios sin necesidad de modificar la arquitectura base.
+\end{itemize}
+
+\section{Herramientas tecnológicas propuestas}
+
+\begin{table}[H]
+\centering
+\caption{Herramientas tecnológicas propuestas para SICOLEGIO 360}
+\label{tab:tecnologia}
+
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+
+Capa &
+Herramienta &
+Función \\
+\midrule
+Presentación & HTML5, CSS3, JavaScript & Interfaz de usuario web \\
+Presentación & React / Vue.js & Framework de interfaz \\
+Lógica & Node.js / PHP / Django & Backend del sistema \\
+Lógica & REST API & Comunicación entre capas \\
+Datos & MySQL / PostgreSQL & Motor de base de datos \\
+Seguridad & HTTPS, JWT, BCrypt & Protección de comunicaciones \\
+Reportes & FPDF / JasperReports & Generación de documentos PDF \\
+Infraestructura & AWS / Azure / Google Cloud & Alojamiento en la nube \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Seguridad del sistema}
+
+La seguridad de SICOLEGIO 360 está basada en múltiples capas de protección:
+
+\begin{itemize}
+  \item \textbf{Autenticación:} El acceso al sistema requiere usuario y contraseña. Las contraseñas se almacenan encriptadas con algoritmos de hash seguros (BCrypt).
+  \item \textbf{Autorización:} El sistema implementa un modelo de control de acceso basado en roles (RBAC). Cada usuario solo puede acceder a los módulos y realizar las acciones permitidas por su rol.
+  \item \textbf{Separación de datos:} La arquitectura multiinstitucional garantiza que los datos de cada colegio estén completamente separados de los demás.
+  \item \textbf{Comunicación segura:} Todas las comunicaciones entre el navegador del usuario y el servidor del sistema se realizan a través del protocolo HTTPS.
+  \item \textbf{Copias de seguridad:} El sistema realiza copias de seguridad automáticas de la base de datos de manera diaria, almacenándolas en una ubicación segura y separada del servidor principal.
+  \item \textbf{Auditoría:} El sistema registra un log de todas las acciones realizadas por los usuarios, incluyendo los datos modificados, el usuario que realizó la acción y la fecha y hora del evento.
+\end{itemize}
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO XIV — BENEFICIOS Y RETOS
+% ═══════════════════════════════════════════════════════════════
+\chapter{Beneficios y Retos del Sistema}
+
+\section{Beneficios académicos}
+
+La implementación de SICOLEGIO 360 genera beneficios directos en la dimensión académica de las instituciones educativas:
+
+\begin{itemize}
+  \item \textbf{Mejor control de notas:} Los docentes registran las notas directamente en el sistema, eliminando el riesgo de pérdida o error de transcripción.
+  \item \textbf{Detección temprana del bajo rendimiento:} El sistema genera alertas automáticas cuando un estudiante presenta promedios por debajo del mínimo, permitiendo intervenciones oportunas.
+  \item \textbf{Libretas automáticas:} La generación automática de libretas elimina el trabajo manual de la secretaría y reduce los errores en el documento final.
+  \item \textbf{Seguimiento estudiantil integral:} El historial completo de cada estudiante (notas, asistencia, conducta, pagos) está disponible en tiempo real para tutores y directivos.
+\end{itemize}
+
+\section{Beneficios administrativos}
+
+\begin{itemize}
+  \item \textbf{Reducción de la pérdida de información:} Al centralizar todos los datos en una base de datos, se elimina el riesgo de pérdida de archivos físicos.
+  \item \textbf{Centralización de datos:} Toda la información institucional está disponible desde un único punto de acceso, sin necesidad de consultar múltiples archivos o sistemas.
+  \item \textbf{Reducción de errores:} La automatización de los cálculos y la validación de datos reduce significativamente los errores operativos.
+  \item \textbf{Reportes rápidos:} Los reportes que antes tomaban horas o días en elaborarse se generan automáticamente en segundos.
+\end{itemize}
+
+\section{Beneficios financieros}
+
+\begin{itemize}
+  \item \textbf{Control de pagos en tiempo real:} El estado de cuenta de cada estudiante está disponible de inmediato para tesorería y dirección.
+  \item \textbf{Identificación oportuna de deudas:} El sistema identifica automáticamente las deudas pendientes y genera alertas antes de que se acumulen.
+  \item \textbf{Control de morosidad:} El índice de morosidad es calculado y actualizado automáticamente, permitiendo a la dirección tomar medidas preventivas.
+  \item \textbf{Reportes financieros automáticos:} Los reportes de recaudación, deudas y moras se generan automáticamente para cualquier período seleccionado.
+\end{itemize}
+
+\section{Beneficios para docentes}
+
+\begin{itemize}
+  \item \textbf{Registro rápido de notas y asistencia:} El proceso de registro desde el sistema es más rápido y seguro que el registro manual en cuadernos.
+  \item \textbf{Reducción del trabajo manual:} El cálculo de promedios, la generación de reportes de aula y la comunicación con padres se realizan automáticamente.
+  \item \textbf{Acceso a reportes por aula:} Los docentes pueden consultar en tiempo real el rendimiento de sus estudiantes, identificar a quienes necesitan apoyo y comunicarse con sus padres desde la plataforma.
+\end{itemize}
+
+\section{Beneficios para padres}
+
+\begin{itemize}
+  \item \textbf{Mejor comunicación:} Los padres reciben comunicados, citaciones y alertas a través de un canal formal y organizado.
+  \item \textbf{Acceso a información clara y actualizada:} Los padres pueden consultar en cualquier momento las notas, asistencias y pagos de sus hijos sin necesitar comunicarse con la secretaría.
+\end{itemize}
+
+\section{Beneficios para estudiantes}
+
+\begin{itemize}
+  \item \textbf{Transparencia en la información académica:} Los estudiantes pueden consultar sus propias notas, horarios y asistencias en tiempo real.
+  \item \textbf{Comunicación directa con la institución:} Las alertas y comunicados del colegio llegan de manera oportuna a través de la plataforma.
+\end{itemize}
+
+\section{Beneficios para directivos}
+
+\begin{itemize}
+  \item \textbf{Toma de decisiones basada en datos:} Los directivos tienen acceso a reportes e indicadores actualizados en tiempo real para fundamentar sus decisiones.
+  \item \textbf{Control académico, financiero y administrativo integral:} La visión global de la institución está disponible desde un único tablero de control.
+\end{itemize}
+
+\section{Beneficios para el administrador de la plataforma}
+
+\begin{itemize}
+  \item \textbf{Gestión de múltiples colegios:} El superadministrador puede monitorear el desempeño de todos los colegios registrados desde un único panel.
+  \item \textbf{Escalabilidad comercial:} El modelo multiinstitucional permite incorporar nuevos colegios usuarios sin necesidad de desarrollar una nueva plataforma.
+  \item \textbf{Reportes globales:} El ESS proporciona información global sobre el crecimiento y el desempeño de la plataforma.
+\end{itemize}
+
+\section{Retos de implementación}
+
+A pesar de los beneficios descritos, la implementación de SICOLEGIO 360 enfrenta una serie de retos que deben ser gestionados adecuadamente:
+
+\begin{enumerate}
+  \item \textbf{Capacitación de usuarios:} El personal de los colegios debe ser capacitado para usar el sistema de manera efectiva. La resistencia al cambio puede generar una curva de aprendizaje lenta.
+  \item \textbf{Resistencia al cambio:} Algunos directivos y docentes pueden preferir continuar con los métodos manuales por costumbre o desconfianza hacia la tecnología.
+  \item \textbf{Costo de implementación:} La adquisición, configuración y mantenimiento del sistema implica una inversión inicial que puede ser difícil de asumir para colegios de recursos limitados.
+  \item \textbf{Seguridad de la información:} El manejo de datos personales de menores de edad requiere cumplir con regulaciones específicas de protección de datos.
+  \item \textbf{Calidad de los datos registrados:} El valor del sistema depende de la calidad de los datos ingresados. Si el personal no registra los datos correctamente, los reportes y análisis serán inexactos.
+  \item \textbf{Mantenimiento de la plataforma:} El sistema requiere actualizaciones periódicas, mantenimiento técnico y soporte continuo para garantizar su funcionamiento óptimo.
+\end{enumerate}
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO XV — VIABILIDAD
+% ═══════════════════════════════════════════════════════════════
+\chapter{Viabilidad del Sistema}
+
+\section{Viabilidad técnica}
+
+Desde el punto de vista técnico, SICOLEGIO 360 es plenamente viable. Las tecnologías necesarias para su desarrollo son maduras, ampliamente disponibles y bien documentadas. El uso de frameworks de desarrollo web modernos, sistemas gestores de bases de datos relacionales consolidados y servicios de alojamiento en la nube garantiza la disponibilidad, el rendimiento y la escalabilidad del sistema.
+
+La arquitectura en tres capas propuesta es un estándar de la industria para aplicaciones web de este tipo, lo que facilita el desarrollo, el mantenimiento y la escalabilidad. La separación de datos entre colegios mediante el modelo multiinstitucional es técnicamente sencilla de implementar y no supone un riesgo técnico significativo.
+
+El único riesgo técnico relevante es la migración de datos históricos desde los sistemas actuales de los colegios (Excel, archivos físicos) hacia la nueva plataforma. Este proceso debe planificarse cuidadosamente para garantizar la integridad y la completitud de los datos migrados.
+
+\section{Viabilidad económica}
+
+Desde el punto de vista económico, el modelo multiinstitucional de SICOLEGIO 360 es especialmente atractivo porque permite distribuir los costos de desarrollo e infraestructura entre múltiples colegios usuarios. En lugar de que cada colegio financie el desarrollo de su propio sistema, todos los colegios comparten el costo de una plataforma única.
+
+El modelo de negocio propuesto es el de suscripción mensual o anual, con planes diferenciados según el tamaño del colegio (número de estudiantes). Este modelo genera ingresos recurrentes que permiten financiar el mantenimiento y la mejora continua de la plataforma.
+
+Los beneficios económicos para los colegios incluyen la reducción de costos operativos (menos tiempo dedicado a tareas administrativas manuales), la mejora en la gestión financiera (reducción de la morosidad por un mejor control de pagos) y la mejora en la imagen institucional (mejor servicio a los padres de familia).
+
+\section{Viabilidad operativa}
+
+Desde el punto de vista operativo, la viabilidad del sistema depende principalmente de la capacidad de los colegios para adoptar el nuevo sistema de trabajo. Los factores clave son la voluntad del personal para aprender a usar el sistema, la disponibilidad de dispositivos con acceso a Internet en las instalaciones del colegio y el compromiso de la dirección con el proceso de implementación.
+
+La viabilidad operativa se puede mejorar mediante una implementación progresiva por módulos (comenzando con los módulos de mayor impacto, como matrícula y notas), un programa de capacitación adecuado y un servicio de soporte técnico accesible para los usuarios.
+
+\section{Viabilidad organizacional}
+
+Desde el punto de vista organizacional, la implementación de SICOLEGIO 360 requiere que los colegios estén dispuestos a revisar y adaptar sus procesos internos para aprovechar al máximo las capacidades del sistema. Esto puede implicar cambios en las responsabilidades de algunos roles, la eliminación de algunos procesos manuales y la incorporación de nuevos procedimientos de ingreso y consulta de información.
+
+La dirección del colegio juega un papel fundamental en la viabilidad organizacional: su compromiso con el proceso de implementación y su disposición a promover el uso del sistema entre todo el personal son factores determinantes para el éxito del proyecto.
+
+\section{Viabilidad comercial}
+
+Desde el punto de vista comercial, el mercado de colegios privados pequeños y medianos en el Perú y América Latina es amplio y está subatendido en términos de soluciones tecnológicas accesibles y específicas para el sector. La mayoría de las soluciones existentes son costosas, complejas de implementar o no están adaptadas a las particularidades del sistema educativo peruano.
+
+SICOLEGIO 360 ofrece una propuesta de valor diferenciada: es una plataforma específicamente diseñada para colegios (no un ERP genérico adaptado), es multiinstitucional (reduciendo costos por economía de escala), es accesible desde cualquier dispositivo con Internet y está disponible a un costo de suscripción asequible para el mercado objetivo.
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO XVI — CONCLUSIONES
+% ═══════════════════════════════════════════════════════════════
+\chapter{Conclusiones}
+
+\section{Conclusión sobre la automatización de procesos}
+
+La propuesta de SICOLEGIO 360 demuestra que la automatización de los procesos académicos, administrativos y financieros de las instituciones educativas es técnicamente viable, económicamente justificable y organizacionalmente beneficiosa. Los procesos que actualmente se realizan de manera manual —matrícula, registro de notas, cálculo de promedios, emisión de libretas, control de pagos— pueden ser automatizados de manera integral, eliminando los errores, las demoras y las ineficiencias propias de la gestión manual.
+
+La automatización no implica la eliminación del rol humano en la gestión educativa, sino su transformación: en lugar de dedicar tiempo a tareas repetitivas y mecánicas, el personal puede concentrarse en actividades de mayor valor agregado, como el análisis de los datos generados por el sistema, la atención personalizada a los estudiantes y la toma de decisiones basadas en información confiable.
+
+\section{Conclusión sobre el enfoque socio-tecnológico}
+
+El enfoque socio-tecnológico adoptado en el diseño de SICOLEGIO 360 es fundamental para su éxito. Un sistema de información educativa que solo considere la dimensión tecnológica —el software, la base de datos, los módulos— sin contemplar la dimensión humana y organizacional está condenado al fracaso. Las personas que usarán el sistema, los procesos que apoyará y la cultura de cada institución educativa deben ser considerados desde el inicio del diseño.
+
+SICOLEGIO 360 integra tecnología, organización, personas y procesos en un diseño que busca el ajuste óptimo entre las capacidades técnicas del sistema y las necesidades reales de los colegios usuarios. Este enfoque garantiza que el sistema no solo sea técnicamente correcto, sino también socialmente adoptable y organizacionalmente útil.
+
+\section{Conclusión sobre los sistemas empresariales}
+
+La aplicación del concepto de sistema empresarial integrado al sector educativo es una de las contribuciones más importantes de este proyecto. SICOLEGIO 360 demuestra que las instituciones educativas, al igual que las empresas, pueden beneficiarse enormemente de la integración de sus procesos en una sola plataforma. La eliminación de las islas de información, la disponibilidad de datos en tiempo real y la generación automática de reportes transforman la capacidad de gestión de los colegios que adoptan el sistema.
+
+\section{Conclusión sobre el análisis de datos}
+
+El análisis de datos es uno de los beneficios más significativos de SICOLEGIO 360. Al centralizar toda la información institucional en una base de datos integrada, el sistema permite generar indicadores, cruzar variables y detectar patrones que serían imposibles de identificar con sistemas manuales. La detección temprana de estudiantes en riesgo académico, la identificación de familias con alto nivel de morosidad y el análisis de la evolución del rendimiento académico son capacidades que tienen un impacto directo en la calidad del servicio educativo.
+
+\section{Conclusión sobre el uso multiinstitucional}
+
+El diseño multiinstitucional de SICOLEGIO 360 es su característica más innovadora y diferenciadora. Al permitir que múltiples colegios compartan una misma plataforma, el sistema ofrece una solución económicamente accesible para instituciones que no pueden financiar el desarrollo de su propio sistema de información. Este modelo no solo beneficia a los colegios usuarios, sino que también crea un ecosistema de datos que el superadministrador de la plataforma puede aprovechar para mejorar continuamente el servicio.
+
+\section{Conclusión sobre la toma de decisiones}
+
+SICOLEGIO 360 transforma la toma de decisiones en los colegios: de decisiones basadas en la intuición y la experiencia personal a decisiones fundamentadas en datos confiables y actualizados. Los directores y coordinadores que usan el sistema tienen acceso a indicadores de rendimiento, alertas tempranas y análisis comparativos que les permiten actuar de manera proactiva, anticipándose a los problemas antes de que se conviertan en crisis.
+
+% ═══════════════════════════════════════════════════════════════
+%  CAPÍTULO XVII — RECOMENDACIONES
+% ═══════════════════════════════════════════════════════════════
+\chapter{Recomendaciones}
+
+\section{Capacitación a usuarios}
+
+Se recomienda diseñar e implementar un programa de capacitación integral para todos los usuarios del sistema, diferenciado por rol. El programa debe incluir tutoriales, manuales de usuario, sesiones de entrenamiento presencial y recursos de ayuda en línea. La capacitación debe realizarse antes del inicio del uso del sistema y debe incluir sesiones de seguimiento para resolver dudas surgidas durante el uso real.
+
+\section{Implementación progresiva por módulos}
+
+Se recomienda implementar el sistema de manera progresiva, comenzando con los módulos de mayor impacto y menor complejidad operativa. El orden sugerido es: módulo de estudiantes y matrícula, módulo de notas y asistencia, módulo de pagos, módulo de comunicación y, finalmente, módulos de reportes y alertas. Esta estrategia permite al personal del colegio familiarizarse gradualmente con el sistema y reduce el riesgo de rechazo por sobrecarga de cambios.
+
+\section{Protección de datos personales}
+
+Se recomienda implementar una política de privacidad clara que explique a los usuarios (padres, estudiantes y personal) cómo se recopilan, almacenan y utilizan sus datos personales. La plataforma debe cumplir con la legislación vigente sobre protección de datos personales en cada país donde opere. Se deben establecer procedimientos claros para la eliminación de datos de estudiantes que dejan de ser parte de la institución.
+
+\section{Copias de seguridad periódicas}
+
+Se recomienda implementar un sistema de copias de seguridad automáticas que se ejecuten al menos una vez al día, con almacenamiento en una ubicación geográficamente separada del servidor principal. Las copias de seguridad deben verificarse periódicamente para garantizar que pueden ser restauradas correctamente en caso de falla.
+
+\section{Evaluación del sistema después de su uso}
+
+Se recomienda realizar una evaluación formal del sistema después de su primer año de uso, que incluya encuestas de satisfacción a los usuarios, análisis de los indicadores de uso del sistema y revisión de los objetivos alcanzados. Los resultados de esta evaluación deben servir como base para la planificación de mejoras y actualizaciones del sistema.
+
+\section{Mejora continua de la plataforma}
+
+Se recomienda adoptar una cultura de mejora continua en el desarrollo y la gestión de SICOLEGIO 360. Esto implica mantener un canal formal de retroalimentación con los colegios usuarios, priorizar las mejoras según su impacto y viabilidad, actualizar el sistema periódicamente para incorporar nuevas funcionalidades y corregir deficiencias identificadas, y mantenerse al día con las tendencias tecnológicas del sector educativo.
+
+% ─────────────────────────────────────────────────────────────
+%  BIBLIOGRAFÍA
+% ─────────────────────────────────────────────────────────────
+\begin{thebibliography}{99}
+
+\bibitem[Laudon y Laudon(2016)]{laudon2016}
+Laudon, K. C., \& Laudon, J. P. (2016).
+\textit{Sistemas de información gerencial} (14.ª ed.).
+Pearson Educación.
+
+\bibitem[O'Brien y Marakas(2009)]{obrien2009}
+O'Brien, J. A., \& Marakas, G. M. (2009).
+\textit{Management information systems} (9.ª ed.).
+McGraw-Hill / Irwin.
+
+\bibitem[Stair y Reynolds(2016)]{stair2016}
+Stair, R., \& Reynolds, G. (2016).
+\textit{Principles of information systems} (12.ª ed.).
+Cengage Learning.
+
+\bibitem[Kendall y Kendall(2011)]{kendall2011}
+Kendall, K. E., \& Kendall, J. E. (2011).
+\textit{Análisis y diseño de sistemas} (8.ª ed.).
+Pearson Educación.
+
+\bibitem[Date(2001)]{date2001}
+Date, C. J. (2001).
+\textit{Introducción a los sistemas de bases de datos} (7.ª ed.).
+Pearson Educación.
+
+\bibitem[Sommerville(2011)]{sommerville2011}
+Sommerville, I. (2011).
+\textit{Ingeniería de software} (9.ª ed.).
+Pearson Educación.
+
+\bibitem[Pressman(2010)]{pressman2010}
+Pressman, R. S. (2010).
+\textit{Ingeniería del software: un enfoque práctico} (7.ª ed.).
+McGraw-Hill.
+
+\bibitem[Hern\'andez Sampieri et~al.(2014)]{hernandez2014}
+Hernández Sampieri, R., Fernández Collado, C., \& Baptista Lucio, P. (2014).
+\textit{Metodología de la investigación} (6.ª ed.).
+McGraw-Hill.
+
+\bibitem[Porter(1985)]{porter1985}
+Porter, M. E. (1985).
+\textit{Competitive advantage: Creating and sustaining superior performance}.
+Free Press.
+
+\end{thebibliography}
+
+% ─────────────────────────────────────────────────────────────
+%  ANEXOS
+% ─────────────────────────────────────────────────────────────
+\appendix
+\addcontentsline{toc}{chapter}{Anexos}
+
+% ─────────────────────────────────────────────────────────────
+\chapter*{Anexo 1: Enfoque Socio-Tecnol\'ogico}
+\addcontentsline{toc}{chapter}{Anexo 1: Enfoque Socio-Tecnol\'ogico}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{image.png}
+  \caption{Dimensiones del enfoque socio-tecnológico de SICOLEGIO 360}
+  \label{fig:sistema-informacion}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────
+
+
+
+% ─────────────────────────────────────────────────────────────
+
+% ─────────────────────────────────────────────────────────────
+\chapter*{Anexo 2: Pir\'amide de Niveles Organizacionales}
+\addcontentsline{toc}{chapter}{Anexo 4: Pir\'amide de Niveles Organizacionales}
+
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{1.png}
+  \caption{Pirámide de niveles Organizacionales}
+  \label{fig:sistema-informacion}
+\end{figure}
+%─────────────────────────────────────────────────────────────
+\chapter*{Anexo 3: Tipos de Sistemas de Informaci\'on}
+\addcontentsline{toc}{chapter}{Anexo 5: Tipos de Sistemas de Informaci\'on}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{3.png}
+  \caption{Relación entre tipos de sistemas en SICOLEGIO 360}
+  \label{fig:sistema-informacion}
+\end{figure}
+
+%
+
+\end{document}

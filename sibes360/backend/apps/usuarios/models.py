@@ -24,6 +24,7 @@ class Usuario(AbstractUser):
         related_name='usuarios'
     )
     estado = models.BooleanField(default=True)
+    dni = models.CharField(max_length=8, blank=True, null=True, unique=True, verbose_name="DNI")
 
     # Use email or username for auth
     def __str__(self):

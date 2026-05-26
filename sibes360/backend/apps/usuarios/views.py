@@ -26,13 +26,18 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return Usuario.objects.all()
+            queryset = Usuario.objects.all()
+            institucion_id = self.request.query_params.get('institucion', None)
+            if institucion_id:
+                queryset = queryset.filter(institucion_id=institucion_id)
+            return queryset
         elif rol == 'Director':
             return Usuario.objects.filter(institucion=user.institucion)
         elif rol == 'Docente':
             return Usuario.objects.filter(id=user.id)
         else:
             return Usuario.objects.none()
+
 
     def update(self, request, *args, **kwargs):
         user = request.user

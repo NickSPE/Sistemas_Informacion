@@ -1,7 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
 const Layout = ({ children }) => {
+  const { user, selectedInstitucion, setSelectedInstitucion } = useAuth();
+  const [instituciones, setInstituciones] = useState([]);
+
+  useEffect(() => {
+    if (user?.rol === 'SuperAdmin') {
+      const fetchInsts = async () => {
+        try {
+          const res = await axios.get('http://localhost:8000/api/instituciones/');
+          setInstituciones(res.data);
+        } catch (err) {
+          console.error("Layout failed to load institutions:", err);
+        }
+      };
+      fetchInsts();
+    }
+  }, [user]);
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#f4f6fb]">
       {/* Column 1: Left Navy Sidebar (240px) */}
@@ -15,6 +34,25 @@ const Layout = ({ children }) => {
             <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">SIBES 360</span>
             <span className="text-slate-300">/</span>
             <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider">Lima, Perú</span>
+            {user?.rol === 'SuperAdmin' && (
+              <>
+                <span className="text-slate-300">/</span>
+                <div className="flex items-center gap-1.5 ml-1">
+                  <select
+                    value={selectedInstitucion}
+                    onChange={(e) => setSelectedInstitucion(e.target.value)}
+                    className="bg-[#fcfcff] border border-indigo-100 hover:border-indigo-200 text-[11px] font-bold text-indigo-600 rounded-lg px-2.5 py-1 focus:outline-none focus:border-[#6c63ff] cursor-pointer shadow-sm transition-all"
+                  >
+                    <option value="">🏫 Todos los Colegios (Global)</option>
+                    {instituciones.map((inst) => (
+                      <option key={inst.id} value={inst.id}>
+                        🏫 {inst.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
           </div>
           <div className="flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -32,3 +70,4 @@ const Layout = ({ children }) => {
 };
 
 export default Layout;
+
