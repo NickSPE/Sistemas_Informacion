@@ -23,7 +23,7 @@ const Pagos = () => {
     try {
       const [pagRes, penRes, estRes] = await Promise.all([
         axios.get('http://localhost:8000/api/pagos/'),
-        axios.get('http://localhost:8000/api/pension/'),
+        axios.get('http://localhost:8000/api/pensiones/'),
         axios.get('http://localhost:8000/api/estudiantes/')
       ]);
       setPagos(pagRes.data);

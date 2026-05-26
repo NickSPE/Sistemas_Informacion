@@ -22,7 +22,7 @@ const Libretas = () => {
       const [libRes, estRes, perRes] = await Promise.all([
         axios.get('http://localhost:8000/api/libretas/'),
         axios.get('http://localhost:8000/api/estudiantes/'),
-        axios.get('http://localhost:8000/api/periodo/')
+        axios.get('http://localhost:8000/api/periodos/')
       ]);
       setLibretas(libRes.data);
       setEstudiantes(estRes.data);

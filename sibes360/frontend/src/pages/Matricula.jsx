@@ -26,9 +26,9 @@ const Matricula = () => {
       const [matRes, estRes, gradRes, seccRes, perRes] = await Promise.all([
         axios.get('http://localhost:8000/api/matricula/'),
         axios.get('http://localhost:8000/api/estudiantes/'),
-        axios.get('http://localhost:8000/api/grado/'),
-        axios.get('http://localhost:8000/api/seccion/'),
-        axios.get('http://localhost:8000/api/periodo/')
+        axios.get('http://localhost:8000/api/grados/'),
+        axios.get('http://localhost:8000/api/secciones/'),
+        axios.get('http://localhost:8000/api/periodos/')
       ]);
       setMatriculas(matRes.data);
       setEstudiantes(estRes.data);

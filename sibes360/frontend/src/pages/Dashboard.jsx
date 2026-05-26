@@ -4,8 +4,24 @@ import {
   Users, Briefcase, Building, AlertTriangle, TrendingDown, Clock, ShieldAlert, FileText 
 } from 'lucide-react';
 import KPICard from '../components/KPICard';
+import Badge from '../components/Badge';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../context/AuthContext';
+
+const directorPendingFeatures = [
+  {
+    modulo: 'Dashboard',
+    detalle: 'Las gráficas de asistencia y morosidad usan datos simulados.'
+  },
+  {
+    modulo: 'Reportes',
+    detalle: 'El gráfico por colegio aún se alimenta de datos de ejemplo.'
+  },
+  {
+    modulo: 'Libretas',
+    detalle: 'La impresión solo muestra una alerta; falta generar el PDF final.'
+  }
+];
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -47,6 +63,7 @@ const Dashboard = () => {
 
   const isParent = user?.rol === 'Apoderado';
   const isTeacher = user?.rol === 'Docente';
+  const isDirector = user?.rol === 'Director';
 
   return (
     <div className="space-y-6">
@@ -226,6 +243,23 @@ const Dashboard = () => {
               </a>
             </div>
           </div>
+
+          {isDirector && (
+            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+              <h2 className="text-sm font-bold text-[#1a1f36] mb-4">Funcionalidades Pendientes</h2>
+              <div className="space-y-3">
+                {directorPendingFeatures.map((item) => (
+                  <div key={item.modulo} className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-bold text-[#1a1f36]">{item.modulo}</p>
+                      <p className="text-[10px] text-[#8898aa]">{item.detalle}</p>
+                    </div>
+                    <Badge type="pendiente" text="Pendiente" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
       </div>
