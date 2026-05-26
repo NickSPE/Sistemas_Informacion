@@ -35,7 +35,7 @@ class AsistenciaViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(fecha=fecha)
         if estudiante:
             queryset = queryset.filter(estudiante_id=estudiante)
-        return queryset
+        return queryset.select_related('estudiante', 'justificacion')
 
     @action(detail=False, methods=['get'], url_path='reporte')
     def reporte(self, request):

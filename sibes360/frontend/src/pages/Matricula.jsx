@@ -14,6 +14,7 @@ const Matricula = () => {
   const [periodos, setPeriodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedYearFilter, setSelectedYearFilter] = useState('2025');
 
   // Form states
   const [selectedStudent, setSelectedStudent] = useState('');
@@ -89,21 +90,39 @@ const Matricula = () => {
     );
   }
 
+  const years = [...new Set(matriculas.map(m => m.periodo_anio?.toString()).filter(Boolean))].sort((a, b) => b - a);
+  const availableYears = years.length > 0 ? years : ['2025', '2024', '2023', '2022'];
+  const filteredMatriculas = matriculas.filter(m => m.periodo_anio?.toString() === selectedYearFilter);
+
   return (
     <div className="space-y-6">
       {/* Strict single H1 Constraint */}
-      <div>
-        <h1 className="text-xl font-bold text-[#1a1f36] tracking-tight">Proceso de Matrícula</h1>
-        <p className="text-xs text-[#8898aa]">Gestión de matrículas activas, asignaciones de aula y periodos vigentes.</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-[#1a1f36] tracking-tight">Proceso de Matrícula</h1>
+          <p className="text-xs text-[#8898aa]">Gestión de matrículas activas, asignaciones de aula y periodos vigentes.</p>
+        </div>
+        <div className="flex items-center gap-2 bg-white px-3 py-1.5 border border-slate-200 rounded-xl shadow-sm">
+          <span className="text-[10px] font-bold text-[#8898aa] uppercase tracking-wider">Año Académico:</span>
+          <select
+            value={selectedYearFilter}
+            onChange={(e) => setSelectedYearFilter(e.target.value)}
+            className="text-xs font-bold text-[#1a1f36] bg-transparent border-none focus:outline-none cursor-pointer"
+          >
+            {availableYears.map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Center Column */}
         <div className="lg:col-span-2">
           <DataTable
-            title="Matrículas Escolares 2025"
+            title={`Matrículas Escolares - ${selectedYearFilter}`}
             columns={columns}
-            data={matriculas}
+            data={filteredMatriculas}
             searchField="estudiante_apellidos"
             onAdd={() => setIsModalOpen(true)}
             addLabel="Matricular Alumno"
@@ -114,8 +133,8 @@ const Matricula = () => {
         <div className="space-y-6">
           <KPICard 
             title="Alumnos Matriculados" 
-            value={matriculas.length} 
-            subtitle="Matrículas en periodo vigente" 
+            value={filteredMatriculas.length} 
+            subtitle={`Matrículas en el año ${selectedYearFilter}`} 
             icon={UserPlus} 
           />
           <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">

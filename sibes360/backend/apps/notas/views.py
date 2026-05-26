@@ -5,6 +5,18 @@ from .models import Evaluacion, Nota, Promedio
 from .serializers import EvaluacionSerializer, NotaSerializer, PromedioSerializer
 from apoderados.models import Apoderado
 
+def get_docente_profile(user):
+    from docentes.models import Docente
+    if not user or not user.is_authenticated or not user.rol or user.rol.nombre_rol != 'Docente':
+        return None
+    docente_profile = None
+    if getattr(user, 'dni', None):
+        docente_profile = Docente.objects.filter(institucion=user.institucion, dni=user.dni).first()
+    if not docente_profile:
+        full_name = f"{user.first_name} {user.last_name}".strip()
+        docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+    return docente_profile
+
 class EvaluacionViewSet(viewsets.ModelViewSet):
     queryset = Evaluacion.objects.all()
     serializer_class = EvaluacionSerializer
@@ -21,10 +33,8 @@ class EvaluacionViewSet(viewsets.ModelViewSet):
         elif rol == 'Director':
             queryset = Evaluacion.objects.filter(curso__institucion=user.institucion)
         elif rol == 'Docente':
-            from docentes.models import Docente
             from horarios.models import Horario
-            full_name = f"{user.first_name} {user.last_name}".strip()
-            docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+            docente_profile = get_docente_profile(user)
             if docente_profile:
                 cursos_ids = Horario.objects.filter(docente=docente_profile).values_list('curso_id', flat=True)
                 queryset = Evaluacion.objects.filter(curso__institucion=user.institucion, curso_id__in=cursos_ids)
@@ -38,7 +48,7 @@ class EvaluacionViewSet(viewsets.ModelViewSet):
         curso_id = self.request.query_params.get('curso', None)
         if curso_id:
             queryset = queryset.filter(curso_id=curso_id)
-        return queryset
+        return queryset.select_related('curso', 'periodo')
 
     def create(self, request, *args, **kwargs):
         user = request.user
@@ -47,11 +57,9 @@ class EvaluacionViewSet(viewsets.ModelViewSet):
             return Response({"detail": "No autorizado para apoderados."}, status=status.HTTP_403_FORBIDDEN)
         if rol == 'Docente':
             # Verify they teach the course
-            from docentes.models import Docente
             from horarios.models import Horario
             curso_id = request.data.get('curso')
-            full_name = f"{user.first_name} {user.last_name}".strip()
-            docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+            docente_profile = get_docente_profile(user)
             if not docente_profile or not curso_id:
                 return Response({"detail": "Curso o perfil inválido."}, status=status.HTTP_400_BAD_REQUEST)
             teaches = Horario.objects.filter(docente=docente_profile, curso_id=curso_id).exists()
@@ -75,10 +83,8 @@ class NotaViewSet(viewsets.ModelViewSet):
         elif rol == 'Director':
             queryset = Nota.objects.filter(estudiante__institucion=user.institucion)
         elif rol == 'Docente':
-            from docentes.models import Docente
             from horarios.models import Horario
-            full_name = f"{user.first_name} {user.last_name}".strip()
-            docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+            docente_profile = get_docente_profile(user)
             if docente_profile:
                 cursos_ids = Horario.objects.filter(docente=docente_profile).values_list('curso_id', flat=True)
                 queryset = Nota.objects.filter(estudiante__institucion=user.institucion, evaluacion__curso_id__in=cursos_ids)
@@ -96,7 +102,7 @@ class NotaViewSet(viewsets.ModelViewSet):
         curso_id = self.request.query_params.get('curso', None)
         if curso_id:
             queryset = queryset.filter(evaluacion__curso_id=curso_id)
-        return queryset
+        return queryset.select_related('evaluacion__curso', 'estudiante')
 
     def create(self, request, *args, **kwargs):
         user = request.user
@@ -105,7 +111,6 @@ class NotaViewSet(viewsets.ModelViewSet):
             return Response({"detail": "Los apoderados no pueden registrar calificaciones."}, status=status.HTTP_403_FORBIDDEN)
         if rol == 'Docente':
             # Verify they teach the course of the evaluation and the student is in their class
-            from docentes.models import Docente
             from horarios.models import Horario
             from matricula.models import Matricula
             eval_id = request.data.get('evaluacion')
@@ -113,8 +118,7 @@ class NotaViewSet(viewsets.ModelViewSet):
             evaluacion = Evaluacion.objects.filter(id=eval_id).first()
             if not evaluacion or not student_id:
                 return Response({"detail": "Evaluación o estudiante inválido."}, status=status.HTTP_400_BAD_REQUEST)
-            full_name = f"{user.first_name} {user.last_name}".strip()
-            docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+            docente_profile = get_docente_profile(user)
             if not docente_profile:
                 return Response({"detail": "Perfil de docente no encontrado."}, status=status.HTTP_400_BAD_REQUEST)
             # Must teach the course
@@ -145,10 +149,8 @@ class NotaViewSet(viewsets.ModelViewSet):
             if rol == 'Director':
                 promedios = promedios.filter(estudiante__institucion=user.institucion)
             elif rol == 'Docente':
-                from docentes.models import Docente
                 from horarios.models import Horario
-                full_name = f"{user.first_name} {user.last_name}".strip()
-                docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+                docente_profile = get_docente_profile(user)
                 if docente_profile:
                     cursos_ids = Horario.objects.filter(docente=docente_profile).values_list('curso_id', flat=True)
                     promedios = promedios.filter(estudiante__institucion=user.institucion, curso_id__in=cursos_ids)
@@ -176,22 +178,24 @@ class PromedioViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return Promedio.objects.all()
+            queryset = Promedio.objects.all()
         elif rol == 'Director':
-            return Promedio.objects.filter(estudiante__institucion=user.institucion)
+            queryset = Promedio.objects.filter(estudiante__institucion=user.institucion)
         elif rol == 'Docente':
-            from docentes.models import Docente
             from horarios.models import Horario
-            full_name = f"{user.first_name} {user.last_name}".strip()
-            docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+            docente_profile = get_docente_profile(user)
             if docente_profile:
                 cursos_ids = Horario.objects.filter(docente=docente_profile).values_list('curso_id', flat=True)
-                return Promedio.objects.filter(estudiante__institucion=user.institucion, curso_id__in=cursos_ids)
-            return Promedio.objects.none()
+                queryset = Promedio.objects.filter(estudiante__institucion=user.institucion, curso_id__in=cursos_ids)
+            else:
+                queryset = Promedio.objects.none()
         elif rol == 'Apoderado':
             if hasattr(user, 'apoderado_profile'):
                 student_ids = user.apoderado_profile.estudiantes.values_list('id', flat=True)
-                return Promedio.objects.filter(estudiante_id__in=student_ids)
-            return Promedio.objects.none()
+                queryset = Promedio.objects.filter(estudiante_id__in=student_ids)
+            else:
+                queryset = Promedio.objects.none()
         else:
-            return Promedio.objects.none()
+            queryset = Promedio.objects.none()
+
+        return queryset.select_related('estudiante', 'curso', 'periodo')

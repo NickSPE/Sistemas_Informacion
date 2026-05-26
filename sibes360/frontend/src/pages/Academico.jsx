@@ -142,6 +142,11 @@ const Academico = () => {
   const [allDocentes, setAllDocentes] = useState([]);
   const [allSecciones, setAllSecciones] = useState([]);
 
+  // Filter States inside Course Detail
+  const [selectedFilterGrado, setSelectedFilterGrado] = useState('');
+  const [selectedFilterSeccion, setSelectedFilterSeccion] = useState('');
+  const [selectedFilterAsistenciaFecha, setSelectedFilterAsistenciaFecha] = useState('');
+
   const canAddCurso = user?.rol === 'SuperAdmin' || user?.rol === 'Director';
 
   const fetchData = async () => {
@@ -196,6 +201,9 @@ const Academico = () => {
   // Nested view handlers
   const handleSelectCurso = async (curso) => {
     setSelectedCurso(curso);
+    setSelectedFilterGrado('');
+    setSelectedFilterSeccion('');
+    setSelectedFilterAsistenciaFecha('');
     setDetailLoading(true);
     setActiveTab('horarios'); // Default tab: Horarios
     try {
@@ -605,10 +613,38 @@ const Academico = () => {
     }
   });
 
-  const enrolledStudentIds = uniqueEnrolledStudents.map(s => s.id);
+  // Unique list of grades for filtering (derived from all enrolled students)
+  const filterGradosList = Array.from(new Set(uniqueEnrolledStudents.map(s => s.grado_nombre))).sort();
+  
+  // Unique list of sections for filtering (filtered by grade if a grade is selected)
+  const filterSeccionesList = Array.from(
+    new Set(
+      uniqueEnrolledStudents
+        .filter(s => !selectedFilterGrado || s.grado_nombre === selectedFilterGrado)
+        .map(s => s.seccion_nombre)
+    )
+  ).sort();
+
+  // Apply filters to get the students to display
+  const filteredEnrolledStudents = uniqueEnrolledStudents.filter(s => {
+    const matchesGrado = !selectedFilterGrado || s.grado_nombre === selectedFilterGrado;
+    const matchesSeccion = !selectedFilterSeccion || s.seccion_nombre === selectedFilterSeccion;
+    return matchesGrado && matchesSeccion;
+  });
+
+  const enrolledStudentIds = filteredEnrolledStudents.map(s => s.id);
 
   // Filter attendance records to those of enrolled students
   const courseAsistencias = asistencias.filter(asist => enrolledStudentIds.includes(asist.estudiante));
+
+  // Unique dates for attendance, sorted descending (latest first)
+  const courseAsistenciaDates = Array.from(new Set(courseAsistencias.map(a => a.fecha))).sort().reverse();
+
+  // Effective date: chosen date or default to the most recent one (ultimo dia)
+  const effectiveAsistenciaFecha = selectedFilterAsistenciaFecha || (courseAsistenciaDates.length > 0 ? courseAsistenciaDates[0] : '');
+
+  // Filtered attendance by the effective date
+  const filteredCourseAsistencias = courseAsistencias.filter(a => effectiveAsistenciaFecha === '' || a.fecha === effectiveAsistenciaFecha);
 
   // Filter conduct records to those of enrolled students
   const courseConductas = conductas.filter(c => enrolledStudentIds.includes(c.estudiante));
@@ -737,7 +773,7 @@ const Academico = () => {
               }`}
             >
               <GraduationCap size={14} />
-              <span>Estudiantes ({uniqueEnrolledStudents.length})</span>
+              <span>Estudiantes ({filteredEnrolledStudents.length})</span>
             </button>
             <button 
               onClick={() => setActiveTab('notas')}
@@ -767,6 +803,62 @@ const Academico = () => {
               <span>Conducta</span>
             </button>
           </div>
+
+          {/* Filtros de Grado y Sección */}
+          {!isHorarioTab && (
+            <div className="bg-slate-50 border border-slate-200/60 rounded-xl p-3.5 mt-4 flex flex-wrap items-center justify-between gap-4 text-left">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Filtrar por:</span>
+                <div className="flex gap-2.5">
+                  <div>
+                    <select
+                      value={selectedFilterGrado}
+                      onChange={(e) => {
+                        setSelectedFilterGrado(e.target.value);
+                        setSelectedFilterSeccion(''); // Reset section when grade changes
+                      }}
+                      className="px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 font-semibold focus:outline-none focus:border-[#6c63ff] cursor-pointer"
+                    >
+                      <option value="">Todos los Grados</option>
+                      {filterGradosList.map(g => (
+                        <option key={g} value={g}>{g}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <select
+                      value={selectedFilterSeccion}
+                      onChange={(e) => setSelectedFilterSeccion(e.target.value)}
+                      className="px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 font-semibold focus:outline-none focus:border-[#6c63ff] cursor-pointer"
+                    >
+                      <option value="">Todas las Secciones</option>
+                      {filterSeccionesList.map(s => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {isAttendanceTab && (
+                    <div>
+                      <select
+                        value={effectiveAsistenciaFecha}
+                        onChange={(e) => setSelectedFilterAsistenciaFecha(e.target.value)}
+                        className="px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 font-semibold focus:outline-none focus:border-[#6c63ff] cursor-pointer"
+                      >
+                        <option value="">Todas las Fechas</option>
+                        {courseAsistenciaDates.map(d => (
+                          <option key={d} value={d}>{d}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="text-[11px] font-semibold text-[#6c63ff]">
+                Mostrando <span className="bg-[#6c63ff]/10 px-2 py-0.5 rounded-md font-bold">{filteredEnrolledStudents.length}</span> alumnos de un total de <span className="text-slate-400 font-bold">{uniqueEnrolledStudents.length}</span>
+              </div>
+            </div>
+          )}
 
           <div className="mt-6">
             {detailLoading ? (
@@ -854,8 +946,8 @@ const Academico = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-slate-700 bg-white">
-                      {uniqueEnrolledStudents.length > 0 ? (
-                        uniqueEnrolledStudents.map((s) => (
+                      {filteredEnrolledStudents.length > 0 ? (
+                        filteredEnrolledStudents.map((s) => (
                           <tr key={s.id} className="hover:bg-slate-50/50 transition-colors">
                             <td className="px-4 py-2.5 text-slate-400 font-mono">#{s.id}</td>
                             <td className="px-4 py-2.5 font-bold text-[#1a1f36]">{s.apellidos}</td>
@@ -909,8 +1001,8 @@ const Academico = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-slate-700 bg-white">
-                      {uniqueEnrolledStudents.length > 0 ? (
-                        uniqueEnrolledStudents.map((s) => {
+                      {filteredEnrolledStudents.length > 0 ? (
+                        filteredEnrolledStudents.map((s) => {
                           const studentGrades = cursoNotas.filter(n => n.estudiante === s.id);
                           return (
                             <tr key={s.id} className="hover:bg-slate-50/50 transition-colors">
@@ -980,8 +1072,8 @@ const Academico = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-slate-700 bg-white">
-                      {courseAsistencias && courseAsistencias.length > 0 ? (
-                        courseAsistencias.map((a) => (
+                      {filteredCourseAsistencias && filteredCourseAsistencias.length > 0 ? (
+                        filteredCourseAsistencias.map((a) => (
                           <tr key={a.id} className="hover:bg-slate-50/50 transition-colors">
                             <td className="px-4 py-2.5 text-slate-500">{a.fecha}</td>
                             <td className="px-4 py-2.5 font-bold text-[#1a1f36]">
@@ -1116,7 +1208,7 @@ const Academico = () => {
                   className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-slate-50/10 text-[#1a1f36]"
                 >
                   <option value="">Seleccione alumno...</option>
-                  {uniqueEnrolledStudents.map(e => (
+                  {filteredEnrolledStudents.map(e => (
                     <option key={e.id} value={e.id}>{e.apellidos}, {e.nombres} ({e.seccion_nombre})</option>
                   ))}
                 </select>
@@ -1158,7 +1250,7 @@ const Academico = () => {
                   className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-slate-50/10 text-[#1a1f36]"
                 >
                   <option value="">Seleccione alumno...</option>
-                  {uniqueEnrolledStudents.map(e => (
+                  {filteredEnrolledStudents.map(e => (
                     <option key={e.id} value={e.id}>{e.apellidos}, {e.nombres} ({e.seccion_nombre})</option>
                   ))}
                 </select>
@@ -1209,7 +1301,7 @@ const Academico = () => {
                   className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-slate-50/10 text-[#1a1f36]"
                 >
                   <option value="">Seleccione alumno...</option>
-                  {uniqueEnrolledStudents.map(e => (
+                  {filteredEnrolledStudents.map(e => (
                     <option key={e.id} value={e.id}>{e.apellidos}, {e.nombres} ({e.seccion_nombre})</option>
                   ))}
                 </select>

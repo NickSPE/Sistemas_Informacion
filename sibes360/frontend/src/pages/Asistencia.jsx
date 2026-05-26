@@ -12,6 +12,7 @@ const Asistencia = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAsistencia, setEditingAsistencia] = useState(null);
+  const [selectedFilterFecha, setSelectedFilterFecha] = useState('');
 
   // Form states
   const [selectedStudent, setSelectedStudent] = useState('');
@@ -104,6 +105,11 @@ const Asistencia = () => {
     }
   };
 
+  // Derive unique dates, sorted descending
+  const uniqueDates = Array.from(new Set(asistencias.map(a => a.fecha))).sort().reverse();
+  const effectiveFecha = selectedFilterFecha || (uniqueDates.length > 0 ? uniqueDates[0] : '');
+  const filteredAsistencias = asistencias.filter(a => effectiveFecha === '' || a.fecha === effectiveFecha);
+
   const columns = [
     { header: 'Fecha', accessor: 'fecha', width: '110px' },
     { header: 'Estudiante', render: (row) => `${row.estudiante_apellidos || ''}, ${row.estudiante_nombres || ''}` },
@@ -156,13 +162,34 @@ const Asistencia = () => {
         <p className="text-xs text-[#8898aa]">Toma de asistencia escolar diaria, retardos y gestión de justificaciones oficiales.</p>
       </div>
 
+      {/* Filtro por Fecha */}
+      <div className="bg-white border border-slate-200 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-4 text-left shadow-sm">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Filtrar por Fecha:</span>
+          <select
+            value={effectiveFecha}
+            onChange={(e) => setSelectedFilterFecha(e.target.value)}
+            className="px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 font-semibold focus:outline-none focus:border-[#6c63ff] cursor-pointer"
+          >
+            <option value="">Todas las Fechas</option>
+            {uniqueDates.map(d => (
+              <option key={d} value={d}>{d}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="text-[11px] font-semibold text-[#6c63ff]">
+          Mostrando <span className="bg-[#6c63ff]/10 px-2 py-0.5 rounded-md font-bold">{filteredAsistencias.length}</span> registros para el día <span className="text-slate-500 font-bold">{effectiveFecha || 'Todos'}</span>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Center Column */}
         <div className="lg:col-span-2">
           <DataTable
             title="Bitácora de Asistencia Escolar"
             columns={columns}
-            data={asistencias}
+            data={filteredAsistencias}
             searchField="estudiante_apellidos"
             onAdd={handleOpenAdd}
             addLabel="Registrar Asistencia"

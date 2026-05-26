@@ -14,8 +14,8 @@ class MatriculaViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return Matricula.objects.all()
+            return Matricula.objects.all().select_related('estudiante', 'periodo', 'grado', 'seccion')
         elif rol in ['Director', 'Docente']:
-            return Matricula.objects.filter(estudiante__institucion=user.institucion)
+            return Matricula.objects.filter(estudiante__institucion=user.institucion).select_related('estudiante', 'periodo', 'grado', 'seccion')
         else:
             return Matricula.objects.none()

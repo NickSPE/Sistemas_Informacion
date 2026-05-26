@@ -7,6 +7,17 @@ from matricula.models import Matricula
 from horarios.models import Horario
 from docentes.models import Docente
 
+def get_docente_profile(user):
+    if not user or not user.is_authenticated or not user.rol or user.rol.nombre_rol != 'Docente':
+        return None
+    docente_profile = None
+    if getattr(user, 'dni', None):
+        docente_profile = Docente.objects.filter(institucion=user.institucion, dni=user.dni).first()
+    if not docente_profile:
+        full_name = f"{user.first_name} {user.last_name}".strip()
+        docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+    return docente_profile
+
 class EstudianteViewSet(viewsets.ModelViewSet):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteSerializer
@@ -34,8 +45,7 @@ class EstudianteViewSet(viewsets.ModelViewSet):
         return queryset
 
     def check_docente_permission(self, user, student, data=None):
-        full_name = f"{user.first_name} {user.last_name}".strip()
-        docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+        docente_profile = get_docente_profile(user)
         if not docente_profile:
             return False, "Perfil de docente no encontrado."
 

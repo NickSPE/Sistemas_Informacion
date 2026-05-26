@@ -8,6 +8,18 @@ from .serializers import (
     PeriodoAcademicoSerializer
 )
 
+def get_docente_profile(user):
+    from docentes.models import Docente
+    if not user or not user.is_authenticated or not user.rol or user.rol.nombre_rol != 'Docente':
+        return None
+    docente_profile = None
+    if getattr(user, 'dni', None):
+        docente_profile = Docente.objects.filter(institucion=user.institucion, dni=user.dni).first()
+    if not docente_profile:
+        full_name = f"{user.first_name} {user.last_name}".strip()
+        docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+    return docente_profile
+
 class NivelEducativoViewSet(viewsets.ModelViewSet):
     queryset = NivelEducativo.objects.all()
     serializer_class = NivelEducativoSerializer
@@ -93,10 +105,8 @@ class CursoViewSet(viewsets.ModelViewSet):
         elif rol == 'Director' or rol == 'Apoderado':
             queryset = Curso.objects.filter(institucion=user.institucion)
         elif rol == 'Docente':
-            from docentes.models import Docente
             from horarios.models import Horario
-            full_name = f"{user.first_name} {user.last_name}".strip()
-            docente_profile = Docente.objects.filter(institucion=user.institucion, nombres=full_name).first()
+            docente_profile = get_docente_profile(user)
             if docente_profile:
                 cursos_ids = Horario.objects.filter(docente=docente_profile).values_list('curso_id', flat=True)
                 queryset = Curso.objects.filter(id__in=cursos_ids)
