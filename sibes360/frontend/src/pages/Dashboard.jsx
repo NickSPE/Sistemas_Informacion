@@ -10,14 +10,17 @@ import { useAuth } from '../context/AuthContext';
 
 const directorPendingFeatures = [
   {
+    id: 'dashboard',
     modulo: 'Dashboard',
     detalle: 'Las gráficas de asistencia y morosidad usan datos simulados.'
   },
   {
+    id: 'reportes',
     modulo: 'Reportes',
     detalle: 'El gráfico por colegio aún se alimenta de datos de ejemplo.'
   },
   {
+    id: 'libretas',
     modulo: 'Libretas',
     detalle: 'La impresión solo muestra una alerta; falta generar el PDF final.'
   }
@@ -249,7 +252,7 @@ const Dashboard = () => {
               <h2 className="text-sm font-bold text-[#1a1f36] mb-4">Funcionalidades Pendientes</h2>
               <div className="space-y-3">
                 {directorPendingFeatures.map((item) => (
-                  <div key={item.modulo} className="flex items-start justify-between gap-3">
+                  <div key={item.id} className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-xs font-bold text-[#1a1f36]">{item.modulo}</p>
                       <p className="text-[10px] text-[#8898aa]">{item.detalle}</p>
