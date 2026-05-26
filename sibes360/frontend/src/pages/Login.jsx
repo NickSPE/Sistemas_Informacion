@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { LogIn, Lock, User, AlertCircle } from 'lucide-react';
+import { LogIn, Lock, User, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -81,13 +82,16 @@ const Login = () => {
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-[#8898aa]" size={16} />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="pl-10 pr-4 py-2.5 w-full text-xs border border-slate-200 rounded-xl focus:outline-none focus:border-[#6c63ff] transition-all bg-slate-50/20 text-[#1a1f36]"
+                className="pl-10 pr-10 py-2.5 w-full text-xs border border-slate-200 rounded-xl focus:outline-none focus:border-[#6c63ff] transition-all bg-slate-50/20 text-[#1a1f36]"
               />
+              <button type="button" onClick={() => setShowPassword(s => !s)} className="absolute right-3 top-2.5 text-[#8898aa]">
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
           </div>
 

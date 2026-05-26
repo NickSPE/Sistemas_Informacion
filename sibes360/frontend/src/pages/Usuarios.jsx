@@ -5,6 +5,7 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
 import { Users, UserCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -12,6 +13,7 @@ const Usuarios = () => {
   const [instituciones, setInstituciones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
 
   // Form states
   const [username, setUsername] = useState('');
@@ -70,6 +72,55 @@ const Usuarios = () => {
     }
   };
 
+  const { user: currentUser } = useAuth();
+
+  const openEdit = (u) => {
+    setEditingUser(u);
+    // populate form
+    setUsername(u.username || '');
+    setEmail(u.email || '');
+    setFirstName(u.first_name || '');
+    setLastName(u.last_name || '');
+    setSelectedRol(u.rol || '');
+    setSelectedInst(u.institucion || '');
+    setPassword('');
+    setIsModalOpen(true);
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    try {
+      await axios.put(`http://localhost:8000/api/usuarios/${editingUser.id}/`, {
+        username,
+        ...(password ? { password } : {}),
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        rol: selectedRol ? parseInt(selectedRol) : null,
+        institucion: selectedInst ? parseInt(selectedInst) : null,
+        estado: true
+      });
+      setIsModalOpen(false);
+      setEditingUser(null);
+      setUsername(''); setPassword(''); setEmail(''); setFirstName(''); setLastName(''); setSelectedRol(''); setSelectedInst('');
+      fetchData();
+    } catch (err) {
+      console.error('Failed to update user:', err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm('¿Eliminar usuario seleccionado? Esta acción no se puede deshacer.')) return;
+    try {
+      await axios.delete(`http://localhost:8000/api/usuarios/${id}/`);
+      fetchData();
+    } catch (err) {
+      console.error('Failed to delete user:', err);
+      alert('No se pudo eliminar el usuario. Revisa permisos o dependencias.');
+    }
+  };
+
   const columns = [
     { header: 'Username', accessor: 'username', width: '120px' },
     { header: 'Nombre Completo', render: (row) => `${row.first_name || ''} ${row.last_name || ''}` },
@@ -80,6 +131,23 @@ const Usuarios = () => {
       accessor: 'rol_nombre', 
       width: '120px',
       render: (row) => <Badge type={row.rol_nombre === 'SuperAdmin' ? 'presente' : row.rol_nombre === 'Director' ? 'justificada' : 'pendiente'} text={row.rol_nombre || 'Sin Rol'} />
+    },
+    {
+      header: 'Acciones',
+      accessor: 'actions',
+      width: '160px',
+      render: (row) => {
+        const role = currentUser?.rol || null;
+        const isSuper = role === 'SuperAdmin';
+        const isDirector = role === 'Director' && currentUser?.institucion_id === row.institucion;
+        const canManage = isSuper || isDirector;
+        return (
+          <div className="flex gap-2">
+            {canManage && <button onClick={() => openEdit(row)} className="text-xs px-2 py-1 bg-yellow-100 rounded">Editar</button>}
+            {canManage && <button onClick={() => handleDelete(row.id)} className="text-xs px-2 py-1 bg-red-50 text-red-600 rounded">Eliminar</button>}
+          </div>
+        );
+      }
     }
   ];
 
@@ -107,7 +175,7 @@ const Usuarios = () => {
             columns={columns}
             data={usuarios}
             searchField="username"
-            onAdd={() => setIsModalOpen(true)}
+            onAdd={() => { setEditingUser(null); setIsModalOpen(true); }}
             addLabel="Nuevo Usuario"
           />
         </div>
@@ -138,8 +206,8 @@ const Usuarios = () => {
       </div>
 
       {/* Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Crear Nuevo Usuario">
-        <form onSubmit={handleAdd} className="space-y-4 text-left">
+      <Modal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setEditingUser(null); }} title={editingUser ? "Editar Usuario" : "Crear Nuevo Usuario"}>
+        <form onSubmit={editingUser ? handleUpdate : handleAdd} className="space-y-4 text-left">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Usuario (Login)</label>
@@ -151,7 +219,7 @@ const Usuarios = () => {
             <div>
               <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Contraseña</label>
               <input 
-                type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••"
+                type="password" required={!editingUser} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••"
                 className="w-full px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-[#6c63ff] bg-slate-50/10 text-[#1a1f36]"
               />
             </div>
@@ -206,7 +274,7 @@ const Usuarios = () => {
             </div>
           </div>
           <button type="submit" className="w-full py-2 bg-[#6c63ff] text-white rounded-lg text-xs font-bold hover:bg-[#5b52e0] transition-colors mt-2">
-            Crear Usuario
+            {editingUser ? 'Guardar cambios' : 'Crear Usuario'}
           </button>
         </form>
       </Modal>

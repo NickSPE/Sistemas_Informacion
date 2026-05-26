@@ -28,6 +28,7 @@ import Pagos from './pages/Pagos';
 import Comunicacion from './pages/Comunicacion';
 import Alertas from './pages/Alertas';
 import Reportes from './pages/Reportes';
+import StaffManagement from './pages/StaffManagement';
 
 // Protected Route Wrapper para Administradores y Profesores
 const ProtectedRoute = ({ children }) => {
@@ -101,6 +102,7 @@ function App() {
           <Route path="/comunicacion" element={<ProtectedRoute><Comunicacion /></ProtectedRoute>} />
           <Route path="/alertas" element={<ProtectedRoute><Alertas /></ProtectedRoute>} />
           <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
+          <Route path="/staff-management" element={<ProtectedRoute><StaffManagement /></ProtectedRoute>} />
 
           {/* Protected Parent Portal pages */}
           <Route path="/portal-familia" element={<ParentRoute><DashboardPadre /></ParentRoute>} />
