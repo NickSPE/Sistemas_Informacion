@@ -1,0 +1,1004 @@
+\documentclass[12pt, a4paper]{report}
+
+%------------------------------------------------------------
+% PAQUETES
+%------------------------------------------------------------
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{parskip}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+
+%------------------------------------------------------------
+% CONFIGURACIÓN DE PÁGINA
+%------------------------------------------------------------
+\geometry{
+  top=3cm,
+  bottom=2.5cm,
+  left=3.5cm,
+  right=2.5cm
+}
+
+\setstretch{1.5}
+\setlength{\headheight}{15pt}
+
+%------------------------------------------------------------
+% ENCABEZADO Y PIE DE PÁGINA
+%------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Universidad Nacional Agraria de la Selva}
+\fancyhead[R]{\small Sistemas de Información}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%------------------------------------------------------------
+% FORMATO DE TÍTULOS Y SUBTÍTULOS
+%------------------------------------------------------------
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries\centering\color{azulUNAS}}
+  {\chaptertitlename\ \thechapter}{8pt}{\Large}
+
+\titleformat{\section}
+  {\normalfont\large\bfseries\color{azulUNAS}}
+  {\thesection}{0.8em}{}
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries\color{azulUNAS}}
+  {\thesubsection}{0.8em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\itshape\color{azulUNAS}}
+  {\thesubsubsection}{0.8em}{}
+
+\titlespacing*{\chapter}{0pt}{20pt}{14pt}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titlespacing*{\subsection}{0pt}{8pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{6pt}{3pt}
+
+%------------------------------------------------------------
+% COLORES
+%------------------------------------------------------------
+\definecolor{azulUNAS}{RGB}{0, 0, 0}   % negro
+\definecolor{verdeSel}{RGB}{0, 0, 0}   % negro
+
+%------------------------------------------------------------
+% HIPERVÍNCULOS
+%------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=azulUNAS,
+  urlcolor=verdeSel,
+  citecolor=azulUNAS,
+  pdftitle={TPS - Examen de Admisión UNAS},
+  pdfauthor={Estudiante - UNAS},
+  hypertexnames=false,
+}
+
+%------------------------------------------------------------
+% ESTILO APA 7 PARA CARÁTULA
+%------------------------------------------------------------
+
+\fancypagestyle{apaTitle}{%
+  \fancyhf{}%
+  \fancyhead[R]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+\newcommand{\insignia}[1]{%
+  \includegraphics[height=2.8cm]{#1}%
+}
+ 
+%============================================================
+\begin{document}
+\pagestyle{empty}
+ 
+\begin{titlepage}
+\centering
+\singlespacing
+ 
+% ── 1. Encabezado institucional ──────────────────────────────
+{\large\bfseries UNIVERSIDAD NACIONAL AGRARIA DE LA SELVA}\\[3pt]
+{\small\bfseries FACULTAD DE INGENIERÍA EN INFORMÁTICA Y SISTEMAS}\\[3pt]
+{\small\bfseries ESCUELA PROFESIONAL DE INGENIERÍA EN\\
+INFORMÁTICA Y SISTEMAS}
+ 
+\vspace{0.8cm}
+ 
+% ── 2. Logos centrados con espacio entre ellos ───────────────
+\insignia{unas-logo.png}%
+\hspace{2cm}%                    % <── ajusta este espacio
+\insignia{fiis-logo.png}
+ 
+\vspace{1.2cm}
+ 
+% ── 3. Tipo de documento ─────────────────────────────────────
+{\normalsize\bfseries PROYECTO DE MEDIO CURSO}\\[6pt]
+{\normalsize\bfseries CURSO DE SISTEMAS DE INFORMACIÓN}
+ 
+\vspace{1.5cm}
+ 
+% ── 4. Tabla de campos ───────────────────────────────────────
+\begin{flushleft}
+\renewcommand{\arraystretch}{1.7}
+\begin{tabular}{>{\bfseries}p{5.5cm} p{8.5cm}}
+ 
+  Título
+    & : Sistema de Procesamiento de Transacciones (TPS)
+      del Proceso de Admisión de la UNAS \\
+ 
+  Línea de investigación
+    & : Sistemas de Información \\
+ 
+  Eje temático
+    & : Procesamiento de Transacciones \\
+ 
+  Autores
+    & : Castro Cano, Brennis Benjamín \\
+    & \phantom{: }Carhuapuma Peña, Nilver Leimer \\
+    & \phantom{: }Maiz Melendez, Hans \\
+ 
+  Docente
+    & : [Nombres y Apellidos del Docente] \\
+ 
+ 
+  
+\end{tabular}
+\end{flushleft}
+ 
+\vfill
+ 
+% ── 5. Pie de página ─────────────────────────────────────────
+{\bfseries Tingo María -- Perú. \the\year.}
+ 
+\end{titlepage}
+%------------------------------------------------------------
+% PÁGINAS PRELIMINARES (numeración romana)
+%------------------------------------------------------------
+\pagenumbering{roman}
+\setcounter{page}{2}
+
+%------------------------------------------------------------
+% RESUMEN
+%------------------------------------------------------------
+\section*{RESUMEN}
+\addcontentsline{toc}{chapter}{Resumen}
+
+El presente proyecto de medio curso tiene como propósito describir y analizar el \textbf{Sistema de Procesamiento de Transacciones (TPS)} aplicado al proceso de admisión de la \textbf{Universidad Nacional Agraria de la Selva (UNAS)}, con sede en la ciudad de Tingo María, región Huánuco.
+
+El proceso de admisión es una actividad institucional crítica que involucra la recepción de inscripciones, la verificación de documentos, la aplicación del examen de admisión, la corrección automatizada de pruebas y la publicación oficial de resultados. Este flujo operativo constituye un TPS en tanto registra, procesa y almacena grandes volúmenes de transacciones de datos en tiempo real.
+
+En el estudio se identifican los cuatro componentes principales del TPS: \textit{entradas} (ficha de inscripción, pago de arancel, documentos del postulante), \textit{almacenamiento} (base de datos de postulantes, banco de preguntas, historial de convocatorias), \textit{procesamiento} (verificación de requisitos, corrección del examen de 100 preguntas en 180 minutos, cálculo de puntajes y ranking) y \textit{salidas} (lista de ingresantes, constancias individuales, reportes estadísticos). Se incluye también el componente de \textit{retroalimentación}, que permite la mejora continua del proceso entre convocatorias.
+
+\bigskip
+\noindent\textbf{Palabras clave:} Sistema de Procesamiento de Transacciones, TPS, Examen de Admisión, UNAS, Sistemas de Información, Base de Datos, Proceso Automatizado.
+\clearpage
+%------------------------------------------------------------
+% ÍNDICE GENERAL
+%------------------------------------------------------------
+\tableofcontents
+\newpage
+
+%------------------------------------------------------------
+% ÍNDICE DE FIGURAS Y TABLAS (opcional)
+%------------------------------------------------------------
+\listoffigures     % ← se mantiene
+\clearpage
+
+\listoftables      % ← se mantiene
+\clearpage
+
+%------------------------------------------------------------
+% INTRODUCCIÓN
+%------------------------------------------------------------
+\chapter*{INTRODUCCIÓN}
+\addcontentsline{toc}{chapter}{Introducción}
+
+En la actualidad, las instituciones de educación superior requieren de sistemas de información eficientes para gestionar los múltiples procesos administrativos que realizan a lo largo del año académico. Uno de los más importantes es el proceso de admisión, mediante el cual los postulantes acceden a una vacante en la universidad.
+
+La \textbf{Universidad Nacional Agraria de la Selva (UNAS)}, ubicada en la Carretera Central km 1.21 de Tingo María, región Huánuco, oferta anualmente plazas en sus \textbf{12 carreras profesionales} a través de un proceso de admisión regulado que involucra inscripciones, pago de aranceles, rendición de un examen de 100 preguntas y publicación de resultados dentro de las 24 horas siguientes al examen.
+
+Este proceso reúne las características propias de un \textbf{Sistema de Procesamiento de Transacciones (TPS)}: maneja un alto volumen de datos estructurados, requiere precisión en el registro y cálculo de puntajes, opera bajo restricciones de tiempo, y genera salidas formales como listas de ingresantes y constancias individuales.
+
+El presente proyecto de medio curso, desarrollado en el marco del curso de \textit{Sistemas de Información}, tiene como objetivo analizar en profundidad el TPS del proceso de admisión de la UNAS, identificar sus componentes, describir los procesos manuales y automatizados involucrados, y proponer una arquitectura de sistema de información que optimice su funcionamiento.
+
+El informe se organiza en tres capítulos: el \textbf{Capítulo I} describe la organización y sus procesos actuales; el \textbf{Capítulo II} presenta la propuesta de sistema de información con sus procesos automatizados y marco teórico; y el \textbf{Capítulo III} detalla las funciones del sistema en los distintos niveles de la pirámide organizacional, así como el diseño técnico de la solución.
+
+\newpage
+
+%============================================================
+% NUMERACIÓN ARÁBIGA DESDE EL CAPÍTULO I
+%============================================================
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+%============================================================
+%  CAPÍTULO I: LA ORGANIZACIÓN
+%============================================================
+\chapter{LA ORGANIZACIÓN}
+
+%------------------------------------------------------------
+\section{DESCRIPCIÓN DE LA ORGANIZACIÓN}
+%------------------------------------------------------------
+
+\subsection{Nombre}
+
+La organización objeto de estudio es la \textbf{Universidad Nacional Agraria de la Selva (UNAS)}, institución pública de educación superior ubicada en Tingo María, provincia de Leoncio Prado, departamento de Huánuco, Perú.
+
+\subsection{Antecedentes Históricos}
+
+La Universidad Nacional Agraria de la Selva fue creada el 17 de julio de 1964 mediante la Ley N.º 15015, con el nombre de \textit{Universidad Nacional Agraria de Tingo María}. Fue concebida como una institución orientada a las ciencias agrarias y forestales en la Amazonía peruana, respondiendo a la necesidad de formación técnica y profesional en la región selvática del país.
+
+Con el paso de los años, la UNAS amplió su oferta académica, incorporando carreras de ingeniería, ciencias económicas e informática, consolidándose como la principal casa de estudios superiores de la región Huánuco en cuanto a cobertura territorial y diversidad de programas académicos.
+
+Actualmente, la UNAS cuenta con \textbf{12 carreras profesionales} distribuidas en diversas facultades, y mantiene su sede en la Carretera Central km 1.21, Tingo María.
+
+\subsection{Organigrama}
+
+La UNAS se organiza jerárquicamente bajo la autoridad de la Asamblea Universitaria, el Consejo Universitario y el Rector. Las unidades académicas (Facultades y Escuelas Profesionales) dependen del Vicerrectorado Académico, mientras que las unidades administrativas (entre ellas la Oficina de Admisión) dependen del Vicerrectorado Administrativo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{organigrama 2021_page-0001.jpg}
+    \caption{Organigrama de la UNAS}
+    \label{fig:organigrama}
+\end{figure}
+
+\subsection{Ubicación Geográfica}
+
+\begin{table}[H]
+  \centering
+  \caption{Datos de ubicación geográfica de la UNAS}
+  \label{tab:ubicacion}
+  \begin{tabular}{>{\bfseries}p{4cm} p{8cm}}
+    \toprule
+    Campo & Dato \\
+    \midrule
+    Institución & Universidad Nacional Agraria de la Selva \\
+    Dirección & Carretera Central km 1.21 \\
+    Distrito & Rupa-Rupa \\
+    Provincia & Leoncio Prado \\
+    Departamento & Huánuco \\
+    País & Perú \\
+    Portal web & \url{https://portal.unas.edu.pe} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Visión}
+
+Ser una universidad de excelencia académica, reconocida a nivel nacional e internacional por su contribución al desarrollo sostenible de la Amazonía peruana, a través de la formación integral de profesionales competentes, la investigación científica e innovación tecnológica, comprometida con el cuidado del medio ambiente y el bienestar de la sociedad.
+
+\subsection{Misión}
+
+La UNAS forma profesionales integrales, genera y transfiere conocimientos científico, tecnológico y humanistico a los estudiantes; con responsabilidad social y compromiso con el desarrollo sostenible y competitividad del país.
+
+%------------------------------------------------------------
+\section{ÁREA FUNCIONAL ACTUAL SIN SISTEMA DE INFORMACIÓN}
+%------------------------------------------------------------
+
+El área de Admisión de la UNAS opera actualmente con una combinación de procesos manuales y semi-automatizados. Si bien existe un portal web para la inscripción en línea, etapas clave como la verificación documental, la asignación de aulas, la corrección de exámenes y la publicación de resultados presentan cuellos de botella que podrían optimizarse mediante un Sistema de Información integrado.
+
+Los principales problemas identificados en la operación actual son:
+
+\begin{itemize}[noitemsep]
+  \item Demoras en la verificación manual de documentos de los postulantes.
+  \item Riesgo de errores humanos en el cálculo de puntajes y elaboración del ranking.
+  \item Falta de integración entre el sistema de pagos y la base de datos de postulantes.
+  \item Ausencia de un módulo de análisis estadístico para identificar áreas con mayor índice de error en los exámenes.
+  \item Dificultad para gestionar apelaciones de puntajes de forma eficiente.
+\end{itemize}
+
+%------------------------------------------------------------
+\section{ÁREA DE INFORMÁTICA, TELECOMUNICACIONES Y ESTADÍSTICA}
+%------------------------------------------------------------
+
+La Oficina de Tecnología de la Información y Comunicación (OTIC) de la UNAS es la unidad encargada de administrar la infraestructura tecnológica institucional, incluyendo servidores, redes, aplicaciones web y sistemas de información. En el proceso de admisión, la OTIC brinda soporte al portal de inscripciones en línea y a la publicación de resultados en el sitio web oficial.
+
+%------------------------------------------------------------
+\section{PROCESOS DE FUNCIONAMIENTO MANUALES}
+%------------------------------------------------------------
+
+\subsection*{Área de Producción (Proceso de Admisión)}
+
+El proceso de admisión de la UNAS se desarrolla actualmente de la siguiente manera:
+
+\begin{enumerate}[noitemsep]
+  \item El postulante accede al portal web o se presenta en la oficina de admisión para obtener la ficha de inscripción.
+  \item Realiza el pago del arancel (S/. 220 para egresados de I.E. Estatal; S/. 240 para egresados de I.E. Privada) en los bancos autorizados.
+  \item Entrega la ficha de inscripción, el comprobante de pago, DNI, certificado de estudios y fotografía en ventanilla.
+  \item El personal administrativo verifica manualmente los documentos y registra al postulante en el sistema.
+  \item Se asigna al postulante un aula y horario para la fecha del examen.
+  \item En la fecha del examen, se aplica la prueba de 100 preguntas con una duración de 180 minutos.
+  \item Las hojas de respuesta son corregidas (de forma óptica o manual) y se calcula el puntaje de cada postulante.
+  \item Se elabora el ranking por orden de mérito y se publica la lista de ingresantes dentro de las 24 horas del examen.
+\end{enumerate}
+
+\subsection*{Unidad de Inventarios}
+
+La unidad de inventarios del área de admisión gestiona el stock de fichas de inscripción, materiales de examen (cuadernillos, hojas de respuesta), útiles de oficina y equipos de cómputo necesarios para el proceso. Este inventario se controla de forma manual mediante registros en hojas de cálculo.
+
+%------------------------------------------------------------
+\section{PROBLEMA DEL ÁREA Y LA ORGANIZACIÓN}
+%------------------------------------------------------------
+
+\subsection{Descripción del Área}
+
+El área de Admisión de la UNAS es la unidad orgánica responsable de planificar, ejecutar y supervisar el proceso de selección de postulantes para el ingreso a la universidad. Depende administrativamente del Rectorado y opera bajo las normas del Reglamento de Admisión vigente.
+
+\subsection{Organización}
+
+El área está conformada por: el Jefe de Admisión, personal administrativo de registro, personal de atención al postulante, personal de soporte técnico y docentes evaluadores.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{organigrama-admision.png}
+    \caption{Organigrama del área de admisión}
+    \label{fig:organigrama_admision}
+\end{figure}
+
+\begin{itemize}[noitemsep]
+  \item Garantizar un proceso de admisión transparente, eficiente y meritocrático.
+  \item Registrar con precisión a todos los postulantes inscritos y sus datos académicos.
+  \item Aplicar el examen de admisión de forma ordenada y segura.
+  \item Publicar los resultados de forma oportuna (dentro de las 24 horas del examen).
+  \item Atender las apelaciones de puntaje con celeridad y justicia.
+\end{itemize}
+
+
+%============================================================
+%  CAPÍTULO II: DESCRIPCIÓN DEL SISTEMA DE INFORMACIÓN CON S.I.
+%============================================================
+\chapter{DESCRIPCIÓN DEL SISTEMA DE INFORMACIÓN CON S.I.}
+
+%------------------------------------------------------------
+\section{PROCESOS AUTOMATIZADOS}
+%------------------------------------------------------------
+
+La propuesta de Sistema de Información para el proceso de admisión de la UNAS contempla la automatización integral de los subprocesos actualmente manuales o semi-automatizados.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{admision.png}
+    \caption{Procesos automatizados}
+    \label{fig:organigrama}
+\end{figure}
+
+\subsection{Sistema de Información}
+
+Un \textbf{Sistema de Información (SI)} es un conjunto organizado de elementos (personas, datos, actividades y recursos materiales) que interactúan entre sí para procesar información y distribuirla de manera adecuada en función de los objetivos de una organización \textit{(Laudon \& Laudon, 2020)}.
+
+En el contexto del proceso de admisión de la UNAS, el SI propuesto permite:
+
+\begin{itemize}[noitemsep]
+  \item Automatizar el registro de postulantes y la verificación de documentos.
+  \item Gestionar el banco de preguntas de forma segura y por niveles de dificultad.
+  \item Calcular automáticamente los puntajes y generar el ranking de mérito.
+  \item Publicar resultados en tiempo real en el portal web institucional.
+  \item Generar reportes estadísticos por área temática y convocatoria.
+\end{itemize}
+
+\subsection{Sistema de Información Integrado}
+
+El sistema integrado articula los módulos de inscripción, pagos, asignación de aulas, gestión del examen y publicación de resultados en una única plataforma, eliminando la redundancia de datos y reduciendo los tiempos de procesamiento.
+
+\subsection{Desarrollo de Software}
+
+El software será desarrollado utilizando la metodología ágil \textbf{XP (Extreme Programming)}, que permite entregas incrementales y adaptación continua a los requerimientos del cliente. El desarrollo se realizará con \textbf{Python} y el framework \textbf{Reflex}, una herramienta para crear aplicaciones web interactivas usando únicamente Python. La arquitectura conservará la separación lógica en \textbf{3 Capas}: presentación, lógica de negocio y acceso a datos.
+
+\subsection{Implementación}
+
+La implementación del sistema se realizará en las instalaciones de la UNAS (sede Tingo María, Carretera Central km 1.21). Se contempla la instalación del servidor de aplicaciones, la configuración de la base de datos y la capacitación del personal administrativo del área de Admisión.
+
+\subsection{Reportes}
+
+El sistema generará los siguientes reportes:
+
+\begin{table}[H]
+  \centering
+  \caption{Reportes generados por el TPS de Admisión UNAS}
+  \label{tab:reportes}
+  \begin{tabular}{p{5cm} p{7cm}}
+    \toprule
+    \textbf{Reporte} & \textbf{Descripción} \\
+    \midrule
+    Lista de ingresantes & Ordenada por carrera y puntaje de mérito \\
+    Constancia individual & Puntaje por área temática para cada postulante \\
+    Cuadro de méritos & Ranking completo por convocatoria \\
+    Reporte estadístico & Análisis por área temática: promedios, errores frecuentes \\
+    Reporte de apelaciones & Estado y resolución de cada apelación presentada \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Sistema de Gestión de Base de Datos}
+
+Se utilizará \textbf{PostgreSQL} como Sistema de Gestión de Base de Datos (SGBD), conectado desde la aplicación Reflex mediante una capa de acceso a datos en Python. Esta base permitirá almacenar y consultar de forma segura la información de postulantes, exámenes, pagos y resultados.
+
+%------------------------------------------------------------
+\section{MARCO TEÓRICO}
+%------------------------------------------------------------
+
+\subsection{¿Qué es software?}
+
+El software es el conjunto de programas, instrucciones y reglas informáticas que permiten ejecutar distintas tareas en un sistema informático. A diferencia del hardware, el software es intangible y representa la parte lógica de un sistema computacional \textit{(Pressman, 2014)}.
+
+\subsection{Ciclo de vida de un sistema de información}
+
+El ciclo de vida de un SI comprende las fases de: \textbf{(1) Planificación}, \textbf{(2) Análisis}, \textbf{(3) Diseño}, \textbf{(4) Implementación}, \textbf{(5) Pruebas} y \textbf{(6) Mantenimiento}. Cada fase produce entregables específicos que sirven como insumo para la fase siguiente.
+
+\subsection{Clasificación de los sistemas de información}
+
+Los sistemas de información se clasifican según el nivel organizacional al que sirven:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{TPS (Transaction Processing Systems):} nivel operativo, procesan transacciones rutinarias.
+  \item \textbf{MIS (Management Information Systems):} nivel táctico, apoyan la toma de decisiones.
+  \item \textbf{DSS (Decision Support Systems):} nivel estratégico, apoyan decisiones no estructuradas.
+  \item \textbf{ESS (Executive Support Systems):} nivel directivo, resúmenes ejecutivos y tendencias.
+\end{itemize}
+
+El sistema propuesto para la UNAS corresponde principalmente al nivel \textbf{TPS}.
+
+\subsection{Lenguaje de programación}
+
+Se empleará \textbf{Python} como lenguaje de programación principal, debido a su sintaxis clara, amplia comunidad, facilidad para desarrollar aplicaciones web y compatibilidad con librerías para validación de datos, reportes y conexión a bases de datos.
+
+\subsection{¿Qué es la Programación en 3 Capas?}
+
+La programación en 3 capas es un patrón de arquitectura de software que separa la aplicación en: \textbf{Capa de Presentación} (interfaz de usuario), \textbf{Capa de Negocio} (reglas y lógica del sistema) y \textbf{Capa de Datos} (acceso y persistencia en la base de datos). Esta separación facilita el mantenimiento, escalabilidad y reutilización del código.
+
+\subsection{¿Qué es XP?}
+
+\textbf{Extreme Programming (XP)} es una metodología ágil de desarrollo de software creada por Kent Beck que enfatiza la comunicación constante con el cliente, la simplicidad en el diseño, la retroalimentación continua y el coraje para adaptarse a los cambios. Es especialmente efectiva en proyectos con requerimientos cambiantes.
+
+\subsection{XP como metodología}
+
+Las prácticas fundamentales de XP incluyen: desarrollo guiado por pruebas (TDD), programación en parejas, integración continua, refactorización, entregas pequeñas e historias de usuario para capturar requerimientos.
+
+\subsection{Framework Reflex}
+
+\textbf{Reflex} es un framework de Python para construir aplicaciones web interactivas sin necesidad de programar directamente en JavaScript. Permite definir la interfaz, el estado de la aplicación y la lógica de eventos desde Python, generando una aplicación web moderna que puede ejecutarse localmente o desplegarse en un servidor.
+
+\subsection{¿Qué es PostgreSQL?}
+
+\textbf{PostgreSQL} es un sistema de gestión de bases de datos relacional de código abierto, reconocido por su estabilidad, integridad transaccional, soporte para consultas SQL avanzadas y capacidad para manejar aplicaciones web y empresariales. En el sistema propuesto permitirá almacenar los datos del proceso de admisión con seguridad, consistencia y escalabilidad.
+
+\subsection{¿Qué es un entorno virtual de Python?}
+
+Un entorno virtual de Python permite aislar las dependencias del proyecto, como Reflex y los conectores de base de datos, evitando conflictos con otros programas instalados en el equipo. En el proyecto se usará un entorno configurado para desarrollo, pruebas y despliegue del sistema web de admisión.
+
+
+%============================================================
+%  CAPÍTULO III: FUNCIONES DEL SI EN LOS NIVELES DE LA PIRÁMIDE
+%============================================================
+\chapter{FUNCIONES DEL SISTEMA DE INFORMACIÓN EN LOS DISTINTOS NIVELES DE LA PIRÁMIDE}
+
+El TPS del proceso de admisión de la UNAS opera en los distintos niveles de la pirámide organizacional de la siguiente manera:
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance=0pt]
+    % Pirámide organizacional
+    \draw[fill=azulUNAS!70] (0,0) -- (6,0) -- (3,5) -- cycle;
+    \draw[fill=azulUNAS!40] (0.6,1.5) -- (5.4,1.5) -- (3,5) -- cycle;
+    \draw[fill=azulUNAS!15] (1.5,3) -- (4.5,3) -- (3,5) -- cycle;
+    % Etiquetas
+    \node at (3, 0.7) {\textbf{\small Nivel Operativo (TPS)}};
+    \node at (3, 2.2) {\textbf{\small Nivel Táctico (MIS)}};
+    \node at (3, 3.8) {\textbf{\small Nivel}};
+    \node at (3, 4.2) {\textbf{\small Estratégico}};
+  \end{tikzpicture}
+  \caption{Pirámide organizacional y niveles del SI de Admisión UNAS}
+  \label{fig:piramide}
+\end{figure}
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Nivel Operativo (TPS):} registro de postulantes, validación de pagos, corrección del examen y emisión de constancias individuales.
+  \item \textbf{Nivel Táctico (MIS):} reportes estadísticos por área temática, análisis del rendimiento de postulantes, comparación entre convocatorias.
+  \item \textbf{Nivel Estratégico:} información para la toma de decisiones sobre actualización del banco de preguntas, apertura de nuevas carreras y política de cuotas de ingreso.
+\end{itemize}
+
+%------------------------------------------------------------
+\section{CARACTERIZACIÓN DEL PROBLEMA}
+%------------------------------------------------------------
+
+\subsection{Descripción de la actividad asignada}
+
+La actividad asignada consiste en el análisis del Sistema de Procesamiento de Transacciones (TPS) del proceso de admisión de la UNAS, identificando sus entradas, almacenamiento, procesamiento, salidas y retroalimentación.
+
+\subsection{Objetivos}
+
+\begin{itemize}[noitemsep]
+  \item Identificar y documentar los componentes del TPS del proceso de admisión.
+  \item Elaborar el flujograma del proceso de captación y traslado de información.
+  \item Diseñar la base de datos que soporte el sistema propuesto.
+  \item Desarrollar y probar el software de gestión de admisión.
+\end{itemize}
+
+\subsection{Materiales a usar en el análisis}
+
+\begin{table}[H]
+  \centering
+  \caption{Materiales utilizados en el análisis del TPS}
+  \label{tab:materiales}
+  \begin{tabular}{p{4cm} p{8cm}}
+    \toprule
+    \textbf{Material} & \textbf{Descripción} \\
+    \midrule
+    Reglamento de Admisión & Documento oficial UNAS que norma el proceso \\
+    Portal web UNAS & \url{https://portal.unas.edu.pe} \\
+    Fichas de inscripción & Formatos físicos y digitales de registro \\
+    Comprobantes de pago & Vouchers del Banco de la Nación \\
+    Cuadernillo de examen & 100 preguntas distribuidas por áreas \\
+    Hoja de respuestas & Hoja óptica o manual de marcación \\
+    Listas de ingresantes & Publicadas en el portal y en vitrinas \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+%------------------------------------------------------------
+\section{FLUJOGRAMA DEL PROCESO DE CAPTACIÓN Y TRASLADO DE INFORMACIÓN}
+%------------------------------------------------------------
+
+A continuación se presenta el flujograma del TPS del proceso de admisión de la UNAS:
+
+\begin{figure}[H]
+  \centering
+  \resizebox{!}{0.82\textheight}{%
+  \begin{tikzpicture}[
+      node distance=0.8cm,
+      every node/.style={font=\scriptsize},
+      process/.style={rectangle, rounded corners, draw=azulUNAS, fill=azulUNAS!10,
+                      text width=4.5cm, text centered, minimum height=0.75cm},
+      decision/.style={diamond, draw=verdeSel, fill=verdeSel!10,
+                       text width=2.8cm, text centered, inner sep=0pt, minimum height=0.85cm},
+      arrow/.style={-{Stealth}, thick}
+    ]
+
+    \node[process] (inicio)   {INICIO: Postulante solicita ficha de inscripción};
+    \node[process, below=of inicio]   (pago)    {Pago de arancel (S/. 220 / S/. 240)};
+    \node[process, below=of pago]     (docs)    {Entrega de documentos: DNI, certificado, foto};
+    \node[decision, below=of docs]    (verif)   {¿Documentos completos?};
+    \node[process, below=of verif]    (asig)    {Asignación de aula y sede};
+    \node[process, below=of asig]     (examen)  {Rendición del examen (100 preguntas, 180 min.)};
+    \node[process, below=of examen]   (correc)  {Corrección y cálculo de puntaje};
+    \node[decision, below=of correc]  (aprueba) {¿Puntaje $\geq$ 51 correctas?};
+    \node[process, below=of aprueba]  (ranking) {Elaboración del ranking de mérito};
+    \node[process, below=of ranking]  (pub)     {Publicación de resultados (máx. 24 horas)};
+    \node[process, below=of pub]      (fin)     {FIN};
+
+    \draw[arrow] (inicio)  -- (pago);
+    \draw[arrow] (pago)    -- (docs);
+    \draw[arrow] (docs)    -- (verif);
+    \draw[arrow] (verif)   -- node[right]{Sí} (asig);
+    \draw[arrow] (verif.east) -- ++(2,0) node[right]{No (devolver)} |- (docs.east);
+    \draw[arrow] (asig)    -- (examen);
+    \draw[arrow] (examen)  -- (correc);
+    \draw[arrow] (correc)  -- (aprueba);
+    \draw[arrow] (aprueba) -- node[right]{Sí} (ranking);
+    \draw[arrow] (aprueba.west) -- ++(-2,0) node[left]{No (no ingresa)} |- (pub.west);
+    \draw[arrow] (ranking) -- (pub);
+    \draw[arrow] (pub)     -- (fin);
+  \end{tikzpicture}%
+  }
+  \caption{Flujograma del TPS del proceso de admisión — UNAS}
+  \label{fig:flujograma}
+\end{figure}
+
+%------------------------------------------------------------
+\section{INSTALACIÓN Y CONFIGURACIÓN DE HERRAMIENTAS DE DESARROLLO}
+%------------------------------------------------------------
+
+\subsection{Descripción de la actividad asignada}
+
+Instalación y configuración del entorno de desarrollo necesario para implementar el software del TPS de Admisión de la UNAS.
+
+\subsection{Objetivos}
+
+\begin{itemize}[noitemsep]
+  \item Instalar Python y configurar el entorno de desarrollo del proyecto.
+  \item Instalar Reflex y las dependencias necesarias para la aplicación web.
+  \item Verificar la conectividad entre la aplicación Reflex y la base de datos PostgreSQL.
+\end{itemize}
+
+\subsection{Tecnología Python y Reflex}
+
+Python será el lenguaje principal del sistema, mientras que Reflex permitirá construir la interfaz web, manejar el estado de los formularios y conectar las acciones del usuario con la lógica de negocio del TPS de admisión. Para la edición del código puede utilizarse Visual Studio Code u otro editor compatible con Python.
+
+\subsection{Instalación de Python y Reflex}
+
+\begin{enumerate}[noitemsep]
+  \item Instalar Python desde \url{https://www.python.org}.
+  \item Crear la carpeta del proyecto e instalar Reflex con el gestor de paquetes de Python.
+  \item Inicializar la aplicación con el comando \texttt{reflex init}.
+  \item Ejecutar el servidor de desarrollo con \texttt{reflex run}.
+\end{enumerate}
+
+\subsection{Estructura básica del proyecto Reflex}
+
+\begin{enumerate}[noitemsep]
+  \item \texttt{app.py}: define las páginas, componentes visuales y rutas principales.
+  \item \texttt{state.py}: administra el estado de formularios, validaciones y eventos.
+  \item \texttt{models.py}: representa las entidades principales, como postulante, inscripción, pago y resultado.
+  \item \texttt{services.py}: contiene la lógica de negocio para validar documentos, calcular puntajes y generar rankings.
+\end{enumerate}
+
+\subsection{Principales características del Gestor de Base de Datos PostgreSQL}
+
+\begin{itemize}[noitemsep]
+  \item Motor relacional de código abierto con soporte ACID.
+  \item Manejo de claves primarias, claves foráneas, restricciones y transacciones.
+  \item Soporte para procedimientos, vistas, índices y consultas SQL avanzadas.
+  \item Administración mediante herramientas como pgAdmin, DBeaver o consola \texttt{psql}.
+\end{itemize}
+
+\subsection{Instalación de PostgreSQL}
+
+PostgreSQL puede instalarse como servidor independiente o administrarse mediante herramientas gráficas. Para su instalación oficial se puede descargar desde \url{https://www.postgresql.org/download/}.
+
+%------------------------------------------------------------
+\section{DISEÑO DE LA BASE DE DATOS}
+%------------------------------------------------------------
+
+\subsection{Descripción de la actividad asignada}
+
+Diseño del modelo relacional de la base de datos que soporta el TPS del proceso de admisión de la UNAS.
+
+\subsection{Objetivos}
+
+\begin{itemize}[noitemsep]
+  \item Definir las entidades y relaciones del sistema.
+  \item Normalizar las tablas hasta la 3FN (Tercera Forma Normal).
+  \item Documentar las especificaciones técnicas de cada tabla.
+\end{itemize}
+
+\subsection{Especificaciones técnicas de la Base de Datos}
+
+\begin{table}[H]
+  \centering
+  \caption{Especificaciones técnicas de la base de datos}
+  \label{tab:bdspec}
+  \begin{tabular}{>{\bfseries}p{4cm} p{8cm}}
+    \toprule
+    Parámetro & Valor \\
+    \midrule
+    SGBD & PostgreSQL 16.x \\
+    Nombre de la BD & \texttt{db\_admision\_unas} \\
+    Codificación & UTF-8 \\
+    Motor de almacenamiento & PostgreSQL nativo (soporte de FK y transacciones) \\
+    Servidor & Servidor PostgreSQL local / servidor institucional \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Relación de tablas}
+
+Las tablas principales del modelo son:
+
+\begin{table}[H]
+  \centering
+  \caption{Tablas de la base de datos del TPS de Admisión}
+  \label{tab:tablas}
+  \begin{tabular}{p{4cm} p{8cm}}
+    \toprule
+    \textbf{Tabla} & \textbf{Descripción} \\
+    \midrule
+    \texttt{postulante} & Datos personales y académicos del postulante \\
+    \texttt{carrera} & Catálogo de las 12 carreras profesionales \\
+    \texttt{inscripcion} & Registro de cada inscripción (postulante + carrera + pago) \\
+    \texttt{pago} & Comprobante y monto del arancel abonado \\
+    \texttt{examen} & Convocatoria, fecha y sede del examen \\
+    \texttt{pregunta} & Banco de preguntas por área temática y dificultad \\
+    \texttt{resultado} & Puntaje, ranking y estado (ingresante / no ingresante) \\
+    \texttt{apelacion} & Registro de apelaciones y su resolución \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+%------------------------------------------------------------
+\section{DESARROLLO DEL SOFTWARE}
+%------------------------------------------------------------
+
+\subsection{Descripción de la actividad asignada}
+
+Desarrollo del módulo principal del TPS del proceso de admisión de la UNAS, permitiendo registrar postulantes, almacenar información académica, calcular automáticamente los puntajes obtenidos en el examen y publicar los resultados finales mediante una aplicación web desarrollada en Python.
+
+\subsection{Objetivos}
+
+\begin{itemize}[noitemsep]
+  \item Implementar la conexión entre Python y la base de datos PostgreSQL.
+  
+  \item Desarrollar la lógica necesaria para registrar postulantes, procesar resultados y generar rankings automáticamente.
+  
+  \item Construir una interfaz web sencilla para pruebas y simulación del proceso de admisión.
+  
+  \item Utilizar archivos CSV para importar, visualizar y validar datos durante las pruebas del sistema.
+  
+  \item Centralizar el desarrollo del sistema en un único archivo de ejecución para facilitar las pruebas y validaciones iniciales del proyecto.
+\end{itemize}
+
+\subsection{Arquitectura Monolítica del Sistema}
+
+Para el desarrollo del prototipo del TPS se utilizó una arquitectura \textbf{Monolítica}, debido a que el sistema se encuentra en una etapa académica y de pruebas funcionales.
+
+En este enfoque, toda la lógica del sistema se encuentra integrada en un único proyecto y archivo principal de ejecución, facilitando el desarrollo rápido, las pruebas de funcionamiento y la validación de datos sin necesidad de dividir el sistema en múltiples servicios o módulos independientes.
+
+La arquitectura monolítica utilizada integra:
+
+\begin{itemize}[noitemsep]
+  \item Interfaz web del sistema.
+  
+  \item Lógica de negocio del proceso de admisión.
+  
+  \item Conexión y consultas a la base de datos PostgreSQL.
+  
+  \item Lectura y procesamiento de archivos CSV.
+  
+  \item Generación de resultados y rankings.
+\end{itemize}
+
+Este modelo resulta adecuado para proyectos académicos y prototipos iniciales, ya que reduce la complejidad de configuración y despliegue del sistema.
+
+\subsection{Estructura general del sistema}
+
+El sistema fue desarrollado utilizando Python y Reflex, concentrando el funcionamiento principal en un único archivo de desarrollo denominado:
+
+\begin{verbatim}
+app.py
+\end{verbatim}
+
+En este archivo se integran:
+
+\begin{itemize}[noitemsep]
+  \item Formularios de registro de postulantes.
+  
+  \item Validación de datos ingresados.
+  
+  \item Procesamiento del puntaje del examen.
+  
+  \item Generación del ranking de mérito.
+  
+  \item Consultas a PostgreSQL.
+  
+  \item Importación y visualización de datos desde archivos CSV.
+  
+  \item Visualización de resultados.
+\end{itemize}
+
+\subsection{Uso de archivos CSV}
+
+Durante el desarrollo y pruebas del sistema se utilizaron archivos en formato \textbf{CSV (Comma Separated Values)} para almacenar y visualizar información de manera temporal.
+
+Los archivos CSV permitieron:
+
+\begin{itemize}[noitemsep]
+  \item Importar listas de postulantes.
+  
+  \item Simular resultados de exámenes.
+  
+  \item Verificar registros sin necesidad de realizar consultas directas a la base de datos.
+  
+  \item Facilitar pruebas rápidas del sistema durante el desarrollo.
+  
+  \item Exportar información para análisis estadísticos.
+\end{itemize}
+
+El uso de CSV complementa el funcionamiento de PostgreSQL, especialmente en las etapas iniciales del desarrollo del software y en la validación de datos.
+
+\subsection{Lógica de negocio implementada}
+
+La lógica implementada en el sistema considera las reglas principales del proceso de admisión de la UNAS:
+
+\begin{itemize}[noitemsep]
+  \item Registro de postulantes por carrera profesional.
+  
+  \item Validación del pago de inscripción.
+  
+  \item Cálculo automático del puntaje del examen.
+  
+  \item Determinación de ingresantes según ranking.
+  
+  \item Generación automática de reportes y resultados.
+\end{itemize}
+
+El cálculo del puntaje se realiza considerando:
+
+\begin{itemize}[noitemsep]
+  \item 1 punto por respuesta correcta.
+  
+  \item Puntaje mínimo de ingreso: 51 respuestas correctas.
+\end{itemize}
+
+\subsection{Conexión a la Base de Datos}
+
+La aplicación establece conexión con PostgreSQL mediante librerías compatibles con Python, utilizando parámetros de servidor, puerto, usuario y contraseña.
+
+\begin{verbatim}
+host=localhost
+port=5432
+database=db_admision_unas
+user=postgres
+password=********
+\end{verbatim}
+
+\subsection{Herramientas utilizadas}
+
+\begin{table}[H]
+\centering
+\caption{Herramientas utilizadas en el desarrollo del software}
+\label{tab:herramientas}
+\begin{tabular}{p{5cm} p{7cm}}
+\toprule
+\textbf{Herramienta} & \textbf{Descripción} \\
+\midrule
+Python & Lenguaje principal del sistema \\
+Reflex & Framework web para la interfaz del TPS \\
+PostgreSQL & Sistema gestor de base de datos relacional \\
+CSV & Archivos utilizados para pruebas y visualización de datos \\
+Visual Studio Code & Editor de código fuente \\
+GitHub & Control de versiones del proyecto \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%------------------------------------------------------------
+\section{PRUEBAS FUNCIONALES DEL SOFTWARE}
+%------------------------------------------------------------
+
+\subsection{Descripción de la actividad asignada}
+
+Ejecución de pruebas funcionales para verificar que el sistema cumple con los requerimientos del proceso de admisión.
+
+\subsection{Objetivos}
+
+\begin{itemize}[noitemsep]
+  \item Validar el registro correcto de postulantes y pagos.
+  \item Verificar el cálculo exacto de puntajes y el orden del ranking.
+  \item Comprobar la generación correcta de reportes y constancias.
+\end{itemize}
+
+\subsection{Detección de Errores}
+
+Durante las pruebas se utilizarán los siguientes tipos de prueba:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Pruebas unitarias:} verificación de cada módulo de forma aislada.
+  \item \textbf{Pruebas de integración:} verificación del flujo completo inscripción → examen → resultado.
+  \item \textbf{Pruebas de carga:} simulación de múltiples inscripciones simultáneas.
+  \item \textbf{Pruebas de aceptación:} validación con el personal del área de Admisión.
+\end{itemize}
+
+\subsection{Planteamiento de solución}
+
+Los errores detectados durante las pruebas serán clasificados por severidad (crítica, mayor, menor) y corregidos antes de la entrega final. Se llevará un registro de cada error en una bitácora de pruebas que incluya: descripción del error, módulo afectado, fecha de detección, responsable de corrección y fecha de resolución.
+
+
+%============================================================
+%  CONCLUSIONES
+%============================================================
+\chapter*{CONCLUSIONES}
+\addcontentsline{toc}{chapter}{Conclusiones}
+
+\begin{enumerate}
+  \item El proceso de admisión de la UNAS constituye un \textbf{Sistema de Procesamiento de Transacciones (TPS)} típico, dado que maneja un alto volumen de transacciones estructuradas, requiere precisión en el registro y cálculo de datos, opera bajo restricciones de tiempo y genera salidas formales con valor legal.
+
+  \item Los cuatro componentes del TPS fueron identificados con claridad: las \textbf{entradas} (ficha, pago, documentos), el \textbf{almacenamiento} (base de datos de postulantes y banco de preguntas), el \textbf{procesamiento} (verificación, corrección del examen, cálculo de puntajes) y las \textbf{salidas} (listas de ingresantes, constancias, reportes estadísticos).
+
+  \item La automatización integral del proceso, mediante un sistema desarrollado en \textbf{Python con Reflex}, arquitectura de 3 capas y base de datos \textbf{PostgreSQL}, permitiría reducir los tiempos de procesamiento, eliminar errores humanos en el cálculo de puntajes y mejorar la transparencia del proceso.
+
+  \item El \textbf{componente de retroalimentación} del TPS (apelaciones, análisis de errores, actualización del banco de preguntas) es fundamental para la mejora continua del proceso entre convocatorias, contribuyendo a la calidad académica de los ingresantes.
+
+  \item La metodología ágil \textbf{XP} resulta adecuada para el desarrollo del software, dado que los requerimientos del área de Admisión pueden evolucionar entre convocatorias y la metodología permite adaptaciones rápidas.
+\end{enumerate}
+
+
+%============================================================
+%  RECOMENDACIONES
+%============================================================
+\chapter*{RECOMENDACIONES}
+\addcontentsline{toc}{chapter}{Recomendaciones}
+
+\begin{enumerate}
+  \item Integrar el módulo de pagos con los sistemas del Banco de la Nación para la \textbf{verificación automática} de aranceles en tiempo real, eliminando la verificación manual.
+
+  \item Implementar un \textbf{lector óptico de hojas de respuesta} para agilizar la corrección del examen y reducir el tiempo entre la aplicación y la publicación de resultados.
+
+  \item Desarrollar un \textbf{módulo de análisis estadístico} que identifique automáticamente las preguntas con mayor índice de error, facilitando la actualización del banco de preguntas.
+
+  \item Considerar la \textbf{migración del servidor a la nube} (AWS, Google Cloud o Azure) para mejorar la disponibilidad del sistema en los picos de demanda propios del período de inscripciones.
+
+  \item Capacitar periódicamente al personal administrativo del área de Admisión en el uso del sistema y en protocolos de seguridad de la información.
+\end{enumerate}
+
+
+%============================================================
+%  BIBLIOGRAFÍA
+%============================================================
+\chapter*{BIBLIOGRAFÍA}
+\addcontentsline{toc}{chapter}{Bibliografía}
+
+\begin{itemize}[leftmargin=*, label={}]
+  \item Kendall, K. E., \& Kendall, J. E. (2011). \textit{Análisis y diseño de sistemas} (8.ª ed.). Pearson Educación.
+
+  \item Laudon, K. C., \& Laudon, J. P. (2020). \textit{Sistemas de información gerencial} (15.ª ed.). Pearson Educación.
+
+  \item Pressman, R. S. (2014). \textit{Ingeniería del software: Un enfoque práctico} (7.ª ed.). McGraw-Hill.
+
+  \item Date, C. J. (2001). \textit{Introducción a los sistemas de bases de datos} (7.ª ed.). Pearson Educación.
+
+  \item Beck, K. (2000). \textit{Extreme Programming Explained: Embrace Change}. Addison-Wesley.
+
+  \item Universidad Nacional Agraria de la Selva. (2024). \textit{Reglamento de Admisión}. UNAS. Recuperado de \url{https://portal.unas.edu.pe}
+\end{itemize}
+
+
+%============================================================
+%  ANEXOS
+%============================================================
+\chapter*{ANEXOS}
+\addcontentsline{toc}{chapter}{Anexos}
+
+\section*{Anexo A: Datos del TPS — Examen de Admisión UNAS}
+
+\begin{table}[H]
+  \centering
+  \caption{Resumen del TPS del proceso de admisión UNAS}
+  \label{tab:tps_resumen}
+  \begin{tabular}{>{\bfseries}p{3.8cm} p{8.2cm}}
+    \toprule
+    Componente & Descripción \\
+    \midrule
+    Entradas &
+      Ficha de inscripción, pago de arancel (S/. 220 I.E. Estatal / S/. 240 I.E. Privada),
+      DNI, certificado de estudios, fotografía, banco de preguntas \\
+    \midrule
+    Almacenamiento &
+      Base de datos de postulantes, banco de preguntas por área y dificultad,
+      registro de pagos y comprobantes, historial de convocatorias anteriores \\
+    \midrule
+    Procesamiento &
+      Verificación de requisitos, asignación de aula y sede (km 1.21),
+      corrección del examen (100 preguntas, 180 min.),
+      cálculo de puntaje y ranking; puntaje mínimo: 51 respuestas correctas \\
+    \midrule
+    Salidas &
+      Lista oficial de ingresantes por carrera, constancia individual con puntaje por área,
+      cuadro de méritos completo, reportes estadísticos por área temática \\
+    \midrule
+    Retroalimentación &
+      Revisión de apelaciones, análisis de áreas con mayor índice de error,
+      actualización del banco de preguntas, mejoras administrativas \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section*{Anexo B: Datos oficiales UNAS}
+
+\begin{itemize}[noitemsep]
+  \item Carreras profesionales disponibles: \textbf{12}
+  \item Sede única: Tingo María, Huánuco (Carretera Central km 1.21)
+  \item Resultados publicados dentro de las \textbf{24 horas} del examen
+  \item Portal oficial: \url{https://portal.unas.edu.pe}
+\end{itemize}
+
+\end{document}
+%============================================================
+%  FIN DEL DOCUMENTO
+%============================================================

@@ -5,8 +5,10 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
 import { Clock, Info } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Horarios = () => {
+  const { selectedInstitucion } = useAuth();
   const [horarios, setHorarios] = useState([]);
   const [docentes, setDocentes] = useState([]);
   const [cursos, setCursos] = useState([]);
@@ -24,11 +26,12 @@ const Horarios = () => {
 
   const fetchData = async () => {
     try {
+      const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
       const [horRes, docRes, curRes, secRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/horarios/'),
-        axios.get('http://localhost:8000/api/docentes/'),
-        axios.get('http://localhost:8000/api/curso/'),
-        axios.get('http://localhost:8000/api/seccion/')
+        axios.get(`http://localhost:8000/api/horarios/${instParam}`),
+        axios.get(`http://localhost:8000/api/docentes/${instParam}`),
+        axios.get(`http://localhost:8000/api/cursos/${instParam}`),
+        axios.get(`http://localhost:8000/api/secciones/${instParam}`)
       ]);
       setHorarios(horRes.data);
       setDocentes(docRes.data);
@@ -43,7 +46,7 @@ const Horarios = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedInstitucion]);
 
   const handleAdd = async (e) => {
     e.preventDefault();

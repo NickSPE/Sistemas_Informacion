@@ -20,7 +20,11 @@ class ApoderadoViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return Apoderado.objects.all()
+            qs = Apoderado.objects.all()
+            institucion_id = self.request.query_params.get('institucion', None)
+            if institucion_id:
+                qs = qs.filter(estudiantes__institucion_id=institucion_id).distinct()
+            return qs
         elif rol in ['Director', 'Docente']:
             return Apoderado.objects.filter(estudiantes__institucion=user.institucion).distinct()
         elif rol == 'Apoderado':

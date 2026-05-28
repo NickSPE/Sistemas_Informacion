@@ -8,7 +8,7 @@ import { GraduationCap, Award } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Estudiantes = () => {
-  const { user } = useAuth();
+  const { user, selectedInstitucion } = useAuth();
   const [estudiantes, setEstudiantes] = useState([]);
   const [instituciones, setInstituciones] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,8 +27,11 @@ const Estudiantes = () => {
 
   const fetchData = async () => {
     try {
+      const url = selectedInstitucion 
+        ? `http://localhost:8000/api/estudiantes/?institucion=${selectedInstitucion}` 
+        : 'http://localhost:8000/api/estudiantes/';
       const [estRes, instRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/estudiantes/'),
+        axios.get(url),
         axios.get('http://localhost:8000/api/instituciones/')
       ]);
       setEstudiantes(estRes.data);
@@ -42,7 +45,8 @@ const Estudiantes = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedInstitucion]);
+
 
   useEffect(() => {
     if (user?.institucion_id) {

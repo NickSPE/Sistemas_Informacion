@@ -18,6 +18,9 @@ class AsistenciaViewSet(viewsets.ModelViewSet):
 
         if rol == 'SuperAdmin':
             queryset = Asistencia.objects.all()
+            institucion_id = self.request.query_params.get('institucion', None)
+            if institucion_id:
+                queryset = queryset.filter(estudiante__institucion_id=institucion_id)
         elif rol in ['Director', 'Docente']:
             queryset = Asistencia.objects.filter(estudiante__institucion=user.institucion)
         elif rol == 'Apoderado':
@@ -35,7 +38,7 @@ class AsistenciaViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(fecha=fecha)
         if estudiante:
             queryset = queryset.filter(estudiante_id=estudiante)
-        return queryset
+        return queryset.select_related('estudiante', 'justificacion')
 
     @action(detail=False, methods=['get'], url_path='reporte')
     def reporte(self, request):

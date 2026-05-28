@@ -4,13 +4,16 @@ import DataTable from '../components/DataTable';
 import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
-import { Smile, ShieldAlert } from 'lucide-react';
+import { Smile, ShieldAlert, Edit, Trash2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Conducta = () => {
+  const { selectedInstitucion } = useAuth();
   const [conductas, setConductas] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingConducta, setEditingConducta] = useState(null);
 
   // Form states
   const [selectedStudent, setSelectedStudent] = useState('');
@@ -19,9 +22,10 @@ const Conducta = () => {
 
   const fetchData = async () => {
     try {
+      const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
       const [condRes, estRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/conducta/'),
-        axios.get('http://localhost:8000/api/estudiantes/')
+        axios.get(`http://localhost:8000/api/conducta/${instParam}`),
+        axios.get(`http://localhost:8000/api/estudiantes/${instParam}`)
       ]);
       setConductas(condRes.data);
       setEstudiantes(estRes.data);
@@ -34,23 +38,59 @@ const Conducta = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedInstitucion]);
 
-  const handleAdd = async (e) => {
+  const handleOpenAdd = () => {
+    setEditingConducta(null);
+    setSelectedStudent('');
+    setTipo('Positiva');
+    setDescripcion('');
+    setIsModalOpen(true);
+  };
+
+  const handleStartEdit = (row) => {
+    setEditingConducta(row);
+    setSelectedStudent(row.estudiante ? row.estudiante.toString() : '');
+    setTipo(row.tipo);
+    setDescripcion(row.descripcion);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("¿Está seguro de que desea eliminar este registro de conducta?")) {
+      try {
+        await axios.delete(`http://localhost:8000/api/conducta/${id}/`);
+        fetchData();
+      } catch (err) {
+        console.error("Behavior deletion failed:", err);
+        alert("Error al eliminar la incidencia.");
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8000/api/conducta/', {
+      const payload = {
         estudiante: parseInt(selectedStudent),
-        fecha: new Date().toISOString().split('T')[0],
+        fecha: editingConducta ? editingConducta.fecha : new Date().toISOString().split('T')[0],
         tipo,
         descripcion
-      });
+      };
+
+      if (editingConducta) {
+        await axios.put(`http://localhost:8000/api/conducta/${editingConducta.id}/`, payload);
+      } else {
+        await axios.post('http://localhost:8000/api/conducta/', payload);
+      }
       setIsModalOpen(false);
+      setEditingConducta(null);
       setSelectedStudent('');
       setDescripcion('');
       fetchData();
     } catch (err) {
-      console.error("Behavior insertion failed:", err);
+      console.error("Behavior saving failed:", err);
+      alert("Error al guardar la incidencia.");
     }
   };
 
@@ -63,7 +103,31 @@ const Conducta = () => {
       width: '120px',
       render: (row) => <Badge type={row.tipo} text={row.tipo} />
     },
-    { header: 'Descripción / Incidente', accessor: 'descripcion' }
+    { header: 'Descripción / Incidente', accessor: 'descripcion' },
+    {
+      header: 'Acciones',
+      width: '140px',
+      render: (row) => (
+        <div className="flex gap-2.5 items-center">
+          <button 
+            onClick={() => handleStartEdit(row)}
+            className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5 hover:underline"
+            title="Editar Incidencia"
+          >
+            <Edit size={12} />
+            <span>Editar</span>
+          </button>
+          <button 
+            onClick={() => handleDelete(row.id)}
+            className="text-[10px] font-bold text-rose-600 hover:text-rose-800 flex items-center gap-0.5 hover:underline"
+            title="Eliminar Incidencia"
+          >
+            <Trash2 size={12} />
+            <span>Eliminar</span>
+          </button>
+        </div>
+      )
+    }
   ];
 
   if (loading) {
@@ -78,7 +142,7 @@ const Conducta = () => {
     <div className="space-y-6">
       {/* Strict single H1 Constraint */}
       <div>
-        <h1 className="text-xl font-bold text-[#1a1f36] tracking-tight">Registro de Conducta y Disciplina</h1>
+        <h1 className="text-xl font-bold text-[#1a1f36] tracking-tight">Registro de Conducta y Convivencia</h1>
         <p className="text-xs text-[#8898aa]">Control de incidencias de comportamiento escolar, deméritos y reconocimientos positivos.</p>
       </div>
 
@@ -86,11 +150,11 @@ const Conducta = () => {
         {/* Center Column */}
         <div className="lg:col-span-2">
           <DataTable
-            title="Bitácora de Disciplina"
+            title="Bitácora de Convivencia Escolar"
             columns={columns}
             data={conductas}
             searchField="estudiante_apellidos"
-            onAdd={() => setIsModalOpen(true)}
+            onAdd={handleOpenAdd}
             addLabel="Registrar Incidencia"
           />
         </div>
@@ -119,8 +183,8 @@ const Conducta = () => {
       </div>
 
       {/* Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Registrar Incidencia de Conducta">
-        <form onSubmit={handleAdd} className="space-y-4 text-left">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingConducta ? "Modificar Incidencia de Conducta" : "Registrar Incidencia de Conducta"}>
+        <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
             <label className="block text-[10px] font-bold text-[#1a1f36] uppercase tracking-wider mb-1.5">Estudiante</label>
             <select 
@@ -152,7 +216,7 @@ const Conducta = () => {
             />
           </div>
           <button type="submit" className="w-full py-2 bg-[#6c63ff] text-white rounded-lg text-xs font-bold hover:bg-[#5b52e0] transition-colors mt-2">
-            Registrar Incidencia
+            {editingConducta ? "Guardar Cambios" : "Registrar Incidencia"}
           </button>
         </form>
       </Modal>

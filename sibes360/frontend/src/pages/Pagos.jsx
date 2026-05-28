@@ -5,8 +5,10 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
 import { CreditCard, Landmark } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Pagos = () => {
+  const { selectedInstitucion } = useAuth();
   const [pagos, setPagos] = useState([]);
   const [pensiones, setPensiones] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
@@ -21,10 +23,11 @@ const Pagos = () => {
 
   const fetchData = async () => {
     try {
+      const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
       const [pagRes, penRes, estRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/pagos/'),
-        axios.get('http://localhost:8000/api/pension/'),
-        axios.get('http://localhost:8000/api/estudiantes/')
+        axios.get(`http://localhost:8000/api/pagos/${instParam}`),
+        axios.get(`http://localhost:8000/api/pension/${instParam}`),
+        axios.get(`http://localhost:8000/api/estudiantes/${instParam}`)
       ]);
       setPagos(pagRes.data);
       setPensiones(penRes.data);
@@ -38,7 +41,7 @@ const Pagos = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedInstitucion]);
 
   const handleAdd = async (e) => {
     e.preventDefault();

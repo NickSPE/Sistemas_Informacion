@@ -8,7 +8,7 @@ import { Briefcase, UserCheck, BookOpen } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Docentes = () => {
-  const { user } = useAuth();
+  const { user, selectedInstitucion } = useAuth();
   const [docentes, setDocentes] = useState([]);
   const [instituciones, setInstituciones] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,8 +26,11 @@ const Docentes = () => {
 
   const fetchData = async () => {
     try {
+      const url = selectedInstitucion 
+        ? `http://localhost:8000/api/docentes/?institucion=${selectedInstitucion}` 
+        : 'http://localhost:8000/api/docentes/';
       const [docRes, instRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/docentes/'),
+        axios.get(url),
         axios.get('http://localhost:8000/api/instituciones/')
       ]);
       setDocentes(docRes.data);
@@ -41,7 +44,8 @@ const Docentes = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedInstitucion]);
+
 
   useEffect(() => {
     if (user?.institucion_id) {
