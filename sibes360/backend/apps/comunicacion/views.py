@@ -15,7 +15,11 @@ class ComunicadoViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return Comunicado.objects.all().order_by('-fecha')
+            qs = Comunicado.objects.all().order_by('-fecha')
+            institucion_id = self.request.query_params.get('institucion', None)
+            if institucion_id:
+                qs = qs.filter(institucion_id=institucion_id)
+            return qs
         elif rol in ['Director', 'Docente', 'Apoderado']:
             return Comunicado.objects.filter(institucion=user.institucion).order_by('-fecha')
         else:
@@ -33,7 +37,11 @@ class CitacionViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return Citacion.objects.all().order_by('-fecha')
+            qs = Citacion.objects.all().order_by('-fecha')
+            institucion_id = self.request.query_params.get('institucion', None)
+            if institucion_id:
+                qs = qs.filter(estudiante__institucion_id=institucion_id)
+            return qs
         elif rol in ['Director', 'Docente']:
             return Citacion.objects.filter(estudiante__institucion=user.institucion).order_by('-fecha')
         elif rol == 'Apoderado':

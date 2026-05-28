@@ -5,8 +5,10 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
 import { Smile, ShieldAlert, Edit, Trash2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Conducta = () => {
+  const { selectedInstitucion } = useAuth();
   const [conductas, setConductas] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,9 +22,10 @@ const Conducta = () => {
 
   const fetchData = async () => {
     try {
+      const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
       const [condRes, estRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/conducta/'),
-        axios.get('http://localhost:8000/api/estudiantes/')
+        axios.get(`http://localhost:8000/api/conducta/${instParam}`),
+        axios.get(`http://localhost:8000/api/estudiantes/${instParam}`)
       ]);
       setConductas(condRes.data);
       setEstudiantes(estRes.data);
@@ -35,7 +38,7 @@ const Conducta = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedInstitucion]);
 
   const handleOpenAdd = () => {
     setEditingConducta(null);

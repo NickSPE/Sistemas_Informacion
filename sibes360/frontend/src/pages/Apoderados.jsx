@@ -5,8 +5,10 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
 import { ShieldAlert, BookOpen, Edit, Trash2, CheckCircle, XCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Apoderados = () => {
+  const { selectedInstitucion } = useAuth();
   const [apoderados, setApoderados] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,9 +31,10 @@ const Apoderados = () => {
 
   const fetchData = async () => {
     try {
+      const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
       const [apoRes, estRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/apoderados/'),
-        axios.get('http://localhost:8000/api/estudiantes/')
+        axios.get(`http://localhost:8000/api/apoderados/${instParam}`),
+        axios.get(`http://localhost:8000/api/estudiantes/${instParam}`)
       ]);
       setApoderados(apoRes.data);
       setEstudiantes(estRes.data);
@@ -44,7 +47,7 @@ const Apoderados = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedInstitucion]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

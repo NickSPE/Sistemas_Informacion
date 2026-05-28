@@ -5,8 +5,10 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
 import { FileSpreadsheet, Award, Edit, Trash2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Notas = () => {
+  const { selectedInstitucion } = useAuth();
   const [notas, setNotas] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
   const [evaluaciones, setEvaluaciones] = useState([]);
@@ -21,10 +23,11 @@ const Notas = () => {
 
   const fetchData = async () => {
     try {
+      const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
       const [notaRes, estRes, evalRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/notas/'),
-        axios.get('http://localhost:8000/api/estudiantes/'),
-        axios.get('http://localhost:8000/api/evaluaciones/')
+        axios.get(`http://localhost:8000/api/notas/${instParam}`),
+        axios.get(`http://localhost:8000/api/estudiantes/${instParam}`),
+        axios.get(`http://localhost:8000/api/evaluaciones/${instParam}`)
       ]);
       setNotas(notaRes.data);
       setEstudiantes(estRes.data);
@@ -38,7 +41,7 @@ const Notas = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedInstitucion]);
 
   const handleOpenAdd = () => {
     setEditingNota(null);

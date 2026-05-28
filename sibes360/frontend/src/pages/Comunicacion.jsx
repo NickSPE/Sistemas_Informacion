@@ -5,8 +5,10 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
 import { Bell, HelpCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Comunicacion = () => {
+  const { selectedInstitucion } = useAuth();
   const [comunicados, setComunicados] = useState([]);
   const [citaciones, setCitaciones] = useState([]);
   const [instituciones, setInstituciones] = useState([]);
@@ -20,9 +22,10 @@ const Comunicacion = () => {
 
   const fetchData = async () => {
     try {
+      const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
       const [comRes, citRes, instRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/comunicado/'),
-        axios.get('http://localhost:8000/api/citacion/'),
+        axios.get(`http://localhost:8000/api/comunicado/${instParam}`),
+        axios.get(`http://localhost:8000/api/citacion/${instParam}`),
         axios.get('http://localhost:8000/api/instituciones/')
       ]);
       setComunicados(comRes.data);
@@ -37,7 +40,11 @@ const Comunicacion = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+    // Pre-select institution from context
+    if (selectedInstitucion) {
+      setSelectedInst(selectedInstitucion.toString());
+    }
+  }, [selectedInstitucion]);
 
   const handleAdd = async (e) => {
     e.preventDefault();

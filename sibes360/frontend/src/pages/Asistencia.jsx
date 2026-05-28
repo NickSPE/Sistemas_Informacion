@@ -5,8 +5,10 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
 import { Calendar, UserCheck, Edit, Trash2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Asistencia = () => {
+  const { selectedInstitucion } = useAuth();
   const [asistencias, setAsistencias] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,9 +24,10 @@ const Asistencia = () => {
 
   const fetchData = async () => {
     try {
+      const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
       const [asistRes, estRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/asistencia/'),
-        axios.get('http://localhost:8000/api/estudiantes/')
+        axios.get(`http://localhost:8000/api/asistencia/${instParam}`),
+        axios.get(`http://localhost:8000/api/estudiantes/${instParam}`)
       ]);
       setAsistencias(asistRes.data);
       setEstudiantes(estRes.data);
@@ -37,7 +40,7 @@ const Asistencia = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedInstitucion]);
 
   const handleOpenAdd = () => {
     setEditingAsistencia(null);

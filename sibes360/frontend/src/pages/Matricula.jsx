@@ -5,8 +5,10 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
 import { UserPlus, Settings } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Matricula = () => {
+  const { selectedInstitucion } = useAuth();
   const [matriculas, setMatriculas] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
   const [grados, setGrados] = useState([]);
@@ -24,12 +26,14 @@ const Matricula = () => {
 
   const fetchData = async () => {
     try {
+      const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
+      const instAmp = selectedInstitucion ? `&institucion=${selectedInstitucion}` : '';
       const [matRes, estRes, gradRes, seccRes, perRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/matricula/'),
-        axios.get('http://localhost:8000/api/estudiantes/'),
-        axios.get('http://localhost:8000/api/grados/'),
-        axios.get('http://localhost:8000/api/secciones/'),
-        axios.get('http://localhost:8000/api/periodos/')
+        axios.get(`http://localhost:8000/api/matricula/${instParam}`),
+        axios.get(`http://localhost:8000/api/estudiantes/${instParam}`),
+        axios.get(`http://localhost:8000/api/grados/${instParam}`),
+        axios.get(`http://localhost:8000/api/secciones/${instParam}`),
+        axios.get(`http://localhost:8000/api/periodos/${instParam}`)
       ]);
       setMatriculas(matRes.data);
       setEstudiantes(estRes.data);
@@ -45,7 +49,7 @@ const Matricula = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedInstitucion]);
 
   const handleEnroll = async (e) => {
     e.preventDefault();

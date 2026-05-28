@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { 
   Home, Building2, Users, GraduationCap, ShieldAlert, Briefcase, 
   UserPlus, BookOpen, Clock, Calendar, FileSpreadsheet, FileDown, 
-  Smile, CreditCard, Bell, AlertTriangle, BarChart3, LogOut, Settings 
+  Smile, CreditCard, Bell, AlertTriangle, BarChart3, LogOut, Settings, TrendingUp
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -34,6 +34,7 @@ const Sidebar = () => {
     { to: '/comunicacion', label: 'Comunicación', icon: Bell },
     { to: '/alertas', label: 'Alertas', icon: AlertTriangle },
     { to: '/reportes', label: 'Reportes', icon: BarChart3 },
+    { to: '/analisis', label: 'Análisis', icon: TrendingUp },
     { to: '/configuracion', label: 'Configuración', icon: Settings }
   ];
 

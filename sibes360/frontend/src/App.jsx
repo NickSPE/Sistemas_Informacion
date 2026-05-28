@@ -29,6 +29,7 @@ import Pagos from './pages/Pagos';
 import Comunicacion from './pages/Comunicacion';
 import Alertas from './pages/Alertas';
 import Reportes from './pages/Reportes';
+import Analisis from './pages/Analisis';
 import Configuracion from './pages/Configuracion';
 
 // Protected Route Wrapper para Administradores y Profesores
@@ -104,6 +105,7 @@ function App() {
           <Route path="/comunicacion" element={<ProtectedRoute><Comunicacion /></ProtectedRoute>} />
           <Route path="/alertas" element={<ProtectedRoute><Alertas /></ProtectedRoute>} />
           <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
+          <Route path="/analisis" element={<ProtectedRoute><Analisis /></ProtectedRoute>} />
           <Route path="/configuracion" element={<ProtectedRoute><Configuracion /></ProtectedRoute>} />
 
           {/* Protected Parent Portal pages */}

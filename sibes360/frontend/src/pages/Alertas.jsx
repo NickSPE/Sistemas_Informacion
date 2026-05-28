@@ -5,14 +5,17 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import KPICard from '../components/KPICard';
 import { AlertTriangle, ShieldCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Alertas = () => {
+  const { selectedInstitucion } = useAuth();
   const [alertas, setAlertas] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchAlertas = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/alertas/');
+      const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
+      const res = await axios.get(`http://localhost:8000/api/alertas/${instParam}`);
       setAlertas(res.data);
     } catch (err) {
       console.error("Failed to load warnings:", err);
@@ -23,7 +26,7 @@ const Alertas = () => {
 
   useEffect(() => {
     fetchAlertas();
-  }, []);
+  }, [selectedInstitucion]);
 
   const handleResolve = async (id) => {
     try {

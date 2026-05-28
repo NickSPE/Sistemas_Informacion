@@ -30,6 +30,9 @@ class EvaluacionViewSet(viewsets.ModelViewSet):
 
         if rol == 'SuperAdmin':
             queryset = Evaluacion.objects.all()
+            institucion_id = self.request.query_params.get('institucion', None)
+            if institucion_id:
+                queryset = queryset.filter(curso__institucion_id=institucion_id)
         elif rol == 'Director':
             queryset = Evaluacion.objects.filter(curso__institucion=user.institucion)
         elif rol == 'Docente':
@@ -80,6 +83,9 @@ class NotaViewSet(viewsets.ModelViewSet):
 
         if rol == 'SuperAdmin':
             queryset = Nota.objects.all()
+            institucion_id = self.request.query_params.get('institucion', None)
+            if institucion_id:
+                queryset = queryset.filter(estudiante__institucion_id=institucion_id)
         elif rol == 'Director':
             queryset = Nota.objects.filter(estudiante__institucion=user.institucion)
         elif rol == 'Docente':
@@ -179,6 +185,9 @@ class PromedioViewSet(viewsets.ModelViewSet):
 
         if rol == 'SuperAdmin':
             queryset = Promedio.objects.all()
+            institucion_id = self.request.query_params.get('institucion', None)
+            if institucion_id:
+                queryset = queryset.filter(estudiante__institucion_id=institucion_id)
         elif rol == 'Director':
             queryset = Promedio.objects.filter(estudiante__institucion=user.institucion)
         elif rol == 'Docente':

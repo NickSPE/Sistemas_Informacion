@@ -17,7 +17,11 @@ class AlertaViewSet(viewsets.ModelViewSet):
         rol = user.rol.nombre_rol if user.rol else None
 
         if rol == 'SuperAdmin':
-            return Alerta.objects.all().order_by('-id')
+            qs = Alerta.objects.all().order_by('-id')
+            institucion_id = self.request.query_params.get('institucion', None)
+            if institucion_id:
+                qs = qs.filter(estudiante__institucion_id=institucion_id)
+            return qs
         elif rol in ['Director', 'Docente']:
             return Alerta.objects.filter(estudiante__institucion=user.institucion).order_by('-id')
         elif rol == 'Apoderado':
@@ -36,7 +40,9 @@ class AlertaViewSet(viewsets.ModelViewSet):
         active_alerts = Alerta.objects.filter(estado='Activa')
 
         if rol == 'SuperAdmin':
-            pass
+            institucion_id = request.query_params.get('institucion', None)
+            if institucion_id:
+                active_alerts = active_alerts.filter(estudiante__institucion_id=institucion_id)
         elif rol in ['Director', 'Docente']:
             active_alerts = active_alerts.filter(estudiante__institucion=user.institucion)
         elif rol == 'Apoderado':

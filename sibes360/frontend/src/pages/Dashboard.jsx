@@ -8,7 +8,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, selectedInstitucion } = useAuth();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [alerts, setAlerts] = useState([]);
@@ -16,11 +16,12 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const statsRes = await axios.get('http://localhost:8000/api/dashboard/stats/');
+        const instParam = selectedInstitucion ? `?institucion=${selectedInstitucion}` : '';
+        const statsRes = await axios.get(`http://localhost:8000/api/dashboard/stats/${instParam}`);
         setStats(statsRes.data);
 
         // Fetch recent active alerts
-        const alertsRes = await axios.get('http://localhost:8000/api/alertas/pendientes/');
+        const alertsRes = await axios.get(`http://localhost:8000/api/alertas/pendientes/${instParam}`);
         setAlerts(alertsRes.data.slice(0, 4)); // top 4
       } catch (error) {
         console.error("Error loading dashboard data:", error);
@@ -29,9 +30,9 @@ const Dashboard = () => {
       }
     };
     fetchDashboardData();
-  }, []);
+  }, [selectedInstitucion]);
 
-  const chartData = [
+  const chartData = stats?.chart_data || [
     { name: 'Marzo', asistencia: 92, morosidad: 12 },
     { name: 'Abril', asistencia: 94, morosidad: 8 },
     { name: 'Mayo', asistencia: 95, morosidad: 5 },

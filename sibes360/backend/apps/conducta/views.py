@@ -29,6 +29,9 @@ class ConductaViewSet(viewsets.ModelViewSet):
 
         if rol == 'SuperAdmin':
             qs = Conducta.objects.all()
+            institucion_id = self.request.query_params.get('institucion', None)
+            if institucion_id:
+                qs = qs.filter(estudiante__institucion_id=institucion_id)
         elif rol == 'Director':
             qs = Conducta.objects.filter(estudiante__institucion=user.institucion)
         elif rol == 'Docente':
